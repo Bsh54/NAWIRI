@@ -20,3 +20,6 @@ npm-debug.log*
 
 # fichier contenant la cle API - ne jamais committer
 Nouveau document texte.txt
+
+# memoire de travail privee - ne pas publier
+CLAUDE.md
