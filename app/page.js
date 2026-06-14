@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 const COUNTRIES = [
   { value: "Benin", label: "🇧🇯 Bénin" },
@@ -13,202 +14,202 @@ const LANGUAGES = [
   { value: "English", label: "English" },
 ];
 
-export default function Home() {
+export default function Landing() {
   const [country, setCountry] = useState("Benin");
   const [language, setLanguage] = useState("French");
-  const [messages, setMessages] = useState([]);
-  const [input, setInput] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
-  const endRef = useRef(null);
+  const router = useRouter();
 
-  useEffect(() => {
-    endRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages, loading]);
-
-  async function send() {
-    const text = input.trim();
-    if (!text || loading) return;
-
-    const nextMessages = [...messages, { role: "user", content: text }];
-    setMessages(nextMessages);
-    setInput("");
-    setError("");
-    setLoading(true);
-
-    try {
-      const res = await fetch("/api/chat", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ country, language, messages: nextMessages }),
-      });
-      const data = await res.json();
-      if (!res.ok) {
-        setError(data.error || "Erreur.");
-      } else {
-        setMessages([...nextMessages, { role: "assistant", content: data.reply }]);
-      }
-    } catch {
-      setError("Problème de connexion. Réessayez.");
-    } finally {
-      setLoading(false);
-    }
-  }
-
-  function onKeyDown(e) {
-    if (e.key === "Enter" && !e.shiftKey) {
-      e.preventDefault();
-      send();
-    }
+  function start() {
+    router.push(`/chat?country=${country}&language=${language}`);
   }
 
   return (
-    <main
-      style={{
-        maxWidth: 720,
-        margin: "0 auto",
-        minHeight: "100vh",
-        display: "flex",
-        flexDirection: "column",
-        padding: "16px",
-        boxSizing: "border-box",
-      }}
-    >
-      <header style={{ paddingBottom: 12 }}>
-        <h1 style={{ margin: "8px 0 2px", fontSize: 28, color: "#0891B2" }}>
-          NAWIRI 🌍
+    <main style={{ minHeight: "100vh", display: "flex", flexDirection: "column" }}>
+      {/* NAV */}
+      <nav style={{
+        display: "flex", alignItems: "center", justifyContent: "space-between",
+        padding: "16px 32px", borderBottom: "1px solid #A5F3FC",
+        background: "#FFFFFF",
+      }}>
+        <span style={{
+          fontFamily: "'Lexend', sans-serif", fontWeight: 700,
+          fontSize: 22, color: "#0891B2", letterSpacing: "-0.5px",
+        }}>
+          NAWIRI
+        </span>
+        <span style={{ fontSize: 13, color: "#64748B" }}>
+          Bénin · Sénégal · Ghana
+        </span>
+      </nav>
+
+      {/* HERO */}
+      <section style={{
+        flex: 1, display: "flex", flexDirection: "column",
+        alignItems: "center", justifyContent: "center",
+        padding: "60px 24px 40px", textAlign: "center",
+        maxWidth: 680, margin: "0 auto", width: "100%",
+      }}>
+        {/* Badge */}
+        <div style={{
+          display: "inline-flex", alignItems: "center", gap: 8,
+          background: "#CFFAFE", color: "#0E7490", fontSize: 13, fontWeight: 600,
+          padding: "6px 14px", borderRadius: 99, marginBottom: 28,
+          border: "1px solid #A5F3FC",
+        }}>
+          <span style={{ fontSize: 16 }}>🌍</span>
+          Assistant d'orientation sociale · West Africa
+        </div>
+
+        {/* Title */}
+        <h1 style={{
+          fontFamily: "'Lexend', sans-serif", fontWeight: 700,
+          fontSize: "clamp(32px, 6vw, 52px)", lineHeight: 1.15,
+          color: "#164E63", margin: "0 0 20px",
+          letterSpacing: "-1px",
+        }}>
+          L'aide publique existe.
+          <br />
+          <span style={{ color: "#0891B2" }}>Trouvons la vôtre.</span>
         </h1>
-        <p style={{ margin: 0, fontSize: 15 }}>
-          Trouvez l'aide publique à laquelle vous avez droit, en quelques minutes.
+
+        {/* Subtitle */}
+        <p style={{
+          fontSize: "clamp(16px, 2.5vw, 19px)", color: "#475569",
+          lineHeight: 1.6, maxWidth: 540, margin: "0 0 44px",
+        }}>
+          Des familles ratent chaque jour l'aide à laquelle elles ont légalement droit —
+          non pas parce qu'elle n'existe pas, mais parce que le système est difficile à naviguer.
+          <br />
+          <strong style={{ color: "#164E63" }}>NAWIRI est le pont.</strong>
         </p>
 
-        <div style={{ display: "flex", gap: 8, marginTop: 12, flexWrap: "wrap" }}>
-          <select
-            value={country}
-            onChange={(e) => setCountry(e.target.value)}
-            style={selectStyle}
-          >
-            {COUNTRIES.map((c) => (
-              <option key={c.value} value={c.value}>
-                {c.label}
-              </option>
-            ))}
-          </select>
-          <select
-            value={language}
-            onChange={(e) => setLanguage(e.target.value)}
-            style={selectStyle}
-          >
-            {LANGUAGES.map((l) => (
-              <option key={l.value} value={l.value}>
-                {l.label}
-              </option>
-            ))}
-          </select>
-        </div>
-      </header>
-
-      <section
-        style={{
-          flex: 1,
-          overflowY: "auto",
-          background: "#FFFFFF",
-          borderRadius: 16,
-          padding: 16,
-          border: "1px solid #A5F3FC",
-        }}
-      >
-        {messages.length === 0 && (
-          <p style={{ color: "#64748B" }}>
-            Décrivez votre situation librement. Par exemple : « J'ai trois enfants,
-            le plus jeune a 2 ans, il est souvent malade et je n'ai pas
-            d'assurance. »
+        {/* Selector card */}
+        <div style={{
+          background: "#FFFFFF", borderRadius: 20, padding: "32px 36px",
+          boxShadow: "0 4px 24px rgba(8,145,178,0.10)",
+          border: "1px solid #E0F7FA", width: "100%", maxWidth: 440,
+          marginBottom: 16,
+        }}>
+          <p style={{
+            fontFamily: "'Lexend', sans-serif", fontWeight: 600,
+            fontSize: 15, color: "#164E63", margin: "0 0 20px", textAlign: "left",
+          }}>
+            Commençons par votre pays et votre langue
           </p>
-        )}
 
-        {messages.map((m, i) => (
-          <div
-            key={i}
-            style={{
-              display: "flex",
-              justifyContent: m.role === "user" ? "flex-end" : "flex-start",
-              marginBottom: 10,
-            }}
-          >
-            <div
-              style={{
-                maxWidth: "85%",
-                whiteSpace: "pre-wrap",
-                lineHeight: 1.5,
-                fontSize: 15,
-                padding: "10px 14px",
-                borderRadius: 14,
-                background: m.role === "user" ? "#0891B2" : "#ECFEFF",
-                color: m.role === "user" ? "#FFFFFF" : "#164E63",
-              }}
-            >
-              {m.content}
-            </div>
+          <div style={{ display: "flex", gap: 12, marginBottom: 24, flexWrap: "wrap" }}>
+            {COUNTRIES.map((c) => (
+              <button
+                key={c.value}
+                onClick={() => setCountry(c.value)}
+                style={{
+                  flex: 1, minWidth: 110, padding: "10px 8px",
+                  borderRadius: 12, fontSize: 14, fontWeight: 600, cursor: "pointer",
+                  border: country === c.value ? "2px solid #0891B2" : "2px solid #E2E8F0",
+                  background: country === c.value ? "#ECFEFF" : "#F8FAFC",
+                  color: country === c.value ? "#0E7490" : "#64748B",
+                  transition: "all 0.15s",
+                }}
+              >
+                {c.label}
+              </button>
+            ))}
           </div>
-        ))}
 
-        {loading && (
-          <div style={{ color: "#64748B", fontSize: 14 }}>NAWIRI réfléchit…</div>
-        )}
-        {error && (
-          <div style={{ color: "#DC2626", fontSize: 14 }}>{error}</div>
-        )}
-        <div ref={endRef} />
+          <div style={{ display: "flex", gap: 12, marginBottom: 28 }}>
+            {LANGUAGES.map((l) => (
+              <button
+                key={l.value}
+                onClick={() => setLanguage(l.value)}
+                style={{
+                  flex: 1, padding: "10px 8px",
+                  borderRadius: 12, fontSize: 14, fontWeight: 600, cursor: "pointer",
+                  border: language === l.value ? "2px solid #059669" : "2px solid #E2E8F0",
+                  background: language === l.value ? "#ECFDF5" : "#F8FAFC",
+                  color: language === l.value ? "#047857" : "#64748B",
+                  transition: "all 0.15s",
+                }}
+              >
+                {l.label}
+              </button>
+            ))}
+          </div>
+
+          <button
+            onClick={start}
+            style={{
+              width: "100%", padding: "16px", borderRadius: 14,
+              background: "#0891B2", color: "#FFFFFF", border: "none",
+              fontFamily: "'Lexend', sans-serif", fontWeight: 600,
+              fontSize: 16, cursor: "pointer", letterSpacing: "0.2px",
+              boxShadow: "0 4px 14px rgba(8,145,178,0.3)",
+              transition: "background 0.15s, transform 0.1s",
+            }}
+            onMouseEnter={(e) => e.currentTarget.style.background = "#0E7490"}
+            onMouseLeave={(e) => e.currentTarget.style.background = "#0891B2"}
+          >
+            Décrire ma situation →
+          </button>
+        </div>
+
+        <p style={{ fontSize: 12, color: "#94A3B8", maxWidth: 380 }}>
+          Aucune donnée personnelle stockée sur nos serveurs.
+          NAWIRI vous oriente — la décision finale appartient à l'organisme officiel.
+        </p>
       </section>
 
-      <div style={{ display: "flex", gap: 8, marginTop: 12 }}>
-        <textarea
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-          onKeyDown={onKeyDown}
-          rows={2}
-          placeholder="Décrivez votre situation…"
-          style={{
-            flex: 1,
-            resize: "none",
-            fontSize: 15,
-            padding: "10px 12px",
-            borderRadius: 12,
-            border: "1px solid #A5F3FC",
-            fontFamily: "inherit",
-          }}
-        />
-        <button
-          onClick={send}
-          disabled={loading}
-          style={{
-            background: "#059669",
-            color: "#FFFFFF",
-            border: "none",
-            borderRadius: 12,
-            padding: "0 20px",
-            fontSize: 16,
-            cursor: loading ? "default" : "pointer",
-            opacity: loading ? 0.6 : 1,
-          }}
-        >
-          Envoyer
-        </button>
-      </div>
+      {/* HOW IT WORKS */}
+      <section style={{
+        background: "#FFFFFF", padding: "48px 24px",
+        borderTop: "1px solid #E0F7FA",
+      }}>
+        <div style={{ maxWidth: 720, margin: "0 auto" }}>
+          <h2 style={{
+            fontFamily: "'Lexend', sans-serif", fontWeight: 700,
+            fontSize: 22, color: "#164E63", textAlign: "center", marginBottom: 36,
+          }}>
+            Comment ça marche
+          </h2>
+          <div style={{
+            display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))",
+            gap: 24,
+          }}>
+            {[
+              { icon: "🗺️", title: "Choisissez votre pays", desc: "Bénin, Sénégal ou Ghana" },
+              { icon: "💬", title: "Décrivez votre situation", desc: "En texte libre, dans votre langue" },
+              { icon: "🤖", title: "L'IA pose des questions", desc: "Une à la fois, pour cibler précisément" },
+              { icon: "✅", title: "Vous recevez un plan", desc: "Programme · Documents · Étapes · Contact" },
+            ].map((step, i) => (
+              <div key={i} style={{
+                textAlign: "center", padding: "24px 16px",
+                background: "#F0FDFF", borderRadius: 16,
+                border: "1px solid #A5F3FC",
+              }}>
+                <div style={{ fontSize: 32, marginBottom: 12 }}>{step.icon}</div>
+                <div style={{
+                  fontFamily: "'Lexend', sans-serif", fontWeight: 600,
+                  fontSize: 14, color: "#0E7490", marginBottom: 6,
+                }}>{step.title}</div>
+                <div style={{ fontSize: 13, color: "#64748B", lineHeight: 1.4 }}>{step.desc}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
 
-      <p style={{ fontSize: 12, color: "#64748B", marginTop: 8 }}>
-        NAWIRI vous oriente. Vérifiez toujours auprès de l'organisme officiel
-        avant toute démarche.
-      </p>
+      {/* FOOTER */}
+      <footer style={{
+        borderTop: "1px solid #E0F7FA", padding: "20px 32px",
+        display: "flex", justifyContent: "space-between", alignItems: "center",
+        flexWrap: "wrap", gap: 8, background: "#FFFFFF",
+        fontSize: 12, color: "#94A3B8",
+      }}>
+        <span style={{ fontFamily: "'Lexend', sans-serif", fontWeight: 600, color: "#0891B2" }}>
+          NAWIRI
+        </span>
+        <span>USAII Global AI Hackathon 2026 · Team EVOLUTICS · Université d'Abomey-Calavi</span>
+        <span>🔒 Aucune donnée personnelle stockée</span>
+      </footer>
     </main>
   );
 }
-
-const selectStyle = {
-  fontSize: 15,
-  padding: "8px 10px",
-  borderRadius: 10,
-  border: "1px solid #A5F3FC",
-  background: "#FFFFFF",
-  color: "#164E63",
-};
