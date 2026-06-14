@@ -3,6 +3,54 @@
 import { useState, useRef, useEffect, Suspense } from "react";
 import { useRouter } from "next/navigation";
 
+// Renders markdown-like text from Gemini:
+// **bold**, *italic*, lines starting with "- " or "▸ "
+function renderMessage(text) {
+  const lines = text.split("\n");
+  return lines.map((line, li) => {
+    // Detect bullet line
+    const isBullet = /^(\s*[-*]|\s*▸)\s+/.test(line);
+    const content  = isBullet ? line.replace(/^(\s*[-*▸])\s+/, "") : line;
+
+    // Parse inline bold (**text**) and italic (*text*)
+    const parts = [];
+    const regex = /\*\*(.+?)\*\*|\*(.+?)\*/g;
+    let last = 0, match;
+    while ((match = regex.exec(content)) !== null) {
+      if (match.index > last) parts.push(content.slice(last, match.index));
+      if (match[1] !== undefined) {
+        parts.push(
+          <strong key={match.index} style={{ fontWeight: 700, color: "inherit" }}>
+            {match[1]}
+          </strong>
+        );
+      } else {
+        parts.push(
+          <em key={match.index} style={{ fontStyle: "italic" }}>
+            {match[2]}
+          </em>
+        );
+      }
+      last = match.index + match[0].length;
+    }
+    if (last < content.length) parts.push(content.slice(last));
+
+    if (isBullet) {
+      return (
+        <div key={li} style={{ display: "flex", gap: 8, alignItems: "flex-start", marginTop: li === 0 ? 0 : 4 }}>
+          <span style={{ width: 5, height: 5, borderRadius: "50%", background: "var(--primary)", flexShrink: 0, marginTop: 8 }} />
+          <span>{parts}</span>
+        </div>
+      );
+    }
+
+    // Empty line = spacer
+    if (content.trim() === "") return <div key={li} style={{ height: 6 }} />;
+
+    return <div key={li} style={{ marginTop: li === 0 ? 0 : 2 }}>{parts}</div>;
+  });
+}
+
 function ChatApp() {
   const router = useRouter();
   const [messages, setMessages] = useState([]);
@@ -200,11 +248,11 @@ function ChatApp() {
                   borderRadius: m.role === "user" ? "14px 14px 4px 14px" : "14px 14px 14px 4px",
                   background: m.role === "user" ? "var(--primary)" : "var(--bg-card)",
                   color: m.role === "user" ? "#FFF" : "var(--text)",
-                  fontSize: 14, lineHeight: 1.65, whiteSpace: "pre-wrap",
+                  fontSize: 14, lineHeight: 1.65,
                   border: m.role === "assistant" ? "1px solid var(--border-soft)" : "none",
                   boxShadow: m.role === "assistant" ? "0 1px 4px rgba(0,0,0,0.05)" : "none",
                 }}>
-                  {m.content}
+                  {m.role === "user" ? m.content : renderMessage(m.content)}
                 </div>
               </div>
             ))}
