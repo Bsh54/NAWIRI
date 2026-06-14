@@ -261,24 +261,44 @@ function ChatApp() {
               </div>
             )}
 
-            {messages.map((m, i) => (
-              <div key={i} style={{
-                display: "flex", gap: 12, alignItems: "flex-start", width: "100%",
-              }}>
-                <Avatar role={m.role} />
-                <div style={{ flex: 1, minWidth: 0, paddingTop: 5 }}>
+            {messages.map((m, i) => {
+              const isUser = m.role === "user";
+              return (
+                <div key={i} style={{
+                  display: "flex", gap: 12, alignItems: "flex-start", width: "100%",
+                  flexDirection: isUser ? "row-reverse" : "row",
+                }}>
+                  <Avatar role={m.role} />
                   <div style={{
-                    fontFamily: "'Space Grotesk', sans-serif", fontWeight: 700,
-                    fontSize: 13, color: "var(--text)", marginBottom: 3,
+                    minWidth: 0, paddingTop: 5,
+                    flex: isUser ? "0 1 auto" : 1,
+                    maxWidth: isUser ? "82%" : "100%",
+                    textAlign: isUser ? "right" : "left",
                   }}>
-                    {m.role === "user" ? "You" : "NAWIRI"}
-                  </div>
-                  <div style={{ fontSize: 14, lineHeight: 1.65, color: "var(--text)" }}>
-                    {m.role === "user" ? m.content : renderMessage(m.content)}
+                    <div style={{
+                      fontFamily: "'Space Grotesk', sans-serif", fontWeight: 700,
+                      fontSize: 13, color: "var(--text)", marginBottom: 3,
+                    }}>
+                      {isUser ? "You" : "NAWIRI"}
+                    </div>
+                    {isUser ? (
+                      <div style={{
+                        display: "inline-block", textAlign: "left",
+                        padding: "10px 14px", borderRadius: "14px 4px 14px 14px",
+                        background: "var(--primary)", color: "#fff",
+                        fontSize: 14, lineHeight: 1.6,
+                      }}>
+                        {m.content}
+                      </div>
+                    ) : (
+                      <div style={{ fontSize: 14, lineHeight: 1.65, color: "var(--text)" }}>
+                        {renderMessage(m.content)}
+                      </div>
+                    )}
                   </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
 
             {loading && (
               <div style={{ display: "flex", gap: 12, alignItems: "flex-start", width: "100%" }}>

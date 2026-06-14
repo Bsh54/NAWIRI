@@ -57,6 +57,7 @@ function popupHtml(inst) {
 export default function InstitutionsMap({ open = true }) {
   const containerRef = useRef(null);
   const mapRef = useRef(null);
+  const markersRef = useRef([]);
   const [active, setActive] = useState("benin");
 
   // When the panel becomes visible, Leaflet must recompute its size,
@@ -96,11 +97,11 @@ export default function InstitutionsMap({ open = true }) {
         iconAnchor: [8, 8],
       });
 
-      INSTITUTIONS.forEach((inst) => {
+      markersRef.current = INSTITUTIONS.map((inst) =>
         L.marker([inst.lat, inst.lng], { icon: dot })
           .addTo(map)
-          .bindPopup(popupHtml(inst));
-      });
+          .bindPopup(popupHtml(inst))
+      );
 
       // Leaflet can render grey if the container sized after init.
       setTimeout(() => map.invalidateSize(), 200);
@@ -119,12 +120,26 @@ export default function InstitutionsMap({ open = true }) {
     }
   }
 
+  // Click a card → fly the map to that institution and open its popup.
+  function focusInstitution(idx) {
+    const inst = INSTITUTIONS[idx];
+    const marker = markersRef.current[idx];
+    if (mapRef.current && inst) {
+      mapRef.current.flyTo([inst.lat, inst.lng], 15, { duration: 0.8 });
+      if (marker) setTimeout(() => marker.openPopup(), 850);
+    }
+  }
+
+  const list = INSTITUTIONS
+    .map((inst, idx) => ({ inst, idx }))
+    .filter(({ inst }) => inst.country === active);
+
   return (
     <div style={{ display: "flex", flexDirection: "column", height: "100%" }}>
       {/* Country switcher */}
       <div style={{
         display: "flex", gap: 6, padding: "8px 10px",
-        borderBottom: "1px solid var(--border-soft)",
+        borderBottom: "1px solid var(--border-soft)", flexShrink: 0,
       }}>
         {Object.entries(COUNTRIES).map(([key, c]) => (
           <button
@@ -145,16 +160,98 @@ export default function InstitutionsMap({ open = true }) {
         ))}
       </div>
 
-      {/* Map */}
-      <div ref={containerRef} style={{ flex: 1, width: "100%" }} />
+      {/* Map + cards side by side (stack on narrow screens) */}
+      <div className="inst-content" style={{ flex: 1, minHeight: 0, display: "flex" }}>
+        {/* Map */}
+        <div ref={containerRef} className="inst-map" style={{ flex: 1, minHeight: 240 }} />
+
+        {/* Institution cards (small panels) */}
+        <div className="inst-cards" style={{
+          width: 300, flexShrink: 0, overflowY: "auto",
+          borderLeft: "1px solid var(--border-soft)",
+          background: "var(--bg)", padding: "10px",
+        }}>
+          {list.map(({ inst, idx }) => (
+            <button
+              key={idx}
+              onClick={() => focusInstitution(idx)}
+              style={{
+                display: "block", width: "100%", textAlign: "left",
+                background: "var(--bg-card)", cursor: "pointer",
+                border: "1px solid var(--border-soft)", borderRadius: "var(--radius-lg)",
+                padding: "11px 13px", marginBottom: 9,
+                transition: "border-color 0.12s, box-shadow 0.12s",
+              }}
+              onMouseEnter={e => {
+                e.currentTarget.style.borderColor = "var(--primary)";
+                e.currentTarget.style.boxShadow = "0 2px 8px rgba(0,0,0,0.07)";
+              }}
+              onMouseLeave={e => {
+                e.currentTarget.style.borderColor = "var(--border-soft)";
+                e.currentTarget.style.boxShadow = "none";
+              }}
+            >
+              <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 3 }}>
+                <span style={{
+                  width: 9, height: 9, borderRadius: "50%", flexShrink: 0,
+                  background: "#C05A3C", border: "1.5px solid #fff",
+                  boxShadow: "0 0 0 1px #C05A3C",
+                }} />
+                <span style={{
+                  fontFamily: "'Space Grotesk', sans-serif", fontWeight: 700,
+                  fontSize: 13.5, color: "var(--text)",
+                }}>{inst.name}</span>
+              </div>
+              <div style={{ fontSize: 11, color: "var(--text-3)", marginBottom: 5, lineHeight: 1.35 }}>
+                {inst.full}
+              </div>
+              <div style={{ fontSize: 12, color: "var(--text-2)", lineHeight: 1.45, marginBottom: 7 }}>
+                {inst.role}
+              </div>
+              <div style={{ display: "flex", flexWrap: "wrap", gap: 6, alignItems: "center" }}>
+                {inst.phone && (
+                  <a href={`tel:${inst.phone.replace(/\s/g, "")}`} onClick={e => e.stopPropagation()}
+                     style={{ fontSize: 11, color: "var(--primary)", textDecoration: "none", fontWeight: 600 }}>
+                    📞 {inst.phone}
+                  </a>
+                )}
+                <a
+                  href={"https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent(inst.gmaps)}
+                  target="_blank" rel="noreferrer" onClick={e => e.stopPropagation()}
+                  style={{
+                    fontSize: 11, fontWeight: 600, color: "#fff",
+                    background: "var(--primary)", padding: "3px 9px",
+                    borderRadius: 999, textDecoration: "none",
+                  }}
+                >
+                  Google Maps →
+                </a>
+              </div>
+            </button>
+          ))}
+        </div>
+      </div>
 
       {/* Hint */}
       <div style={{
         padding: "6px 12px", fontSize: 10, color: "var(--text-3)",
-        borderTop: "1px solid var(--border-soft)", lineHeight: 1.4,
+        borderTop: "1px solid var(--border-soft)", lineHeight: 1.4, flexShrink: 0,
       }}>
-        Tap a marker for contact and directions. Local branches may be closer than the headquarters shown.
+        Tap a card or a marker for contact and directions. Local branches may be closer than the headquarters shown.
       </div>
+
+      <style>{`
+        @media (max-width: 700px) {
+          .inst-content { flex-direction: column; }
+          .inst-map    { min-height: 230px !important; }
+          .inst-cards  {
+            width: 100% !important;
+            border-left: none !important;
+            border-top: 1px solid var(--border-soft);
+            max-height: 46%;
+          }
+        }
+      `}</style>
     </div>
   );
 }
