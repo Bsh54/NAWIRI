@@ -2,7 +2,9 @@ import { buildSystemInstruction } from "../../../lib/context";
 
 export const runtime = "nodejs";
 
-const GEMINI_MODEL = "gemini-flash-latest";
+// Flash-Lite: no "thinking" tokens (faster, far lighter on the free quota)
+// while still giving complete, well-structured answers in FR/EN.
+const GEMINI_MODEL = "gemini-flash-lite-latest";
 const GEMINI_URL   = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent`;
 
 // Small helper: wait n ms.
@@ -21,8 +23,9 @@ export async function POST(request) {
   try {
     const apiKey = process.env.GEMINI_API_KEY;
     if (!apiKey) {
+      console.error("[chat] missing api key");
       return Response.json(
-        { error: "Server is missing GEMINI_API_KEY." },
+        { error: "I could not answer just now. Please wait a moment and try again." },
         { status: 500 }
       );
     }
@@ -55,66 +58,40 @@ export async function POST(request) {
       ],
     };
 
-    // Call Gemini, retrying once on transient errors (429 quota / 503 overload / 500).
+    // Call Gemini, retrying once only on genuine transient overload (500/503).
+    // We do NOT retry 429 (quota): retrying just burns more of the limit.
     let geminiRes = await callGemini(apiKey, geminiBody);
-    if ([429, 500, 503].includes(geminiRes.status)) {
+    if ([500, 503].includes(geminiRes.status)) {
       await wait(1200);
       geminiRes = await callGemini(apiKey, geminiBody);
     }
 
-    if (!geminiRes.ok) {
-      const detail = await geminiRes.text();
-      console.error("Gemini error:", geminiRes.status, detail);
+    // One soft, neutral message for every failure case. No technical detail
+    // is ever exposed to the user. Logs stay minimal (status code only).
+    const SOFT_ERROR =
+      "I could not answer just now. Please wait a moment and try again.";
 
-      // Give the user an actionable message depending on the real cause.
-      let msg = "The AI engine is temporarily unavailable. Please try again in a moment.";
-      if (geminiRes.status === 429) {
-        msg = "Too many requests right now (free quota reached). Please wait a minute and try again.";
-      } else if (geminiRes.status === 400) {
-        msg = "The request could not be processed. Please rephrase and try again.";
-      } else if (geminiRes.status === 403) {
-        msg = "The AI key is invalid or restricted. Please contact the team.";
-      }
-      return Response.json({ error: msg }, { status: 502 });
+    if (!geminiRes.ok) {
+      console.error("[chat] gemini status", geminiRes.status);
+      return Response.json({ error: SOFT_ERROR }, { status: 502 });
     }
 
     const data      = await geminiRes.json();
     const candidate = data?.candidates?.[0];
-
-    // If the prompt itself was blocked, surface a clear message.
-    const blockReason = data?.promptFeedback?.blockReason;
-    if (blockReason) {
-      console.error("Gemini prompt blocked:", blockReason);
-      return Response.json(
-        { error: "Your message could not be processed. Please rephrase it." },
-        { status: 502 }
-      );
-    }
-
-    const finish = candidate?.finishReason;
-    const reply  = candidate?.content?.parts?.map((p) => p.text || "").join("") || "";
-
-    // The model ran out of output budget before producing visible text.
-    if (!reply.trim() && finish === "MAX_TOKENS") {
-      console.error("Gemini hit MAX_TOKENS with empty text.");
-      return Response.json(
-        { error: "The answer was too long to generate. Please ask about one situation at a time." },
-        { status: 502 }
-      );
-    }
+    const reply     = candidate?.content?.parts?.map((p) => p.text || "").join("") || "";
 
     if (!reply.trim()) {
-      console.error("Gemini empty reply. finishReason:", finish);
-      return Response.json(
-        { error: "The AI returned an empty answer. Please rephrase." },
-        { status: 502 }
-      );
+      console.error("[chat] empty reply", candidate?.finishReason || "no_candidate");
+      return Response.json({ error: SOFT_ERROR }, { status: 502 });
     }
 
     return Response.json({ reply });
 
-  } catch (err) {
-    console.error("Chat route error:", err);
-    return Response.json({ error: "Unexpected server error." }, { status: 500 });
+  } catch {
+    console.error("[chat] server error");
+    return Response.json(
+      { error: "I could not answer just now. Please wait a moment and try again." },
+      { status: 500 }
+    );
   }
 }

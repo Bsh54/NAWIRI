@@ -79,10 +79,10 @@ function ChatApp() {
         body:    JSON.stringify({ messages: next }),
       });
       const data = await res.json();
-      if (!res.ok) setError(data.error || "Error.");
+      if (!res.ok) setError(data.error || "I could not answer just now. Please wait a moment and try again.");
       else setMessages([...next, { role: "assistant", content: data.reply }]);
     } catch {
-      setError("Connection problem. Please try again.");
+      setError("I could not answer just now. Please check your connection and try again.");
     } finally {
       setLoading(false);
     }
@@ -286,9 +286,11 @@ function ChatApp() {
 
             {error && (
               <div style={{
-                padding: "10px 14px",
-                background: "#FEF2F2", border: "1px solid #FECACA",
-                borderRadius: "var(--radius)", fontSize: 13, color: "#B91C1C",
+                alignSelf: "center", maxWidth: 380, textAlign: "center",
+                padding: "10px 16px", marginTop: 4,
+                background: "var(--bg-card)", border: "1px solid var(--border-soft)",
+                borderRadius: "var(--radius-lg)", fontSize: 13, color: "var(--text-3)",
+                lineHeight: 1.5,
               }}>
                 {error}
               </div>
