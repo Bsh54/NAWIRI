@@ -5,12 +5,13 @@ export const runtime = "nodejs";
 // Flash-Lite: no "thinking" tokens (faster, far lighter on the free quota)
 // while still giving complete, well-structured answers in FR/EN.
 const GEMINI_MODEL = "gemini-flash-lite-latest";
-const GEMINI_URL   = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent`;
+// Streaming endpoint (Server-Sent Events): the answer arrives token by token.
+const GEMINI_URL   = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:streamGenerateContent?alt=sse`;
 
-// Small helper: wait n ms.
-const wait = (ms) => new Promise((r) => setTimeout(r, ms));
+const SOFT_ERROR =
+  "I could not answer just now. Please wait a moment and try again.";
 
-// Calls Gemini once. Returns the raw fetch Response.
+// Calls Gemini once (streaming). Returns the raw fetch Response.
 async function callGemini(apiKey, geminiBody) {
   return fetch(GEMINI_URL, {
     method:  "POST",
@@ -58,34 +59,67 @@ export async function POST(request) {
       ],
     };
 
-    // Call Gemini, retrying once only on genuine transient overload (500/503).
-    // We do NOT retry 429 (quota): retrying just burns more of the limit.
-    let geminiRes = await callGemini(apiKey, geminiBody);
-    if ([500, 503].includes(geminiRes.status)) {
-      await wait(1200);
-      geminiRes = await callGemini(apiKey, geminiBody);
-    }
+    const geminiRes = await callGemini(apiKey, geminiBody);
 
-    // One soft, neutral message for every failure case. No technical detail
-    // is ever exposed to the user. Logs stay minimal (status code only).
-    const SOFT_ERROR =
-      "I could not answer just now. Please wait a moment and try again.";
-
-    if (!geminiRes.ok) {
+    // On a hard error we have not streamed anything yet, so we can still
+    // return a clean JSON soft-error (no technical detail leaks).
+    if (!geminiRes.ok || !geminiRes.body) {
       console.error("[chat] gemini status", geminiRes.status);
       return Response.json({ error: SOFT_ERROR }, { status: 502 });
     }
 
-    const data      = await geminiRes.json();
-    const candidate = data?.candidates?.[0];
-    const reply     = candidate?.content?.parts?.map((p) => p.text || "").join("") || "";
+    // Parse Gemini's SSE stream and forward only the plain text deltas.
+    const reader  = geminiRes.body.getReader();
+    const decoder = new TextDecoder();
+    const encoder = new TextEncoder();
+    let buffer = "";
+    let sentAny = false;
 
-    if (!reply.trim()) {
-      console.error("[chat] empty reply", candidate?.finishReason || "no_candidate");
-      return Response.json({ error: SOFT_ERROR }, { status: 502 });
-    }
+    const stream = new ReadableStream({
+      async start(controller) {
+        try {
+          while (true) {
+            const { done, value } = await reader.read();
+            if (done) break;
+            buffer += decoder.decode(value, { stream: true });
+            const lines = buffer.split("\n");
+            buffer = lines.pop(); // keep the last, possibly-incomplete line
+            for (const line of lines) {
+              const t = line.trim();
+              if (!t.startsWith("data:")) continue;
+              const json = t.slice(5).trim();
+              if (!json || json === "[DONE]") continue;
+              try {
+                const obj   = JSON.parse(json);
+                const parts = obj?.candidates?.[0]?.content?.parts || [];
+                for (const p of parts) {
+                  if (p.text) {
+                    controller.enqueue(encoder.encode(p.text));
+                    sentAny = true;
+                  }
+                }
+              } catch { /* ignore a malformed chunk */ }
+            }
+          }
+          if (!sentAny) {
+            console.error("[chat] empty stream");
+            controller.enqueue(encoder.encode(SOFT_ERROR));
+          }
+          controller.close();
+        } catch {
+          console.error("[chat] stream error");
+          if (!sentAny) controller.enqueue(encoder.encode(SOFT_ERROR));
+          controller.close();
+        }
+      },
+    });
 
-    return Response.json({ reply });
+    return new Response(stream, {
+      headers: {
+        "Content-Type":  "text/plain; charset=utf-8",
+        "Cache-Control": "no-cache, no-transform",
+      },
+    });
 
   } catch {
     console.error("[chat] server error");

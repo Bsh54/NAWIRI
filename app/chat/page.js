@@ -4,43 +4,63 @@ import { useState, useRef, useEffect, Suspense } from "react";
 import { useRouter } from "next/navigation";
 import InstitutionsMap from "./InstitutionsMap";
 
+// Parse inline markdown (**bold**, *italic*) into React nodes.
+function renderInline(content, keyBase) {
+  const parts = [];
+  const regex = /\*\*(.+?)\*\*|\*(.+?)\*/g;
+  let last = 0, match;
+  while ((match = regex.exec(content)) !== null) {
+    if (match.index > last) parts.push(content.slice(last, match.index));
+    if (match[1] !== undefined) {
+      parts.push(
+        <strong key={keyBase + "-" + match.index} style={{ fontWeight: 700, color: "inherit" }}>
+          {match[1]}
+        </strong>
+      );
+    } else {
+      parts.push(
+        <em key={keyBase + "-" + match.index} style={{ fontStyle: "italic" }}>
+          {match[2]}
+        </em>
+      );
+    }
+    last = match.index + match[0].length;
+  }
+  if (last < content.length) parts.push(content.slice(last));
+  return parts;
+}
+
 // Renders markdown-like text from Gemini:
-// **bold**, *italic*, lines starting with "- " or "▸ "
+// # headings, **bold**, *italic*, "- " / "* " / "▸ " bullets.
 function renderMessage(text) {
   const lines = text.split("\n");
   return lines.map((line, li) => {
-    // Detect bullet line
+    // Heading: #, ##, ### ...
+    const heading = line.match(/^\s*(#{1,6})\s+(.*)$/);
+    if (heading) {
+      const level = heading[1].length;
+      return (
+        <div key={li} style={{
+          fontFamily: "'Space Grotesk', sans-serif",
+          fontWeight: 700,
+          fontSize: level <= 2 ? 15 : 14,
+          color: "var(--text)",
+          marginTop: li === 0 ? 0 : 12, marginBottom: 2,
+        }}>
+          {renderInline(heading[2], li)}
+        </div>
+      );
+    }
+
+    // Bullet line
     const isBullet = /^(\s*[-*]|\s*▸)\s+/.test(line);
     const content  = isBullet ? line.replace(/^(\s*[-*▸])\s+/, "") : line;
-
-    // Parse inline bold (**text**) and italic (*text*)
-    const parts = [];
-    const regex = /\*\*(.+?)\*\*|\*(.+?)\*/g;
-    let last = 0, match;
-    while ((match = regex.exec(content)) !== null) {
-      if (match.index > last) parts.push(content.slice(last, match.index));
-      if (match[1] !== undefined) {
-        parts.push(
-          <strong key={match.index} style={{ fontWeight: 700, color: "inherit" }}>
-            {match[1]}
-          </strong>
-        );
-      } else {
-        parts.push(
-          <em key={match.index} style={{ fontStyle: "italic" }}>
-            {match[2]}
-          </em>
-        );
-      }
-      last = match.index + match[0].length;
-    }
-    if (last < content.length) parts.push(content.slice(last));
 
     if (isBullet) {
       return (
         <div key={li} style={{ display: "flex", gap: 8, alignItems: "flex-start", marginTop: li === 0 ? 0 : 4 }}>
           <span style={{ width: 5, height: 5, borderRadius: "50%", background: "var(--primary)", flexShrink: 0, marginTop: 8 }} />
-          <span>{parts}</span>
+          <span>{renderInline(content, li)}</span>
         </div>
       );
     }
@@ -48,7 +68,7 @@ function renderMessage(text) {
     // Empty line = spacer
     if (content.trim() === "") return <div key={li} style={{ height: 6 }} />;
 
-    return <div key={li} style={{ marginTop: li === 0 ? 0 : 2 }}>{parts}</div>;
+    return <div key={li} style={{ marginTop: li === 0 ? 0 : 2 }}>{renderInline(content, li)}</div>;
   });
 }
 
@@ -74,17 +94,45 @@ function ChatApp() {
     setError("");
     setLoading(true);
     try {
-      const res  = await fetch("/api/chat", {
+      const res = await fetch("/api/chat", {
         method:  "POST",
         headers: { "Content-Type": "application/json" },
         body:    JSON.stringify({ messages: next }),
       });
-      const data = await res.json();
-      if (!res.ok) setError(data.error || "I could not answer just now. Please wait a moment and try again.");
-      else setMessages([...next, { role: "assistant", content: data.reply }]);
+
+      // Hard failure: read the JSON soft-error, no streaming.
+      if (!res.ok || !res.body) {
+        const data = await res.json().catch(() => ({}));
+        setError(data.error || "I could not answer just now. Please wait a moment and try again.");
+        setLoading(false);
+        return;
+      }
+
+      // Stream the answer in, appending to a growing assistant bubble.
+      const reader  = res.body.getReader();
+      const decoder = new TextDecoder();
+      let acc = "";
+      let started = false;
+
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        acc += decoder.decode(value, { stream: true });
+        if (!started) {
+          started = true;
+          setLoading(false);
+          setMessages([...next, { role: "assistant", content: acc }]);
+        } else {
+          setMessages([...next, { role: "assistant", content: acc }]);
+        }
+      }
+      // Nothing came through at all.
+      if (!started) {
+        setError("I could not answer just now. Please wait a moment and try again.");
+        setLoading(false);
+      }
     } catch {
       setError("I could not answer just now. Please check your connection and try again.");
-    } finally {
       setLoading(false);
     }
   }
