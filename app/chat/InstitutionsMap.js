@@ -54,10 +54,19 @@ function popupHtml(inst) {
     </div>`;
 }
 
-export default function InstitutionsMap() {
+export default function InstitutionsMap({ open = true }) {
   const containerRef = useRef(null);
   const mapRef = useRef(null);
   const [active, setActive] = useState("benin");
+
+  // When the panel becomes visible, Leaflet must recompute its size,
+  // otherwise it renders grey (it was initialised while hidden / 0-width).
+  useEffect(() => {
+    if (open && mapRef.current) {
+      const t = setTimeout(() => mapRef.current.invalidateSize(), 320);
+      return () => clearTimeout(t);
+    }
+  }, [open]);
 
   useEffect(() => {
     let cancelled = false;

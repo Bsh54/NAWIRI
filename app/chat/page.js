@@ -78,6 +78,7 @@ function ChatApp() {
   const [input,    setInput]    = useState("");
   const [loading,  setLoading]  = useState(false);
   const [error,    setError]    = useState("");
+  const [mapOpen,  setMapOpen]  = useState(false);
   const endRef   = useRef(null);
   const inputRef = useRef(null);
 
@@ -166,15 +167,11 @@ function ChatApp() {
         </a>
 
         <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-          <span style={{ fontSize: 12, color: "var(--text-3)" }}>
-            Benin · Senegal · Ghana
-          </span>
           {messages.length > 0 && (
             <button
               onClick={() => { setMessages([]); setError(""); }}
               style={{
-                marginLeft: 8,
-                padding: "4px 12px", borderRadius: "var(--radius)",
+                padding: "5px 12px", borderRadius: "var(--radius)",
                 border: "1px solid var(--border)", background: "transparent",
                 fontSize: 12, fontWeight: 600, color: "var(--text-3)", cursor: "pointer",
               }}
@@ -182,42 +179,33 @@ function ChatApp() {
               New conversation
             </button>
           )}
+          <button
+            onClick={() => setMapOpen(true)}
+            style={{
+              display: "flex", alignItems: "center", gap: 6,
+              padding: "5px 14px", borderRadius: "var(--radius)",
+              border: "1px solid var(--primary)", background: "var(--primary-soft)",
+              fontFamily: "'Space Grotesk', sans-serif",
+              fontSize: 12, fontWeight: 600, color: "var(--primary)", cursor: "pointer",
+            }}
+          >
+            <span style={{ fontSize: 14, lineHeight: 1 }}>◎</span>
+            Institutions
+          </button>
         </div>
       </header>
 
-      {/* BODY: map + chat */}
+      {/* BODY: chat full width (map lives in a toggleable panel) */}
       <div style={{ flex: 1, display: "flex", overflow: "hidden" }}>
 
-        {/* LEFT: interactive map of the official institutions */}
-        <div style={{
-          width: 300, flexShrink: 0,
-          borderRight: "1px solid var(--border-soft)",
-          background: "var(--bg-card)",
-          display: "flex", flexDirection: "column",
-          overflow: "hidden",
-        }}
-          className="map-panel"
-        >
-          <div style={{
-            padding: "10px 14px", borderBottom: "1px solid var(--border-soft)",
-            fontFamily: "'Space Grotesk', sans-serif", fontWeight: 600,
-            fontSize: 12, color: "var(--text-3)",
-            letterSpacing: "0.06em", textTransform: "uppercase",
-          }}>
-            Official institutions
-          </div>
-          <div style={{ flex: 1, minHeight: 0 }}>
-            <InstitutionsMap />
-          </div>
-        </div>
-
-        {/* RIGHT: chat */}
+        {/* Chat */}
         <div style={{ flex: 1, display: "flex", flexDirection: "column", overflow: "hidden" }}>
 
           {/* Messages */}
           <div style={{
-            flex: 1, overflowY: "auto", padding: "24px 32px",
+            flex: 1, overflowY: "auto", padding: "24px 16px",
             display: "flex", flexDirection: "column", gap: 16,
+            width: "100%", maxWidth: 820, margin: "0 auto",
           }}>
 
             {messages.length === 0 && (
@@ -341,10 +329,11 @@ function ChatApp() {
 
           {/* Input bar */}
           <div style={{
-            padding: "14px 24px",
+            padding: "14px 16px",
             borderTop: "1px solid var(--border-soft)",
             background: "var(--bg-card)", flexShrink: 0,
           }}>
+            <div style={{ width: "100%", maxWidth: 820, margin: "0 auto" }}>
             <div style={{ display: "flex", gap: 10, alignItems: "flex-end" }}>
               <textarea
                 ref={inputRef}
@@ -385,17 +374,71 @@ function ChatApp() {
             <p style={{ fontSize: 11, color: "var(--text-3)", marginTop: 8, textAlign: "center" }}>
               NAWIRI guides you. Always verify with the official body before any step.
             </p>
+            </div>
           </div>
         </div>
       </div>
+
+      {/* INSTITUTIONS PANEL (slide-in on desktop, full-screen on mobile) */}
+      {/* Backdrop */}
+      <div
+        onClick={() => setMapOpen(false)}
+        style={{
+          position: "fixed", inset: 0, zIndex: 100,
+          background: "rgba(26,26,26,0.35)",
+          opacity: mapOpen ? 1 : 0,
+          pointerEvents: mapOpen ? "auto" : "none",
+          transition: "opacity 0.25s",
+        }}
+      />
+      {/* Panel */}
+      <aside
+        className="inst-panel"
+        style={{
+          position: "fixed", top: 0, right: 0, height: "100%", zIndex: 101,
+          background: "var(--bg-card)",
+          display: "flex", flexDirection: "column",
+          boxShadow: "-8px 0 32px rgba(0,0,0,0.18)",
+          transform: mapOpen ? "translateX(0)" : "translateX(100%)",
+          transition: "transform 0.3s ease",
+        }}
+      >
+        <div style={{
+          display: "flex", alignItems: "center", justifyContent: "space-between",
+          padding: "12px 16px", borderBottom: "1px solid var(--border-soft)", flexShrink: 0,
+        }}>
+          <span style={{
+            fontFamily: "'Space Grotesk', sans-serif", fontWeight: 700,
+            fontSize: 14, color: "var(--text)",
+          }}>
+            Official institutions
+          </span>
+          <button
+            onClick={() => setMapOpen(false)}
+            aria-label="Close"
+            style={{
+              width: 30, height: 30, borderRadius: "var(--radius)",
+              border: "1px solid var(--border)", background: "transparent",
+              fontSize: 16, color: "var(--text-2)", cursor: "pointer",
+              display: "flex", alignItems: "center", justifyContent: "center",
+            }}
+          >
+            ✕
+          </button>
+        </div>
+        <div style={{ flex: 1, minHeight: 0 }}>
+          <InstitutionsMap open={mapOpen} />
+        </div>
+      </aside>
 
       <style>{`
         @keyframes dot-bounce {
           0%, 80%, 100% { transform: translateY(0);    opacity: 0.4; }
           40%            { transform: translateY(-5px); opacity: 1;   }
         }
-        @media (max-width: 768px) {
-          .map-panel { display: none !important; }
+        .inst-panel { width: 420px; max-width: 100%; }
+        @media (max-width: 640px) {
+          .inst-panel { width: 100%; }
         }
       `}</style>
     </div>
