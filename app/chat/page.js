@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect, Suspense } from "react";
 import { useRouter } from "next/navigation";
+import InstitutionsMap from "./InstitutionsMap";
 
 // Renders markdown-like text from Gemini:
 // **bold**, *italic*, lines starting with "- " or "▸ "
@@ -139,7 +140,7 @@ function ChatApp() {
       {/* BODY: map + chat */}
       <div style={{ flex: 1, display: "flex", overflow: "hidden" }}>
 
-        {/* LEFT: map placeholder showing all 3 countries */}
+        {/* LEFT: interactive map of the official institutions */}
         <div style={{
           width: 300, flexShrink: 0,
           borderRight: "1px solid var(--border-soft)",
@@ -155,19 +156,10 @@ function ChatApp() {
             fontSize: 12, color: "var(--text-3)",
             letterSpacing: "0.06em", textTransform: "uppercase",
           }}>
-            West Africa
+            Official institutions
           </div>
-          <iframe
-            src="https://www.openstreetmap.org/export/embed.html?bbox=-18.0%2C4.0%2C4.0%2C17.0&layer=mapnik"
-            title="West Africa map"
-            style={{ flex: 1, border: "none", width: "100%" }}
-            loading="lazy"
-          />
-          <div style={{
-            padding: "6px 12px", fontSize: 10, color: "var(--text-3)",
-            borderTop: "1px solid var(--border-soft)",
-          }}>
-            OpenStreetMap contributors
+          <div style={{ flex: 1, minHeight: 0 }}>
+            <InstitutionsMap />
           </div>
         </div>
 
