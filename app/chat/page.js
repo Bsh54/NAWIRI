@@ -201,11 +201,11 @@ function ChatApp() {
         {/* Chat */}
         <div style={{ flex: 1, display: "flex", flexDirection: "column", overflow: "hidden" }}>
 
-          {/* Messages */}
+          {/* Messages (scroll area is full width; content is centered) */}
+          <div style={{ flex: 1, overflowY: "auto", padding: "24px 16px" }}>
           <div style={{
-            flex: 1, overflowY: "auto", padding: "24px 16px",
+            width: "100%", maxWidth: 820, margin: "0 auto", minHeight: "100%",
             display: "flex", flexDirection: "column", gap: 16,
-            width: "100%", maxWidth: 820, margin: "0 auto",
           }}>
 
             {messages.length === 0 && (
@@ -325,6 +325,7 @@ function ChatApp() {
             )}
 
             <div ref={endRef} />
+          </div>
           </div>
 
           {/* Input bar */}
