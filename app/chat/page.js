@@ -78,7 +78,7 @@ function ChatApp() {
   const [input,    setInput]    = useState("");
   const [loading,  setLoading]  = useState(false);
   const [error,    setError]    = useState("");
-  const [mapOpen,  setMapOpen]  = useState(false);
+  const [tab,      setTab]      = useState("chat"); // "chat" | "map"
   const endRef   = useRef(null);
   const inputRef = useRef(null);
 
@@ -151,55 +151,62 @@ function ChatApp() {
   return (
     <div style={{ display: "flex", flexDirection: "column", height: "100vh", overflow: "hidden", background: "var(--bg)" }}>
 
-      {/* TOP BAR */}
+      {/* TOP BAR — logo left, Facebook-style icon tabs centered, action right */}
       <header style={{
         display: "flex", alignItems: "center", justifyContent: "space-between",
-        padding: "0 24px", height: 54, flexShrink: 0,
+        padding: "0 16px", height: 56, flexShrink: 0,
         background: "var(--bg-card)",
         borderBottom: "1px solid var(--border-soft)",
       }}>
-        <a href="/" style={{
+        <a href="/" className="brand-text" style={{
           fontFamily: "'Space Grotesk', sans-serif", fontWeight: 700,
           fontSize: 17, color: "var(--text)", letterSpacing: "-0.5px",
-          textDecoration: "none",
+          textDecoration: "none", flex: 1,
         }}>
           NAWIRI
         </a>
 
-        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-          {messages.length > 0 && (
+        {/* Center icon tabs */}
+        <nav style={{ display: "flex", gap: 6, alignItems: "stretch", height: "100%" }}>
+          <TabButton
+            active={tab === "chat"}
+            onClick={() => setTab("chat")}
+            label="Conversation"
+            icon={<ChatIcon />}
+          />
+          <TabButton
+            active={tab === "map"}
+            onClick={() => setTab("map")}
+            label="Institutions"
+            icon={<MapIcon />}
+          />
+        </nav>
+
+        <div style={{ flex: 1, display: "flex", justifyContent: "flex-end" }}>
+          {tab === "chat" && messages.length > 0 && (
             <button
               onClick={() => { setMessages([]); setError(""); }}
               style={{
                 padding: "5px 12px", borderRadius: "var(--radius)",
                 border: "1px solid var(--border)", background: "transparent",
                 fontSize: 12, fontWeight: 600, color: "var(--text-3)", cursor: "pointer",
+                whiteSpace: "nowrap",
               }}
             >
-              New conversation
+              New chat
             </button>
           )}
-          <button
-            onClick={() => setMapOpen(true)}
-            style={{
-              display: "flex", alignItems: "center", gap: 6,
-              padding: "5px 14px", borderRadius: "var(--radius)",
-              border: "1px solid var(--primary)", background: "var(--primary-soft)",
-              fontFamily: "'Space Grotesk', sans-serif",
-              fontSize: 12, fontWeight: 600, color: "var(--primary)", cursor: "pointer",
-            }}
-          >
-            <span style={{ fontSize: 14, lineHeight: 1 }}>◎</span>
-            Institutions
-          </button>
         </div>
       </header>
 
-      {/* BODY: chat full width (map lives in a toggleable panel) */}
+      {/* BODY: two full-page views toggled by the tabs (both stay mounted) */}
       <div style={{ flex: 1, display: "flex", overflow: "hidden" }}>
 
-        {/* Chat */}
-        <div style={{ flex: 1, display: "flex", flexDirection: "column", overflow: "hidden" }}>
+        {/* Chat view */}
+        <div style={{
+          flex: 1, flexDirection: "column", overflow: "hidden",
+          display: tab === "chat" ? "flex" : "none",
+        }}>
 
           {/* Messages (scroll area is full width; content is centered) */}
           <div style={{ flex: 1, overflowY: "auto", padding: "24px 16px" }}>
@@ -256,58 +263,42 @@ function ChatApp() {
 
             {messages.map((m, i) => (
               <div key={i} style={{
-                display: "flex",
-                justifyContent: m.role === "user" ? "flex-end" : "flex-start",
-                gap: 10, alignItems: "flex-start",
+                display: "flex", gap: 12, alignItems: "flex-start", width: "100%",
               }}>
-                {m.role === "assistant" && (
+                <Avatar role={m.role} />
+                <div style={{ flex: 1, minWidth: 0, paddingTop: 5 }}>
                   <div style={{
-                    width: 30, height: 30, borderRadius: "50%", flexShrink: 0,
-                    background: "var(--primary-soft)",
-                    border: "1.5px solid #F6AB99",
-                    display: "flex", alignItems: "center", justifyContent: "center",
                     fontFamily: "'Space Grotesk', sans-serif", fontWeight: 700,
-                    fontSize: 13, color: "var(--primary)", marginTop: 2,
-                  }}>N</div>
-                )}
-                <div style={{
-                  maxWidth: "76%",
-                  padding: "11px 15px",
-                  borderRadius: m.role === "user" ? "14px 14px 4px 14px" : "14px 14px 14px 4px",
-                  background: m.role === "user" ? "var(--primary)" : "var(--bg-card)",
-                  color: m.role === "user" ? "#FFF" : "var(--text)",
-                  fontSize: 14, lineHeight: 1.65,
-                  border: m.role === "assistant" ? "1px solid var(--border-soft)" : "none",
-                  boxShadow: m.role === "assistant" ? "0 1px 4px rgba(0,0,0,0.05)" : "none",
-                }}>
-                  {m.role === "user" ? m.content : renderMessage(m.content)}
+                    fontSize: 13, color: "var(--text)", marginBottom: 3,
+                  }}>
+                    {m.role === "user" ? "You" : "NAWIRI"}
+                  </div>
+                  <div style={{ fontSize: 14, lineHeight: 1.65, color: "var(--text)" }}>
+                    {m.role === "user" ? m.content : renderMessage(m.content)}
+                  </div>
                 </div>
               </div>
             ))}
 
             {loading && (
-              <div style={{ display: "flex", gap: 10, alignItems: "center" }}>
-                <div style={{
-                  width: 30, height: 30, borderRadius: "50%",
-                  background: "var(--primary-soft)", border: "1.5px solid #F6AB99",
-                  display: "flex", alignItems: "center", justifyContent: "center",
-                  fontFamily: "'Space Grotesk', sans-serif", fontWeight: 700,
-                  fontSize: 13, color: "var(--primary)",
-                }}>N</div>
-                <div style={{
-                  padding: "11px 16px",
-                  background: "var(--bg-card)",
-                  border: "1px solid var(--border-soft)",
-                  borderRadius: "14px 14px 14px 4px",
-                  display: "flex", gap: 5, alignItems: "center",
-                }}>
-                  {[0, 1, 2].map(i => (
-                    <span key={i} style={{
-                      width: 6, height: 6, borderRadius: "50%",
-                      background: "var(--text-3)", display: "inline-block",
-                      animation: `dot-bounce 1.2s ease-in-out ${i * 0.2}s infinite`,
-                    }} />
-                  ))}
+              <div style={{ display: "flex", gap: 12, alignItems: "flex-start", width: "100%" }}>
+                <Avatar role="assistant" />
+                <div style={{ flex: 1, paddingTop: 5 }}>
+                  <div style={{
+                    fontFamily: "'Space Grotesk', sans-serif", fontWeight: 700,
+                    fontSize: 13, color: "var(--text)", marginBottom: 6,
+                  }}>
+                    NAWIRI
+                  </div>
+                  <div style={{ display: "flex", gap: 5, alignItems: "center", height: 16 }}>
+                    {[0, 1, 2].map(i => (
+                      <span key={i} style={{
+                        width: 6, height: 6, borderRadius: "50%",
+                        background: "var(--text-3)", display: "inline-block",
+                        animation: `dot-bounce 1.2s ease-in-out ${i * 0.2}s infinite`,
+                      }} />
+                    ))}
+                  </div>
                 </div>
               </div>
             )}
@@ -378,71 +369,102 @@ function ChatApp() {
             </div>
           </div>
         </div>
-      </div>
 
-      {/* INSTITUTIONS PANEL (slide-in on desktop, full-screen on mobile) */}
-      {/* Backdrop */}
-      <div
-        onClick={() => setMapOpen(false)}
-        style={{
-          position: "fixed", inset: 0, zIndex: 100,
-          background: "rgba(26,26,26,0.35)",
-          opacity: mapOpen ? 1 : 0,
-          pointerEvents: mapOpen ? "auto" : "none",
-          transition: "opacity 0.25s",
-        }}
-      />
-      {/* Panel */}
-      <aside
-        className="inst-panel"
-        style={{
-          position: "fixed", top: 0, right: 0, height: "100%", zIndex: 101,
-          background: "var(--bg-card)",
-          display: "flex", flexDirection: "column",
-          boxShadow: "-8px 0 32px rgba(0,0,0,0.18)",
-          transform: mapOpen ? "translateX(0)" : "translateX(100%)",
-          transition: "transform 0.3s ease",
-        }}
-      >
+        {/* Map view (full page) */}
         <div style={{
-          display: "flex", alignItems: "center", justifyContent: "space-between",
-          padding: "12px 16px", borderBottom: "1px solid var(--border-soft)", flexShrink: 0,
+          flex: 1, minHeight: 0,
+          display: tab === "map" ? "block" : "none",
         }}>
-          <span style={{
-            fontFamily: "'Space Grotesk', sans-serif", fontWeight: 700,
-            fontSize: 14, color: "var(--text)",
-          }}>
-            Official institutions
-          </span>
-          <button
-            onClick={() => setMapOpen(false)}
-            aria-label="Close"
-            style={{
-              width: 30, height: 30, borderRadius: "var(--radius)",
-              border: "1px solid var(--border)", background: "transparent",
-              fontSize: 16, color: "var(--text-2)", cursor: "pointer",
-              display: "flex", alignItems: "center", justifyContent: "center",
-            }}
-          >
-            ✕
-          </button>
+          <InstitutionsMap open={tab === "map"} />
         </div>
-        <div style={{ flex: 1, minHeight: 0 }}>
-          <InstitutionsMap open={mapOpen} />
-        </div>
-      </aside>
+      </div>
 
       <style>{`
         @keyframes dot-bounce {
           0%, 80%, 100% { transform: translateY(0);    opacity: 0.4; }
           40%            { transform: translateY(-5px); opacity: 1;   }
         }
-        .inst-panel { width: 420px; max-width: 100%; }
-        @media (max-width: 640px) {
-          .inst-panel { width: 100%; }
+        @media (max-width: 520px) {
+          .brand-text { font-size: 0 !important; }
+          .tab-label  { display: none !important; }
         }
       `}</style>
     </div>
+  );
+}
+
+// ---- Facebook-style icon tab ----
+function TabButton({ active, onClick, label, icon }) {
+  return (
+    <button
+      onClick={onClick}
+      title={label}
+      style={{
+        display: "flex", alignItems: "center", gap: 8,
+        padding: "0 22px", height: "100%", minWidth: 90,
+        justifyContent: "center", cursor: "pointer",
+        background: "transparent", border: "none",
+        borderBottom: "3px solid " + (active ? "var(--primary)" : "transparent"),
+        color: active ? "var(--primary)" : "var(--text-3)",
+        fontFamily: "'Space Grotesk', sans-serif", fontWeight: 600, fontSize: 13,
+        transition: "color 0.15s, border-color 0.15s",
+      }}
+      onMouseEnter={e => { if (!active) e.currentTarget.style.color = "var(--text-2)"; }}
+      onMouseLeave={e => { if (!active) e.currentTarget.style.color = "var(--text-3)"; }}
+    >
+      {icon}
+      <span className="tab-label">{label}</span>
+    </button>
+  );
+}
+
+// ---- Circular app-style avatars (both participants) ----
+function Avatar({ role }) {
+  if (role === "user") {
+    return (
+      <div style={{
+        width: 34, height: 34, borderRadius: "50%", flexShrink: 0,
+        background: "var(--sage, #4A7C59)",
+        display: "flex", alignItems: "center", justifyContent: "center",
+        boxShadow: "0 1px 4px rgba(0,0,0,0.12)",
+        color: "#fff",
+      }}>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+             stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+          <circle cx="12" cy="8" r="4" />
+          <path d="M4 20c0-4 3.5-6 8-6s8 2 8 6" />
+        </svg>
+      </div>
+    );
+  }
+  return (
+    <div style={{
+      width: 34, height: 34, borderRadius: "50%", flexShrink: 0,
+      background: "var(--primary)",
+      display: "flex", alignItems: "center", justifyContent: "center",
+      boxShadow: "0 1px 4px rgba(0,0,0,0.12)",
+      fontFamily: "'Space Grotesk', sans-serif", fontWeight: 700,
+      fontSize: 15, color: "#fff",
+    }}>N</div>
+  );
+}
+
+// ---- Tab icons ----
+function ChatIcon() {
+  return (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
+         stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+    </svg>
+  );
+}
+function MapIcon() {
+  return (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
+         stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+      <circle cx="12" cy="10" r="3" />
+    </svg>
   );
 }
 
