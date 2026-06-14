@@ -1,0 +1,17 @@
+{
+  "name": "nawiri",
+  "version": "0.1.0",
+  "private": true,
+  "description": "NAWIRI — assistant conversationnel d'orientation vers l'aide publique en Afrique de l'Ouest (Bénin, Sénégal, Ghana).",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "next": "14.2.5",
+    "react": "18.3.1",
+    "react-dom": "18.3.1"
+  }
+}
