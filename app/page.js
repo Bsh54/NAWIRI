@@ -114,8 +114,8 @@ export default function Landing() {
           NAWIRI
         </span>
 
-        <div style={{ display: "flex", alignItems: "center", gap: 24 }}>
-          <span style={{ fontSize: 13, color: "var(--text-3)", letterSpacing: "0.2px" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+          <span style={{ fontSize: 13, color: "var(--text-3)", letterSpacing: "0.2px", marginRight: 8 }}>
             {t.nav_countries}
           </span>
           <button
@@ -131,6 +131,25 @@ export default function Landing() {
           >
             {uiLang === "en" ? "FR" : "EN"}
           </button>
+          <a href="/auth/login" style={{
+            padding: "5px 14px", borderRadius: "var(--radius)",
+            border: "1px solid var(--border)", background: "var(--bg-card)",
+            fontSize: 13, fontWeight: 600, color: "var(--text-2)",
+            textDecoration: "none", transition: "border-color 0.15s",
+          }}
+            onMouseEnter={e => e.currentTarget.style.borderColor = "var(--text-2)"}
+            onMouseLeave={e => e.currentTarget.style.borderColor = "var(--border)"}
+          >
+            Sign in
+          </a>
+          <a href="/auth/register" style={{
+            padding: "5px 16px", borderRadius: "var(--radius)",
+            background: "var(--primary)", color: "#FFF",
+            fontSize: 13, fontWeight: 600, textDecoration: "none",
+            border: "1px solid transparent",
+          }}>
+            Get started
+          </a>
         </div>
       </nav>
 
