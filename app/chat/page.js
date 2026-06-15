@@ -1,19 +1,29 @@
 "use client";
 
 import { useState, useRef, useEffect, Suspense } from "react";
-import { useRouter } from "next/navigation";
 import InstitutionsMap from "./InstitutionsMap";
 
 const SOFT_ERROR = "I could not answer just now. Please wait a moment and try again.";
 
-const LOCAL_LANGS = {
-  fon: { label: "Fon",   flag: "🇧🇯" },
-  wo:  { label: "Wolof", flag: "🇸🇳" },
-  tw:  { label: "Twi",   flag: "🇬🇭" },
+// Language configuration — native name is what's displayed in the picker
+const LANG_CONFIG = {
+  en:  { native: "English",  label: "English",  flag: "",   sub: "",         local: false },
+  fr:  { native: "Français", label: "Français", flag: "",   sub: "",         local: false },
+  fon: { native: "Fɔngbe",   label: "Fon",      flag: "🇧🇯", sub: "Bénin",   local: true  },
+  wo:  { native: "Wolof",    label: "Wolof",     flag: "🇸🇳", sub: "Sénégal", local: true  },
+  tw:  { native: "Twi",      label: "Twi",       flag: "🇬🇭", sub: "Ghana",   local: true  },
 };
 
-// Parse inline markdown (**bold**, *italic*) and [[MAP:id|label]] map links
-// into React nodes. `onMap(id)` is called when a map link is clicked.
+const PLACEHOLDERS = {
+  en:  "Describe your situation in English...",
+  fr:  "Décrivez votre situation en français...",
+  fon: "Wlan nǔ e ɖo wɛ ɖo Fɔngbe...",
+  wo:  "Bind sa dëkk bi ci Wolof...",
+  tw:  "Ka wo ho asɛm wɔ Twi mu...",
+};
+
+// ─── Markdown / MAP-link renderer ──────────────────────────────────────────────
+
 function renderInline(content, keyBase, onMap) {
   const parts = [];
   const regex = /\[\[MAP:([^\]|]+)\|([^\]]+)\]\]|\*\*(.+?)\*\*|\*(.+?)\*/g;
@@ -21,7 +31,7 @@ function renderInline(content, keyBase, onMap) {
   while ((match = regex.exec(content)) !== null) {
     if (match.index > last) parts.push(content.slice(last, match.index));
     if (match[1] !== undefined) {
-      const id = match[1].trim();
+      const id    = match[1].trim();
       const label = match[2].trim();
       parts.push(
         <button
@@ -49,17 +59,9 @@ function renderInline(content, keyBase, onMap) {
         </button>
       );
     } else if (match[3] !== undefined) {
-      parts.push(
-        <strong key={keyBase + "-" + match.index} style={{ fontWeight: 700, color: "inherit" }}>
-          {match[3]}
-        </strong>
-      );
+      parts.push(<strong key={keyBase + "-" + match.index} style={{ fontWeight: 700 }}>{match[3]}</strong>);
     } else {
-      parts.push(
-        <em key={keyBase + "-" + match.index} style={{ fontStyle: "italic" }}>
-          {match[4]}
-        </em>
-      );
+      parts.push(<em key={keyBase + "-" + match.index} style={{ fontStyle: "italic" }}>{match[4]}</em>);
     }
     last = match.index + match[0].length;
   }
@@ -67,17 +69,14 @@ function renderInline(content, keyBase, onMap) {
   return parts;
 }
 
-// Renders markdown-like text: # headings, **bold**, *italic*, bullet lists.
 function renderMessage(text, onMap) {
-  const lines = text.split("\n");
-  return lines.map((line, li) => {
+  return text.split("\n").map((line, li) => {
     const heading = line.match(/^\s*(#{1,6})\s+(.*)$/);
     if (heading) {
-      const level = heading[1].length;
       return (
         <div key={li} style={{
           fontFamily: "'Space Grotesk', sans-serif", fontWeight: 700,
-          fontSize: level <= 2 ? 15 : 14, color: "var(--text)",
+          fontSize: heading[1].length <= 2 ? 15 : 14, color: "var(--text)",
           marginTop: li === 0 ? 0 : 12, marginBottom: 2,
         }}>
           {renderInline(heading[2], li, onMap)}
@@ -99,8 +98,139 @@ function renderMessage(text, onMap) {
   });
 }
 
+// ─── Language picker popup ──────────────────────────────────────────────────────
+
+function LangCard({ code, onSelect }) {
+  const [hover, setHover] = useState(false);
+  const cfg = LANG_CONFIG[code];
+  return (
+    <button
+      onClick={() => onSelect(code)}
+      onMouseEnter={() => setHover(true)}
+      onMouseLeave={() => setHover(false)}
+      style={{
+        flex: 1, padding: cfg.flag ? "18px 10px" : "16px 12px",
+        borderRadius: 14, textAlign: "center", cursor: "pointer",
+        border: "2px solid " + (hover ? "var(--primary)" : "var(--border-soft)"),
+        background: hover ? "var(--primary-soft)" : "var(--bg)",
+        transition: "all 0.15s",
+      }}
+    >
+      {cfg.flag && <div style={{ fontSize: 26, marginBottom: 8 }}>{cfg.flag}</div>}
+      <div style={{
+        fontFamily: "'Space Grotesk', sans-serif", fontWeight: 700,
+        fontSize: cfg.flag ? 16 : 17, color: "var(--text)", lineHeight: 1.2,
+      }}>
+        {cfg.native}
+      </div>
+      {cfg.sub && (
+        <div style={{ fontSize: 11, color: "var(--text-3)", marginTop: 4 }}>{cfg.sub}</div>
+      )}
+    </button>
+  );
+}
+
+function LanguagePicker({ onSelect }) {
+  return (
+    <div style={{
+      position: "fixed", inset: 0, zIndex: 200,
+      background: "rgba(15,12,8,0.65)", backdropFilter: "blur(6px)",
+      display: "flex", alignItems: "center", justifyContent: "center",
+      padding: 24,
+    }}>
+      <div style={{
+        background: "var(--bg-card)", borderRadius: 22,
+        border: "1px solid var(--border-soft)",
+        boxShadow: "0 24px 64px rgba(0,0,0,0.22)",
+        width: "100%", maxWidth: 440, overflow: "hidden",
+      }}>
+        {/* Header */}
+        <div style={{ padding: "32px 28px 24px", textAlign: "center" }}>
+          <div style={{
+            fontFamily: "'Space Grotesk', sans-serif", fontWeight: 800,
+            fontSize: 26, color: "var(--primary)", letterSpacing: "-0.5px", marginBottom: 10,
+          }}>
+            NAWIRI
+          </div>
+          <p style={{ fontSize: 15, fontWeight: 600, color: "var(--text)", marginBottom: 4 }}>
+            Choose your language
+          </p>
+          <p style={{ fontSize: 13, color: "var(--text-3)" }}>
+            Choisissez votre langue
+          </p>
+        </div>
+
+        {/* EN / FR */}
+        <div style={{ padding: "0 24px", display: "flex", gap: 12 }}>
+          <LangCard code="en" onSelect={onSelect} />
+          <LangCard code="fr" onSelect={onSelect} />
+        </div>
+
+        {/* Divider */}
+        <div style={{ margin: "22px 24px 14px", display: "flex", alignItems: "center", gap: 10 }}>
+          <div style={{ flex: 1, height: 1, background: "var(--border-soft)" }} />
+          <span style={{
+            fontSize: 10, fontWeight: 700, color: "var(--text-3)",
+            textTransform: "uppercase", letterSpacing: "0.1em", whiteSpace: "nowrap",
+          }}>
+            Langues africaines
+          </span>
+          <div style={{ flex: 1, height: 1, background: "var(--border-soft)" }} />
+        </div>
+
+        {/* African languages */}
+        <div style={{ padding: "0 24px 28px", display: "flex", gap: 12 }}>
+          <LangCard code="fon" onSelect={onSelect} />
+          <LangCard code="wo"  onSelect={onSelect} />
+          <LangCard code="tw"  onSelect={onSelect} />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ─── Translation helper ─────────────────────────────────────────────────────────
+
+// Translates text via /api/translate.
+// [[MAP:id|label]] tokens: the label is embedded inline so it gets translated too,
+// then reassembled around the preserved id.
+async function translateText(text, src, tgt) {
+  // Extract MAP tokens: [[MAP:id|label]] → "label §n§"
+  const mapIds = [];
+  const prepared = text.replace(/\[\[MAP:([^\]|]+)\|([^\]]+)\]\]/g, (_, id, label) => {
+    const n = mapIds.length;
+    mapIds.push(id);
+    return `${label} §${n}§`;
+  });
+
+  try {
+    const res = await fetch("/api/translate", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ text: prepared, src, tgt }),
+    });
+    if (!res.ok) return null;
+    const data = await res.json();
+    let result = data.result || null;
+    if (!result) return null;
+
+    // Restore: "translated label §n§" → [[MAP:id|translated label]]
+    if (mapIds.length > 0) {
+      result = result.replace(/([^§\n]+?)\s*§(\d+)§/g, (_, label, n) => {
+        const id = mapIds[+n];
+        return id ? `[[MAP:${id}|${label.trim()}]]` : label;
+      });
+    }
+
+    return result;
+  } catch {
+    return null;
+  }
+}
+
+// ─── Main chat component ────────────────────────────────────────────────────────
+
 function ChatApp() {
-  const router = useRouter();
   const [messages,    setMessages]    = useState([]);
   const [input,       setInput]       = useState("");
   const [loading,     setLoading]     = useState(false);
@@ -108,14 +238,17 @@ function ChatApp() {
   const [error,       setError]       = useState("");
   const [tab,         setTab]         = useState("chat");
   const [mapTarget,   setMapTarget]   = useState(null);
-  const [localLang,   setLocalLang]   = useState(null); // null | "fon" | "wo" | "tw"
+  const [chosenLang,  setChosenLang]  = useState(null); // null = picker visible
+  const [showPicker,  setShowPicker]  = useState(false);
 
-  // Keeps a clean FR version of the conversation for Gemini.
-  // Display messages may be in a local language; the AI always gets French.
+  // Clean English/French conversation history sent to Gemini.
+  // For local langs: always English. For EN/FR: same as display.
   const aiHistoryRef = useRef([]);
 
   const endRef   = useRef(null);
   const inputRef = useRef(null);
+
+  const isLocalLang = chosenLang && LANG_CONFIG[chosenLang]?.local;
 
   function openMapAt(id) {
     setMapTarget({ id, key: Date.now() });
@@ -126,53 +259,42 @@ function ChatApp() {
     endRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages, loading, translating]);
 
-  // Calls /api/translate. Preserves [[MAP:...]] tokens around the translation.
-  async function translateText(text, src, tgt) {
-    const tokens = [];
-    const clean = text.replace(/\[\[MAP:[^\]]+\]\]/g, (m) => {
-      tokens.push(m);
-      return `__MAP_${tokens.length - 1}__`;
-    });
-    try {
-      const res = await fetch("/api/translate", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ text: clean, src, tgt }),
-      });
-      if (!res.ok) return null;
-      const data = await res.json();
-      let result = data.result || null;
-      if (!result) return null;
-      // Restore [[MAP:...]] tokens
-      result = result.replace(/__MAP_(\d+)__/g, (_, i) => tokens[+i] ?? "");
-      return result;
-    } catch {
-      return null;
-    }
+  function selectLang(code) {
+    setChosenLang(code);
+    setShowPicker(false);
+    inputRef.current?.focus();
+  }
+
+  function newChat() {
+    setMessages([]);
+    setError("");
+    setInput("");
+    aiHistoryRef.current = [];
+    setChosenLang(null);
+    setShowPicker(false);
   }
 
   async function send() {
     const text = input.trim();
-    if (!text || loading || translating) return;
+    if (!text || loading || translating || !chosenLang) return;
 
-    const userMsg    = { role: "user", content: text };
-    const newDisplay = [...messages, userMsg];
+    const newDisplay = [...messages, { role: "user", content: text }];
     setMessages(newDisplay);
     setInput("");
     setError("");
     setLoading(true);
 
     try {
-      // Translate user input to French if a local language is selected.
-      // source_lang = "auto" so that if the user accidentally typed in French, it still works.
+      // 1. For local languages: translate user input → English for Gemini
       let aiText = text;
-      if (localLang) {
-        const xlated = await translateText(text, "auto", "fr");
+      if (isLocalLang) {
+        const xlated = await translateText(text, "auto", "en");
         if (xlated) aiText = xlated;
       }
 
       const newAiHistory = [...aiHistoryRef.current, { role: "user", content: aiText }];
 
+      // 2. Call Gemini
       const res = await fetch("/api/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -186,6 +308,7 @@ function ChatApp() {
         return;
       }
 
+      // 3. Stream English (or FR) response live
       const reader  = res.body.getReader();
       const decoder = new TextDecoder();
       let acc = "";
@@ -199,7 +322,6 @@ function ChatApp() {
           started = true;
           setLoading(false);
         }
-        // Stream the French response live
         setMessages([...newDisplay, { role: "assistant", content: acc }]);
       }
 
@@ -209,19 +331,18 @@ function ChatApp() {
         return;
       }
 
-      // Store the French exchange in AI history (always French for Gemini)
+      // 4. Store English response in AI history
       aiHistoryRef.current = [...newAiHistory, { role: "assistant", content: acc }];
 
-      // Translate the assistant response to the local language
-      if (localLang) {
+      // 5. For local languages: translate Gemini's English response → local lang
+      if (isLocalLang) {
         setMessages([...newDisplay, { role: "assistant", content: acc, isTranslating: true }]);
         setTranslating(true);
-        const xlated = await translateText(acc, "fr", localLang);
+        const xlated = await translateText(acc, "en", chosenLang);
         setTranslating(false);
         if (xlated) {
           setMessages([...newDisplay, { role: "assistant", content: xlated, wasTranslated: true }]);
         } else {
-          // Translation failed: show French with a note
           setMessages([...newDisplay, { role: "assistant", content: acc, translateFailed: true }]);
         }
       }
@@ -237,26 +358,28 @@ function ChatApp() {
     if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); send(); }
   }
 
-  function newChat() {
-    setMessages([]);
-    setError("");
-    aiHistoryRef.current = [];
-  }
-
-  const placeholder = localLang
-    ? `Écris en ${LOCAL_LANGS[localLang].label} ou en français...`
-    : "Describe your situation in English or French...";
-
-  const suggestions = [
-    "My child is 3 years old, often sick, and we have no health insurance. We live in Benin.",
-    "Je suis enceinte et je ne peux pas payer les frais d'hôpital. Je suis au Sénégal.",
-    "I am an informal worker in Ghana and want to know my social protection rights.",
-  ];
-
   const isBusy = loading || translating;
+  const cfg     = chosenLang ? LANG_CONFIG[chosenLang] : null;
+
+  const suggestions = chosenLang === "fr"
+    ? [
+        "Mon enfant a 3 ans, il est souvent malade et nous n'avons pas d'assurance. Nous sommes au Bénin.",
+        "Je suis enceinte et je ne peux pas payer les frais d'hôpital. Je suis au Sénégal.",
+        "Je suis travailleur informel au Ghana et je veux connaître mes droits.",
+      ]
+    : [
+        "My child is 3 years old, often sick, and we have no health insurance. We live in Benin.",
+        "I am pregnant and cannot afford hospital fees. I am in Senegal.",
+        "I am an informal worker in Ghana and want to know my social protection rights.",
+      ];
 
   return (
     <div style={{ display: "flex", flexDirection: "column", height: "100vh", overflow: "hidden", background: "var(--bg)" }}>
+
+      {/* Language picker — shown on first load or when triggered */}
+      {(!chosenLang || showPicker) && (
+        <LanguagePicker onSelect={selectLang} />
+      )}
 
       {/* TOP BAR */}
       <header style={{
@@ -264,7 +387,7 @@ function ChatApp() {
         padding: "0 16px", height: 56, flexShrink: 0,
         background: "var(--bg-card)", borderBottom: "1px solid var(--border-soft)",
       }}>
-        <a href="/" className="brand-text" style={{
+        <a href="/" style={{
           fontFamily: "'Space Grotesk', sans-serif", fontWeight: 700,
           fontSize: 17, color: "var(--text)", letterSpacing: "-0.5px",
           textDecoration: "none", flex: 1,
@@ -277,15 +400,14 @@ function ChatApp() {
           <TabButton active={tab === "map"}  onClick={() => setTab("map")}  label="Institutions"  icon={<MapIcon />} />
         </nav>
 
-        <div style={{ flex: 1, display: "flex", justifyContent: "flex-end" }}>
-          {tab === "chat" && messages.length > 0 && (
+        <div style={{ flex: 1, display: "flex", justifyContent: "flex-end", gap: 8 }}>
+          {messages.length > 0 && (
             <button
               onClick={newChat}
               style={{
                 padding: "5px 12px", borderRadius: "var(--radius)",
                 border: "1px solid var(--border)", background: "transparent",
                 fontSize: 12, fontWeight: 600, color: "var(--text-3)", cursor: "pointer",
-                whiteSpace: "nowrap",
               }}
             >
               New chat
@@ -302,7 +424,6 @@ function ChatApp() {
           flex: 1, flexDirection: "column", overflow: "hidden",
           display: tab === "chat" ? "flex" : "none",
         }}>
-
           {/* Messages */}
           <div style={{ flex: 1, overflowY: "auto", padding: "24px 16px" }}>
             <div style={{
@@ -310,7 +431,7 @@ function ChatApp() {
               display: "flex", flexDirection: "column", gap: 16,
             }}>
 
-              {messages.length === 0 && (
+              {messages.length === 0 && chosenLang && (
                 <div style={{ margin: "auto", maxWidth: 520, textAlign: "center", padding: "32px 16px" }}>
                   <div style={{
                     width: 48, height: 48, borderRadius: "50%",
@@ -322,30 +443,37 @@ function ChatApp() {
                   }}>N</div>
 
                   <p style={{ fontFamily: "'Space Grotesk', sans-serif", fontWeight: 600, fontSize: 17, color: "var(--text)", marginBottom: 8 }}>
-                    Describe your situation
+                    {chosenLang === "fr" ? "Décrivez votre situation" : "Describe your situation"}
                   </p>
                   <p style={{ fontSize: 14, color: "var(--text-2)", lineHeight: 1.6, marginBottom: 24 }}>
-                    In plain words, in English, French, <strong>Fon, Wolof or Twi</strong>. NAWIRI will detect your language and ask one question at a time.
+                    {isLocalLang
+                      ? `NAWIRI comprend le ${cfg.native}. Décris ta situation librement.`
+                      : chosenLang === "fr"
+                        ? "En langage libre. NAWIRI posera une question à la fois pour trouver ce qui vous correspond."
+                        : "In plain words. NAWIRI will ask one question at a time to find what fits you."
+                    }
                   </p>
 
-                  <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-                    {suggestions.map((s, i) => (
-                      <button
-                        key={i}
-                        onClick={() => { setInput(s); inputRef.current?.focus(); }}
-                        style={{
-                          padding: "10px 14px", background: "var(--bg-card)",
-                          border: "1px solid var(--border-soft)", borderRadius: "var(--radius-lg)",
-                          fontSize: 13, color: "var(--text-2)", cursor: "pointer",
-                          textAlign: "left", lineHeight: 1.5, transition: "border-color 0.12s",
-                        }}
-                        onMouseEnter={e => e.currentTarget.style.borderColor = "var(--primary)"}
-                        onMouseLeave={e => e.currentTarget.style.borderColor = "var(--border-soft)"}
-                      >
-                        {s}
-                      </button>
-                    ))}
-                  </div>
+                  {!isLocalLang && (
+                    <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+                      {suggestions.map((s, i) => (
+                        <button
+                          key={i}
+                          onClick={() => { setInput(s); inputRef.current?.focus(); }}
+                          style={{
+                            padding: "10px 14px", background: "var(--bg-card)",
+                            border: "1px solid var(--border-soft)", borderRadius: "var(--radius-lg)",
+                            fontSize: 13, color: "var(--text-2)", cursor: "pointer",
+                            textAlign: "left", lineHeight: 1.5, transition: "border-color 0.12s",
+                          }}
+                          onMouseEnter={e => e.currentTarget.style.borderColor = "var(--primary)"}
+                          onMouseLeave={e => e.currentTarget.style.borderColor = "var(--border-soft)"}
+                        >
+                          {s}
+                        </button>
+                      ))}
+                    </div>
+                  )}
                 </div>
               )}
 
@@ -367,7 +495,7 @@ function ChatApp() {
                         fontFamily: "'Space Grotesk', sans-serif", fontWeight: 700,
                         fontSize: 13, color: "var(--text)", marginBottom: 3,
                       }}>
-                        {isUser ? "You" : "NAWIRI"}
+                        {isUser ? (chosenLang === "fr" ? "Vous" : "You") : "NAWIRI"}
                       </div>
 
                       {isUser ? (
@@ -384,28 +512,27 @@ function ChatApp() {
                           <div style={{ fontSize: 14, lineHeight: 1.65, color: "var(--text)" }}>
                             {renderMessage(m.content, openMapAt)}
                           </div>
-
-                          {/* Translation status badges */}
                           {m.isTranslating && (
                             <div style={{ display: "flex", alignItems: "center", gap: 6, marginTop: 8 }}>
                               <span style={{
-                                display: "inline-block", width: 12, height: 12,
+                                width: 12, height: 12, flexShrink: 0,
                                 border: "2px solid var(--primary)", borderTopColor: "transparent",
-                                borderRadius: "50%", animation: "spin-badge 0.7s linear infinite",
+                                borderRadius: "50%", display: "inline-block",
+                                animation: "spin-badge 0.7s linear infinite",
                               }} />
                               <span style={{ fontSize: 11, color: "var(--text-3)", fontStyle: "italic" }}>
-                                Traduction en cours...
+                                {cfg?.native ? `Traduction en ${cfg.native}...` : "Traduction en cours..."}
                               </span>
                             </div>
                           )}
                           {m.wasTranslated && (
                             <div style={{ fontSize: 11, color: "var(--text-3)", marginTop: 6 }}>
-                              🌍 traduit depuis le français
+                              🌍 traduit en {cfg?.native ?? "langue locale"}
                             </div>
                           )}
                           {m.translateFailed && (
                             <div style={{ fontSize: 11, color: "var(--text-3)", marginTop: 6, fontStyle: "italic" }}>
-                              Traduction indisponible — réponse en français.
+                              Traduction indisponible — réponse en anglais.
                             </div>
                           )}
                         </>
@@ -416,13 +543,13 @@ function ChatApp() {
               })}
 
               {loading && (
-                <div style={{ display: "flex", gap: 12, alignItems: "flex-start", width: "100%" }}>
+                <div style={{ display: "flex", gap: 12, alignItems: "flex-start" }}>
                   <Avatar role="assistant" />
                   <div style={{ flex: 1, paddingTop: 5 }}>
                     <div style={{ fontFamily: "'Space Grotesk', sans-serif", fontWeight: 700, fontSize: 13, color: "var(--text)", marginBottom: 6 }}>
                       NAWIRI
                     </div>
-                    <div style={{ display: "flex", gap: 5, alignItems: "center", height: 16 }}>
+                    <div style={{ display: "flex", gap: 5, alignItems: "center" }}>
                       {[0, 1, 2].map(i => (
                         <span key={i} style={{
                           width: 6, height: 6, borderRadius: "50%", background: "var(--text-3)",
@@ -438,10 +565,9 @@ function ChatApp() {
               {error && (
                 <div style={{
                   alignSelf: "center", maxWidth: 380, textAlign: "center",
-                  padding: "10px 16px", marginTop: 4,
-                  background: "var(--bg-card)", border: "1px solid var(--border-soft)",
-                  borderRadius: "var(--radius-lg)", fontSize: 13, color: "var(--text-3)",
-                  lineHeight: 1.5,
+                  padding: "10px 16px", background: "var(--bg-card)",
+                  border: "1px solid var(--border-soft)", borderRadius: "var(--radius-lg)",
+                  fontSize: 13, color: "var(--text-3)", lineHeight: 1.5,
                 }}>
                   {error}
                 </div>
@@ -453,43 +579,45 @@ function ChatApp() {
 
           {/* Input bar */}
           <div style={{
-            padding: "14px 16px", borderTop: "1px solid var(--border-soft)",
+            padding: "12px 16px 14px", borderTop: "1px solid var(--border-soft)",
             background: "var(--bg-card)", flexShrink: 0,
           }}>
             <div style={{ width: "100%", maxWidth: 820, margin: "0 auto" }}>
 
-              {/* Language selector */}
-              <div style={{ display: "flex", gap: 6, marginBottom: 10, alignItems: "center", flexWrap: "wrap" }}>
-                <span style={{ fontSize: 11, fontWeight: 600, color: "var(--text-3)", marginRight: 2, userSelect: "none" }}>
-                  🌍
-                </span>
-                {[
-                  { code: null, label: "FR / EN", flag: "" },
-                  { code: "fon", ...LOCAL_LANGS.fon },
-                  { code: "wo",  ...LOCAL_LANGS.wo  },
-                  { code: "tw",  ...LOCAL_LANGS.tw  },
-                ].map(({ code, label, flag }) => (
+              {/* Language indicator + change button */}
+              {cfg && (
+                <div style={{
+                  display: "flex", alignItems: "center", justifyContent: "space-between",
+                  marginBottom: 8,
+                }}>
+                  <div style={{
+                    display: "flex", alignItems: "center", gap: 6,
+                    fontSize: 12, color: "var(--text-3)", fontWeight: 600,
+                  }}>
+                    {cfg.flag && <span>{cfg.flag}</span>}
+                    <span>{cfg.native}</span>
+                    {isLocalLang && (
+                      <span style={{
+                        fontSize: 10, background: "var(--primary-soft)",
+                        color: "var(--primary)", padding: "1px 7px",
+                        borderRadius: 99, fontWeight: 700,
+                      }}>
+                        Traduction auto
+                      </span>
+                    )}
+                  </div>
                   <button
-                    key={code ?? "auto"}
-                    onClick={() => setLocalLang(code)}
+                    onClick={() => setShowPicker(true)}
                     style={{
-                      padding: "3px 11px", borderRadius: 99,
-                      border: "1.5px solid " + (localLang === code ? "var(--primary)" : "var(--border)"),
-                      background: localLang === code ? "var(--primary-soft)" : "transparent",
-                      color: localLang === code ? "var(--primary)" : "var(--text-3)",
-                      fontSize: 12, fontWeight: 600, cursor: "pointer",
-                      transition: "all 0.12s", lineHeight: 1.5,
+                      fontSize: 11, color: "var(--primary)", fontWeight: 600,
+                      background: "none", border: "none", cursor: "pointer",
+                      padding: "2px 4px",
                     }}
                   >
-                    {flag ? `${flag} ${label}` : label}
+                    Changer ›
                   </button>
-                ))}
-                {localLang && (
-                  <span style={{ fontSize: 11, color: "var(--text-3)", fontStyle: "italic", marginLeft: 2 }}>
-                    — réponses en {LOCAL_LANGS[localLang].label}
-                  </span>
-                )}
-              </div>
+                </div>
+              )}
 
               <div style={{ display: "flex", gap: 10, alignItems: "flex-end" }}>
                 <textarea
@@ -498,26 +626,27 @@ function ChatApp() {
                   onChange={e => setInput(e.target.value)}
                   onKeyDown={onKeyDown}
                   rows={2}
-                  placeholder={placeholder}
+                  placeholder={chosenLang ? PLACEHOLDERS[chosenLang] : ""}
+                  disabled={!chosenLang}
                   style={{
                     flex: 1, resize: "none", padding: "10px 14px",
                     border: "1.5px solid var(--border)", borderRadius: "var(--radius-lg)",
                     fontSize: 14, color: "var(--text)", background: "var(--bg)",
                     outline: "none", lineHeight: 1.5, fontFamily: "'Inter', sans-serif",
-                    transition: "border-color 0.15s",
+                    transition: "border-color 0.15s", opacity: chosenLang ? 1 : 0.4,
                   }}
                   onFocus={e => e.target.style.borderColor = "var(--primary)"}
                   onBlur={e  => e.target.style.borderColor = "var(--border)"}
                 />
                 <button
                   onClick={send}
-                  disabled={isBusy || !input.trim()}
+                  disabled={isBusy || !input.trim() || !chosenLang}
                   style={{
                     width: 46, height: 46, flexShrink: 0,
                     borderRadius: "var(--radius-lg)", border: "none",
-                    background: isBusy || !input.trim() ? "var(--border)" : "var(--primary)",
+                    background: (isBusy || !input.trim() || !chosenLang) ? "var(--border)" : "var(--primary)",
                     color: "#FFF", fontSize: 18,
-                    cursor: isBusy || !input.trim() ? "default" : "pointer",
+                    cursor: (isBusy || !input.trim() || !chosenLang) ? "default" : "pointer",
                     display: "flex", alignItems: "center", justifyContent: "center",
                     transition: "background 0.12s",
                   }}
@@ -527,7 +656,10 @@ function ChatApp() {
               </div>
 
               <p style={{ fontSize: 11, color: "var(--text-3)", marginTop: 8, textAlign: "center" }}>
-                NAWIRI guides you. Always verify with the official body before any step.
+                {chosenLang === "fr"
+                  ? "NAWIRI vous oriente. Vérifiez toujours avec l'organisme officiel avant d'agir."
+                  : "NAWIRI guides you. Always verify with the official body before any step."
+                }
               </p>
             </div>
           </div>
@@ -551,15 +683,15 @@ function ChatApp() {
 
       <style>{`
         @keyframes dot-bounce {
-          0%, 80%, 100% { transform: translateY(0);    opacity: 0.4; }
-          40%            { transform: translateY(-5px); opacity: 1;   }
+          0%, 80%, 100% { transform: translateY(0); opacity: 0.4; }
+          40% { transform: translateY(-5px); opacity: 1; }
         }
         @keyframes spin-badge {
           to { transform: rotate(360deg); }
         }
         .bottom-nav { display: none; }
         @media (max-width: 640px) {
-          .top-tabs   { display: none !important; }
+          .top-tabs { display: none !important; }
           .bottom-nav { display: flex !important; }
         }
       `}</style>
@@ -567,60 +699,50 @@ function ChatApp() {
   );
 }
 
-// ---- Facebook-style icon tab ----
+// ─── Sub-components ─────────────────────────────────────────────────────────────
+
 function TabButton({ active, onClick, label, icon }) {
   return (
-    <button
-      onClick={onClick}
-      title={label}
-      style={{
-        display: "flex", alignItems: "center", gap: 8,
-        padding: "0 22px", height: "100%", minWidth: 90,
-        justifyContent: "center", cursor: "pointer",
-        background: "transparent", border: "none",
-        borderBottom: "3px solid " + (active ? "var(--primary)" : "transparent"),
-        color: active ? "var(--primary)" : "var(--text-3)",
-        fontFamily: "'Space Grotesk', sans-serif", fontWeight: 600, fontSize: 13,
-        transition: "color 0.15s, border-color 0.15s",
-      }}
-      onMouseEnter={e => { if (!active) e.currentTarget.style.color = "var(--text-2)"; }}
-      onMouseLeave={e => { if (!active) e.currentTarget.style.color = "var(--text-3)"; }}
+    <button onClick={onClick} title={label} style={{
+      display: "flex", alignItems: "center", gap: 8,
+      padding: "0 22px", height: "100%", minWidth: 90, justifyContent: "center",
+      cursor: "pointer", background: "transparent", border: "none",
+      borderBottom: "3px solid " + (active ? "var(--primary)" : "transparent"),
+      color: active ? "var(--primary)" : "var(--text-3)",
+      fontFamily: "'Space Grotesk', sans-serif", fontWeight: 600, fontSize: 13,
+      transition: "color 0.15s, border-color 0.15s",
+    }}
+    onMouseEnter={e => { if (!active) e.currentTarget.style.color = "var(--text-2)"; }}
+    onMouseLeave={e => { if (!active) e.currentTarget.style.color = "var(--text-3)"; }}
     >
-      {icon}
-      <span className="tab-label">{label}</span>
+      {icon}<span className="tab-label">{label}</span>
     </button>
   );
 }
 
-// ---- Bottom nav tab (mobile) ----
 function BottomTab({ active, onClick, label, icon }) {
   return (
-    <button
-      onClick={onClick}
-      style={{
-        flex: 1, display: "flex", flexDirection: "column", alignItems: "center",
-        justifyContent: "center", gap: 3, padding: "8px 0 9px",
-        background: "transparent", border: "none", cursor: "pointer",
-        color: active ? "var(--primary)" : "var(--text-3)",
-        fontFamily: "'Space Grotesk', sans-serif", fontWeight: 600, fontSize: 11,
-        transition: "color 0.15s",
-      }}
-    >
-      {icon}
-      <span>{label}</span>
+    <button onClick={onClick} style={{
+      flex: 1, display: "flex", flexDirection: "column", alignItems: "center",
+      justifyContent: "center", gap: 3, padding: "8px 0 9px",
+      background: "transparent", border: "none", cursor: "pointer",
+      color: active ? "var(--primary)" : "var(--text-3)",
+      fontFamily: "'Space Grotesk', sans-serif", fontWeight: 600, fontSize: 11,
+      transition: "color 0.15s",
+    }}>
+      {icon}<span>{label}</span>
     </button>
   );
 }
 
-// ---- Avatars ----
 function Avatar({ role }) {
   if (role === "user") {
     return (
       <div style={{
         width: 34, height: 34, borderRadius: "50%", flexShrink: 0,
-        background: "var(--sage, #4A7C59)",
+        background: "var(--sage, #4A7C59)", color: "#fff",
         display: "flex", alignItems: "center", justifyContent: "center",
-        boxShadow: "0 1px 4px rgba(0,0,0,0.12)", color: "#fff",
+        boxShadow: "0 1px 4px rgba(0,0,0,0.12)",
       }}>
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
              stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
@@ -633,16 +755,14 @@ function Avatar({ role }) {
   return (
     <div style={{
       width: 34, height: 34, borderRadius: "50%", flexShrink: 0,
-      background: "var(--primary)",
+      background: "var(--primary)", color: "#fff",
       display: "flex", alignItems: "center", justifyContent: "center",
       boxShadow: "0 1px 4px rgba(0,0,0,0.12)",
-      fontFamily: "'Space Grotesk', sans-serif", fontWeight: 700,
-      fontSize: 15, color: "#fff",
+      fontFamily: "'Space Grotesk', sans-serif", fontWeight: 700, fontSize: 15,
     }}>N</div>
   );
 }
 
-// ---- Icons ----
 function ChatIcon() {
   return (
     <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
@@ -660,6 +780,8 @@ function MapIcon() {
     </svg>
   );
 }
+
+// ─── Page wrapper ───────────────────────────────────────────────────────────────
 
 export default function ChatPage() {
   return (
