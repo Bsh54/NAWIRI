@@ -13,6 +13,7 @@
 |---|---|---|
 | `documents/loi-2015-42.pdf` | **Law No. 2015-42 of 17 March 2016** establishing the RAMU (Régime d'Assurance Maladie Universelle). Official Journal of the Republic of Benin, 91 articles. | Legal framework section + Program 1 (coverage Art. 24/26, exclusions Art. 29, persons covered Art. 5-7, card Art. 37, co-payment Art. 21). |
 | `documents/loi-2015-42.txt` | Plain-text extraction of the PDF above (for quoting/searching articles). | Same as above. |
+| `DOCUMENTS.md` | Required-documents file: exact pieces per program + how to obtain foundational documents (ANIP card, secured birth certificate, jugement supplétif, RSU). | Document/prerequisite guidance surfaced by the AI. |
 
 > The PDF is the authoritative source for everything attributed to "Law 2015-42" in `BENIN.md`.
 

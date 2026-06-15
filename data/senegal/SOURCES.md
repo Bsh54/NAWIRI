@@ -15,6 +15,7 @@
 |---|---|---|
 | **Decree No. 2024-832 of 27 March 2024** | Renames ANACMU → SEN-CSU (Agence Sénégalaise de la Couverture Sanitaire Universelle), placed under the Ministry of Family and Solidarity. | Methodological note + Program 1 (CMU governing body). |
 | **Social Orientation Law** (rights of persons with disabilities) | Legal basis of the Equal Opportunity Card. | Program 7. |
+| `DOCUMENTS.md` | Required-documents file: exact pieces per program + how to obtain foundational documents (CNI, birth certificate, jugement supplétif, RNU registration). | Document/prerequisite guidance surfaced by the AI. |
 
 ---
 

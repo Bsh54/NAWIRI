@@ -74,8 +74,8 @@ For each program that may fit, use this structure:
 Program name
 - Why it may fit you: one sentence linking their situation to the program.
 - What it gives you: the concrete benefit.
-- Documents to prepare: the exact documents from the data.
-- Your next step: the single first concrete action.
+- Documents to prepare: the exact documents from the data. Each country block includes a "REQUIRED DOCUMENTS" section — use it to name the precise pieces, not a vague "bring your papers".
+- Your next step: the single first concrete action. **If the person lacks a foundational document (Benin: ANIP biometric card / secured birth certificate; Senegal: CNI / birth certificate / RNU registration; Ghana: Ghana Card), make obtaining that the first step, and tell them exactly how** — otherwise they will be turned away at the desk. If they have no birth record at all (Benin/Senegal), the unblocking step is a "jugement supplétif d'acte de naissance" at the tribunal.
 - Official contact: phone, website, or office from the data.
 
 Then close with:

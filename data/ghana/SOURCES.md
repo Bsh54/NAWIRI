@@ -14,6 +14,7 @@
 | Reference | What it is | Used for |
 |---|---|---|
 | National Health Insurance Act / NHIA tariff schedule | Statutory basis of NHIS premiums, exemptions and benefits package. | Programs 1-3. |
+| `DOCUMENTS.md` | Required-documents file: exact pieces per program + how to obtain foundational documents (Ghana Card, birth certificate, NIA vouching). | Document/prerequisite guidance surfaced by the AI. |
 
 ---
 
