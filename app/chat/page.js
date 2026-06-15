@@ -173,7 +173,7 @@ function LanguagePicker({ onSelect }) {
             fontSize: 10, fontWeight: 700, color: "var(--text-3)",
             textTransform: "uppercase", letterSpacing: "0.1em", whiteSpace: "nowrap",
           }}>
-            Langues africaines
+            African Languages
           </span>
           <div style={{ flex: 1, height: 1, background: "var(--border-soft)" }} />
         </div>
@@ -447,7 +447,7 @@ function ChatApp() {
                   </p>
                   <p style={{ fontSize: 14, color: "var(--text-2)", lineHeight: 1.6, marginBottom: 24 }}>
                     {isLocalLang
-                      ? `NAWIRI comprend le ${cfg.native}. Décris ta situation librement.`
+                      ? `NAWIRI understands ${cfg.native}. Describe your situation freely.`
                       : chosenLang === "fr"
                         ? "En langage libre. NAWIRI posera une question à la fois pour trouver ce qui vous correspond."
                         : "In plain words. NAWIRI will ask one question at a time to find what fits you."
@@ -521,18 +521,18 @@ function ChatApp() {
                                 animation: "spin-badge 0.7s linear infinite",
                               }} />
                               <span style={{ fontSize: 11, color: "var(--text-3)", fontStyle: "italic" }}>
-                                {cfg?.native ? `Traduction en ${cfg.native}...` : "Traduction en cours..."}
+                                {cfg?.native ? `Translating to ${cfg.native}...` : "Translating..."}
                               </span>
                             </div>
                           )}
                           {m.wasTranslated && (
                             <div style={{ fontSize: 11, color: "var(--text-3)", marginTop: 6 }}>
-                              🌍 traduit en {cfg?.native ?? "langue locale"}
+                              🌍 translated to {cfg?.native ?? "local language"}
                             </div>
                           )}
                           {m.translateFailed && (
                             <div style={{ fontSize: 11, color: "var(--text-3)", marginTop: 6, fontStyle: "italic" }}>
-                              Traduction indisponible — réponse en anglais.
+                              Translation unavailable — response in English.
                             </div>
                           )}
                         </>
@@ -602,7 +602,7 @@ function ChatApp() {
                         color: "var(--primary)", padding: "1px 7px",
                         borderRadius: 99, fontWeight: 700,
                       }}>
-                        Traduction auto
+                        Auto-translate
                       </span>
                     )}
                   </div>
@@ -614,7 +614,7 @@ function ChatApp() {
                       padding: "2px 4px",
                     }}
                   >
-                    Changer ›
+                    Change ›
                   </button>
                 </div>
               )}
