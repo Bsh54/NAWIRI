@@ -166,8 +166,8 @@ function ChatApp() {
           NAWIRI
         </a>
 
-        {/* Center icon tabs */}
-        <nav style={{ display: "flex", gap: 6, alignItems: "stretch", height: "100%" }}>
+        {/* Center icon tabs (desktop) */}
+        <nav className="top-tabs" style={{ display: "flex", gap: 6, alignItems: "stretch", height: "100%" }}>
           <TabButton
             active={tab === "chat"}
             onClick={() => setTab("chat")}
@@ -399,14 +399,26 @@ function ChatApp() {
         </div>
       </div>
 
+      {/* BOTTOM NAV (mobile only) */}
+      <nav className="bottom-nav" style={{
+        flexShrink: 0,
+        background: "var(--bg-card)",
+        borderTop: "1px solid var(--border-soft)",
+        paddingBottom: "env(safe-area-inset-bottom, 0px)",
+      }}>
+        <BottomTab active={tab === "chat"} onClick={() => setTab("chat")} label="Conversation" icon={<ChatIcon />} />
+        <BottomTab active={tab === "map"}  onClick={() => setTab("map")}  label="Institutions" icon={<MapIcon />} />
+      </nav>
+
       <style>{`
         @keyframes dot-bounce {
           0%, 80%, 100% { transform: translateY(0);    opacity: 0.4; }
           40%            { transform: translateY(-5px); opacity: 1;   }
         }
-        @media (max-width: 520px) {
-          .brand-text { font-size: 0 !important; }
-          .tab-label  { display: none !important; }
+        .bottom-nav { display: none; }
+        @media (max-width: 640px) {
+          .top-tabs   { display: none !important; }
+          .bottom-nav { display: flex !important; }
         }
       `}</style>
     </div>
@@ -434,6 +446,26 @@ function TabButton({ active, onClick, label, icon }) {
     >
       {icon}
       <span className="tab-label">{label}</span>
+    </button>
+  );
+}
+
+// ---- Bottom nav tab (mobile) ----
+function BottomTab({ active, onClick, label, icon }) {
+  return (
+    <button
+      onClick={onClick}
+      style={{
+        flex: 1, display: "flex", flexDirection: "column", alignItems: "center",
+        justifyContent: "center", gap: 3, padding: "8px 0 9px",
+        background: "transparent", border: "none", cursor: "pointer",
+        color: active ? "var(--primary)" : "var(--text-3)",
+        fontFamily: "'Space Grotesk', sans-serif", fontWeight: 600, fontSize: 11,
+        transition: "color 0.15s",
+      }}
+    >
+      {icon}
+      <span>{label}</span>
     </button>
   );
 }
