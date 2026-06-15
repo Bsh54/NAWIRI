@@ -554,23 +554,6 @@ export default function Landing() {
         </div>
       </section>
 
-      {/* ── FOOTER ─────────────────────────────────────────────────────────── */}
-      <footer style={{
-        borderTop: "1px solid rgba(255,255,255,0.1)",
-        padding: "24px clamp(16px, 4vw, 40px)",
-        display: "flex", justifyContent: "space-between", alignItems: "center",
-        flexWrap: "wrap", gap: 12, background: "var(--bg)",
-        fontSize: 12, color: "var(--text-3)",
-      }}>
-        <span style={{
-          fontFamily: "'Space Grotesk', sans-serif", fontWeight: 800,
-          fontSize: 16, color: "var(--primary)",
-        }}>
-          NAWIRI
-        </span>
-        <span style={{ textAlign: "center" }}>{t.footer_tagline}</span>
-        <span>{t.footer_privacy}</span>
-      </footer>
 
       <style>{`
         @keyframes dot-bounce {
