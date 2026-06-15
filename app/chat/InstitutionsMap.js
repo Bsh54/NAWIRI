@@ -70,6 +70,9 @@ export default function InstitutionsMap({ open = true, target = null }) {
   }, [open]);
 
   useEffect(() => {
+    // Defer the ~150 KB Leaflet download until the map tab is actually opened,
+    // so visitors who only use the chat never pay for it.
+    if (!open) return;
     let cancelled = false;
 
     loadLeaflet().then((L) => {
@@ -110,7 +113,7 @@ export default function InstitutionsMap({ open = true, target = null }) {
     return () => {
       cancelled = true;
     };
-  }, []); // init once
+  }, [open]); // init on first open (then the mapRef guard prevents re-init)
 
   function focusCountry(key) {
     setActive(key);
@@ -139,16 +142,23 @@ export default function InstitutionsMap({ open = true, target = null }) {
     if (idx === -1) return;
     const inst = INSTITUTIONS[idx];
     setActive(inst.country);
-    const go = () => {
-      if (!mapRef.current) return;
-      mapRef.current.invalidateSize();
-      mapRef.current.flyTo([inst.lat, inst.lng], 15, { duration: 0.8 });
-      const marker = markersRef.current[idx];
-      if (marker) setTimeout(() => marker.openPopup(), 850);
-    };
-    // Map may still be mounting / hidden — give it a beat.
-    const t = setTimeout(go, 380);
-    return () => clearTimeout(t);
+
+    // The map may still be loading (Leaflet is fetched on first open), so poll
+    // until it is ready, then fly to the institution and open its popup.
+    let tries = 0;
+    const timer = setInterval(() => {
+      tries++;
+      if (mapRef.current) {
+        mapRef.current.invalidateSize();
+        mapRef.current.flyTo([inst.lat, inst.lng], 15, { duration: 0.8 });
+        const marker = markersRef.current[idx];
+        if (marker) setTimeout(() => marker.openPopup(), 850);
+        clearInterval(timer);
+      } else if (tries > 40) {
+        clearInterval(timer); // give up after ~8s
+      }
+    }, 200);
+    return () => clearInterval(timer);
   }, [target]);
 
   const list = INSTITUTIONS
