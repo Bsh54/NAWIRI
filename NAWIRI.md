@@ -1,4 +1,4 @@
-# AidePath West Africa — Dossier Complet du Projet
+# NAWIRI — Dossier Complet du Projet
 ### USAII Global AI Hackathon 2026 | Undergraduate Track | Brief 4 — Public Services
 #### Équipe : EVOLUTICS | Shadrak BESSANH & Franckel GNONLONFIN | Score Qualifier : 83/100 | Rang #84/424
 
@@ -24,7 +24,7 @@ Le Brief 4 du hackathon demande de construire quelque chose qui aide les gens à
 
 Traduction : les gens ratent l'aide non pas parce qu'elle n'existe pas, mais parce que le système est trop difficile à naviguer.
 
-C'est mot pour mot le problème qu'on résout. Le système existe. Il est trop difficile à naviguer. AidePath est le pont.
+C'est mot pour mot le problème qu'on résout. Le système existe. Il est trop difficile à naviguer. NAWIRI est le pont.
 
 ---
 
@@ -32,11 +32,11 @@ C'est mot pour mot le problème qu'on résout. Le système existe. Il est trop d
 
 ### En une phrase
 
-AidePath est un assistant conversationnel qui aide les familles vulnérables d'Afrique de l'Ouest à découvrir les programmes d'aide publique auxquels elles ont droit, à comprendre les étapes exactes pour y accéder, et à passer de la confusion à l'action concrète, en français ou en anglais.
+NAWIRI est un assistant conversationnel qui aide les familles vulnérables d'Afrique de l'Ouest à découvrir les programmes d'aide publique auxquels elles ont droit, à comprendre les étapes exactes pour y accéder, et à passer de la confusion à l'action concrète. NAWIRI parle français et anglais, et prend en charge trois langues africaines locales — le fɔngbe (Bénin), le wolof (Sénégal) et le twi (Ghana) — en entrée comme en sortie.
 
 ### Ce que ça fait vraiment, étape par étape
 
-L'utilisateur arrive sur une interface simple. Il choisit son pays parmi Sénégal, Bénin ou Ghana. Il choisit sa langue. Puis il décrit sa situation librement, comme il le ferait à un ami.
+L'utilisateur arrive sur une interface simple. Un popup lui demande d'abord sa langue (anglais, français, ou une des trois langues africaines). Puis il décrit sa situation librement, comme il le ferait à un ami — le pays (Sénégal, Bénin ou Ghana) est détecté automatiquement à partir de ce qu'il écrit, et peut changer en cours de conversation. Une carte des institutions officielles est accessible à tout moment, et l'IA peut y renvoyer directement via un lien cliquable.
 
 Exemple : "J'ai trois enfants, le plus jeune a 2 ans, il est souvent malade et je n'ai pas d'assurance maladie. Mon mari est menuisier, on n'a pas de revenus fixes."
 
@@ -48,16 +48,16 @@ Une fois qu'elle a assez d'informations, elle produit une réponse structurée q
 
 ---
 
-*Votre famille est éligible à au moins 2 programmes.*
+*Votre famille pourrait être éligible à au moins 2 programmes.*
 
 *Programme 1 — Soins gratuits enfants moins de 5 ans (CMU Sénégal)*
 Votre fils de 2 ans a droit à des consultations médicales gratuites dans tout centre de santé public au Sénégal.
 Documents à apporter : extrait de naissance de l'enfant, pièce d'identité du parent.
 Prochaine étape : rendez-vous au centre de santé le plus proche et demandez le formulaire CMU enfant.
-Contact : Agence CMU Sénégal — agencecmu.sn
+Contact : SEN-CSU (ex-Agence CMU) — sencsu.sn
 
 *Programme 2 — Bourse de Sécurité Familiale*
-Les familles à faibles revenus avec enfants peuvent recevoir une allocation annuelle de 100 000 FCFA.
+Les familles à faibles revenus avec enfants peuvent recevoir une allocation de 35 000 FCFA/trimestre (140 000 FCFA/an), via ciblage par le Registre National Unique (RNU).
 Documents à apporter : livret de famille, justificatif de résidence, pièce d'identité.
 Prochaine étape : contactez l'antenne locale du Ministère de la Famille de votre commune.
 
@@ -65,13 +65,13 @@ Prochaine étape : contactez l'antenne locale du Ministère de la Famille de vot
 
 ---
 
-Voilà ce qu'AidePath produit. Pas une liste de liens. Pas un résumé générique. Un plan d'action personnalisé, ancré dans la situation réelle de cette personne, dans ce pays précis.
+Voilà ce qu'NAWIRI produit. Pas une liste de liens. Pas un résumé générique. Un plan d'action personnalisé, ancré dans la situation réelle de cette personne, dans ce pays précis.
 
-### La différence entre AidePath et une simple recherche Google
+### La différence entre NAWIRI et une simple recherche Google
 
 Quelqu'un qui cherche "aide médicale enfant Sénégal" sur Google va tomber sur des articles de presse, des pages gouvernementales en français administratif difficile à lire, et des informations génériques qui ne lui disent pas concrètement quoi faire.
 
-AidePath fait quelque chose que Google ne peut pas faire : elle comprend la situation spécifique de la personne, croise cette situation avec les critères réels des programmes disponibles, et produit une réponse personnalisée avec les étapes exactes à suivre.
+NAWIRI fait quelque chose que Google ne peut pas faire : elle comprend la situation spécifique de la personne, croise cette situation avec les critères réels des programmes disponibles, et produit une réponse personnalisée avec les étapes exactes à suivre.
 
 C'est l'interprétation qui manque. Pas l'information. L'interprétation.
 
@@ -113,19 +113,19 @@ Le Ghana permet de couvrir l'Afrique de l'Ouest anglophone et montre que le proj
 
 **Sénégal**
 
-Le premier programme est la CMU — Couverture Maladie Universelle. Elle couvre les personnes à faibles revenus via des mutuelles de santé communautaires. Pour s'inscrire il faut une Carte Nationale d'Identité pour les adultes, ou un extrait d'acte de naissance pour les enfants de moins de 18 ans. Le contact officiel est l'Agence CMU Sénégal.
+Le premier programme est la CMU — Couverture Maladie Universelle. Elle couvre les personnes à faibles revenus via des mutuelles de santé communautaires. Pour s'inscrire il faut une Carte Nationale d'Identité pour les adultes, ou un extrait d'acte de naissance pour les enfants de moins de 18 ans. Le contact officiel est SEN-CSU (ex-Agence CMU, depuis le décret 2024-832) — sencsu.sn. Le Sénégal compte 7 programmes documentés au total (voir data/senegal/).
 
 Le deuxième programme est la gratuité des soins pour les enfants de moins de 5 ans. Aucune inscription préalable n'est nécessaire. Il suffit de se présenter dans un centre de santé public avec l'extrait de naissance de l'enfant. La consultation et les médicaments essentiels sont gratuits.
 
 Le troisième programme est le Plan Sésame pour les personnes âgées de plus de 60 ans. Il couvre les consultations, hospitalisations, et certains médicaments. Il faut une pièce d'identité prouvant l'âge et une carte de résident.
 
-Le quatrième programme est la Bourse de Sécurité Familiale. Elle cible les ménages pauvres avec enfants et verse une allocation annuelle de 100 000 FCFA. Elle passe par le Ministère de la Famille.
+Le quatrième programme est la Bourse de Sécurité Familiale (PNBSF). Elle cible les ménages pauvres avec enfants et verse 35 000 FCFA/trimestre (140 000 FCFA/an). Le ciblage se fait via le Registre National Unique (RNU) — ce n'est pas une inscription libre. Elle passe par le Ministère de la Famille.
 
 **Bénin**
 
-Le RAMU — Régime d'Assurance Maladie Universelle — est géré par l'ANAM (Agence Nationale de l'Assurance Maladie). L'adhésion nécessite une cotisation annuelle dont le montant varie selon les revenus. Le contact est l'ANAM au +229 21 33 21 63 ou sur ramubenin.com.
+⚠️ Correction majeure depuis la rédaction initiale : le RAMU (loi 2015-42) n'est plus le guichet pratique. La santé au Bénin est passée à l'**AMO — Assurance Maladie Obligatoire** (décrets 2023-327 puis 2025-672), avec le volet **ARCH** pour les pauvres, géré par l'**ANPS** (Agence Nationale de Protection Sociale), pas l'ANAM. Bon contact : ANPS — +229 20 21 34 14 — anps.social.gouv.bj. Prérequis transversal : la **carte biométrique ANIP**.
 
-Il existe aussi des programmes de soins gratuits pour les enfants de moins de 5 ans dans certaines zones sanitaires, et des programmes de filets sociaux pour les ménages en situation de grande pauvreté gérés par le Ministère des Affaires Sociales.
+Le Bénin compte 11 programmes documentés (voir data/benin/) : AMO/ARCH, gratuité paludisme <5 ans + femmes enceintes, gratuité césarienne, microcrédit Alafia (FNM), transferts GBESSOKÉ (ciblage enquête), ARV/VIH gratuits, pension CNSS, etc. ⚠️ La dialyse et l'insuline NE sont PAS gratuites au Bénin (ne jamais créer ce faux espoir).
 
 **Ghana**
 
@@ -137,9 +137,9 @@ Le NHIS — National Health Insurance Scheme — est le plus ancien et le plus s
 
 ### L'image mentale correcte
 
-Imagine que AidePath est comme un très bon agent social qui connaît par cœur les règles de tous les programmes d'aide au Sénégal, au Bénin, et au Ghana. Cet agent écoute ce que la personne lui dit, pose des questions de suivi pour mieux comprendre sa situation, et lui dit exactement à quoi elle a droit et comment l'obtenir.
+Imagine que NAWIRI est comme un très bon agent social qui connaît par cœur les règles de tous les programmes d'aide au Sénégal, au Bénin, et au Ghana. Cet agent écoute ce que la personne lui dit, pose des questions de suivi pour mieux comprendre sa situation, et lui dit exactement à quoi elle a droit et comment l'obtenir.
 
-La différence avec un vrai agent social : AidePath est disponible 24h/24, répond en quelques secondes, et ne juge pas la personne.
+La différence avec un vrai agent social : NAWIRI est disponible 24h/24, répond en quelques secondes, et ne juge pas la personne.
 
 ### Les quatre pièces qui font fonctionner le système
 
@@ -157,7 +157,7 @@ Ces données sont construites à partir de sources officielles publiques : les s
 
 C'est la partie IA proprement dite. Elle reçoit ce que l'utilisateur a dit, analyse quelles informations sont présentes et lesquelles manquent, formule la question suivante la plus pertinente, et quand elle a assez d'informations, croise la situation de l'utilisateur avec la base de données des programmes pour produire la réponse.
 
-Ce moteur utilise un grand modèle de langage (comme Claude ou GPT-4) via une connexion API. On lui donne des instructions précises sur son rôle, son ton, la langue qu'il doit utiliser, et les règles qu'il ne doit jamais violer (par exemple : ne jamais dire "vous êtes éligible" de façon définitive, toujours recommander de vérifier auprès de l'organisme officiel).
+Ce moteur utilise un grand modèle de langage — **Google Gemini (`gemini-flash-lite-latest`)** via une connexion API, en streaming. On lui donne des instructions précises sur son rôle, son ton, la langue qu'il doit utiliser, et les règles qu'il ne doit jamais violer (par exemple : ne jamais dire "vous êtes éligible" de façon définitive, toujours recommander de vérifier auprès de l'organisme officiel).
 
 **Pièce 4 — Les garde-fous (ce que le système refuse de faire)**
 
@@ -195,7 +195,7 @@ On présente un flux clair : l'utilisateur décrit sa situation en texte libre, 
 
 **Critère 4 — Impact et valeur décisionnelle (15%)**
 
-La décision que l'IA aide à prendre est claire : est-ce que je peux accéder à ce programme, et si oui comment ? Le before/after est fort : avant AidePath, la personne ne sait pas qu'un programme existe ou ne sait pas comment y accéder. Après AidePath, elle a un plan d'action en main, avec les documents à rassembler et le premier appel à passer.
+La décision que l'IA aide à prendre est claire : est-ce que je peux accéder à ce programme, et si oui comment ? Le before/after est fort : avant NAWIRI, la personne ne sait pas qu'un programme existe ou ne sait pas comment y accéder. Après NAWIRI, elle a un plan d'action en main, avec les documents à rassembler et le premier appel à passer.
 
 **Critère 5 — Responsabilité IA (10%)**
 
@@ -205,9 +205,9 @@ Le human-in-the-loop est clair : l'IA ne valide jamais une demande. Seul un agen
 
 ### Le Decision Impact Statement (champ obligatoire découvert dans le kickoff)
 
-Avant AidePath : une mère de famille à Dakar passe 2 heures à chercher sur internet sans trouver d'information claire. Elle appelle le numéro du ministère, personne ne répond. Elle abandonne. Son enfant malade n'est pas soigné parce qu'elle pense ne pas avoir les moyens.
+Avant NAWIRI : une mère de famille à Dakar passe 2 heures à chercher sur internet sans trouver d'information claire. Elle appelle le numéro du ministère, personne ne répond. Elle abandonne. Son enfant malade n'est pas soigné parce qu'elle pense ne pas avoir les moyens.
 
-Après AidePath : en moins de 3 minutes de conversation, elle sait que son enfant de 2 ans a droit aux soins gratuits, quels documents apporter, dans quel centre aller, et quel contact appeler si elle a une difficulté.
+Après NAWIRI : en moins de 3 minutes de conversation, elle sait que son enfant de 2 ans a droit aux soins gratuits, quels documents apporter, dans quel centre aller, et quel contact appeler si elle a une difficulté.
 
 La décision que l'IA aide à prendre n'est pas abstraite. C'est "est-ce que j'emmène mon enfant chez le médecin aujourd'hui ?"
 
@@ -253,7 +253,7 @@ Tester tous les liens en navigation privée pour s'assurer que les juges peuvent
 
 ## PARTIE 8 — LES SOURCES DE DONNÉES OFFICIELLES
 
-Toutes les données utilisées dans AidePath proviennent de sources publiques et vérifiables. Voici les sources par pays.
+Toutes les données utilisées dans NAWIRI proviennent de sources publiques et vérifiables. Voici les sources par pays.
 
 **Sénégal**
 Site officiel de l'Agence CMU : agencecmu.sn
@@ -296,7 +296,7 @@ Risque : l'IA oriente une personne vers un programme alors qu'une nuance non dé
 
 ### Decision Impact Statement
 
-Avant AidePath : une mère à Dakar ne sait pas que son enfant de 2 ans a droit aux soins gratuits. Elle n'emmène pas son enfant malade chez le médecin par peur du coût. Après AidePath : en 3 minutes de conversation, elle sait exactement à quel programme elle a droit, quels documents apporter, et où aller. La décision change : elle emmène son enfant chez le médecin.
+Avant NAWIRI : une mère à Dakar ne sait pas que son enfant de 2 ans a droit aux soins gratuits. Elle n'emmène pas son enfant malade chez le médecin par peur du coût. Après NAWIRI : en 3 minutes de conversation, elle sait exactement à quel programme elle a droit, quels documents apporter, et où aller. La décision change : elle emmène son enfant chez le médecin.
 
 ---
 
@@ -304,13 +304,13 @@ Avant AidePath : une mère à Dakar ne sait pas que son enfant de 2 ans a droit 
 
 Il est aussi important de définir les limites que les capacités.
 
-AidePath n'est pas un annuaire de programmes. Une liste de liens ou un résumé de programmes sans interprétation personnalisée ne répond pas au brief. Les juges ont explicitement dit qu'ils marqueraient en négatif les projets qui ne font que lister des ressources sans raisonner sur l'éligibilité.
+NAWIRI n'est pas un annuaire de programmes. Une liste de liens ou un résumé de programmes sans interprétation personnalisée ne répond pas au brief. Les juges ont explicitement dit qu'ils marqueraient en négatif les projets qui ne font que lister des ressources sans raisonner sur l'éligibilité.
 
-AidePath n'est pas un outil de diagnostic médical. Il oriente vers des soins et des programmes de santé, mais ne donne jamais d'avis médical.
+NAWIRI n'est pas un outil de diagnostic médical. Il oriente vers des soins et des programmes de santé, mais ne donne jamais d'avis médical.
 
-AidePath n'est pas une garantie. Il indique des pistes d'éligibilité basées sur des critères publics. La décision finale appartient toujours à l'humain, et la vérification appartient toujours à l'organisme officiel.
+NAWIRI n'est pas une garantie. Il indique des pistes d'éligibilité basées sur des critères publics. La décision finale appartient toujours à l'humain, et la vérification appartient toujours à l'organisme officiel.
 
-AidePath n'est pas exhaustif. On couvre 3 pays et un nombre limité de programmes. C'est un choix délibéré de profondeur plutôt que d'étendue. Mieux couvrir 3 pays avec précision vaut plus que couvrir 10 pays superficiellement.
+NAWIRI n'est pas exhaustif. On couvre 3 pays et un nombre limité de programmes. C'est un choix délibéré de profondeur plutôt que d'étendue. Mieux couvrir 3 pays avec précision vaut plus que couvrir 10 pays superficiellement.
 
 ---
 
@@ -323,6 +323,26 @@ Shadrak est béninois et étudiant à l'Université d'Abomey-Calavi. Il connaît
 Franckel est son coéquipier, même contexte géographique et culturel.
 
 Quand une équipe indienne ou américaine construit pour l'Afrique de l'Ouest, elle le fait depuis des données et des articles. Quand cette équipe construit pour l'Afrique de l'Ouest, elle le fait depuis une connaissance authentique du terrain. Les juges sentent cette différence.
+
+---
+
+## PARTIE 12 — ÉTAT DE RÉALISATION (mis à jour le 15 juin 2026)
+
+Ce qui est construit et déployé (repo GitHub Bsh54/NAWIRI, hébergé sur Vercel) :
+
+**Nom & moteur** — Produit renommé NAWIRI. Moteur = Google Gemini `gemini-flash-lite-latest` en streaming SSE (pas Claude/GPT-4 : l'équipe dispose d'une clé Gemini gratuite, rapide, bon FR/EN). Stack : Next.js 14 + Vercel, styles inline, zéro dépendance lourde.
+
+**Données vérifiées** — 22 programmes sur 3 pays, datés et sourcés (data/benin = 11, data/senegal = 7, data/ghana = 4), avec pour chaque pays un fichier de programmes + SOURCES.md + DOCUMENTS.md (pièces exactes à fournir, vrai différenciateur vs Google). Corrections clés intégrées : SEN-CSU (ex-CMU), bourse 140 000 FCFA/an, ARCH/AMO/ANPS au Bénin (ex-RAMU/ANAM), dialyse/insuline NON gratuites au Bénin, prime NHIS réelle GH¢7-42 + GH¢6.
+
+**Langues** — Anglais et français + **trois langues africaines** : fɔngbe, wolof, twi. Sélecteur de langue en popup. Pour les langues africaines : le texte de l'utilisateur passe par une API de traduction (Google Translate via un worker) → anglais → Gemini → retour dans la langue locale. Les chaînes d'interface (accueil, landing) sont pré-traduites et figées → bascule de langue instantanée.
+
+**Détection pays** — Automatique depuis le texte (la dernière mention l'emporte, gère le changement de pays en cours de conversation). Tant qu'aucun pays n'est confirmé, les 3 sont chargés ; dès confirmation, un seul → prompt ~49% plus léger.
+
+**Carte** — Carte Leaflet/OpenStreetMap des institutions officielles (chargée à la demande). L'IA peut émettre un lien `[[MAP:id]]` qui amène l'utilisateur directement à l'institution.
+
+**Garde-fous testés** — System prompt avec protocole d'urgence en premier, boucle d'une question à la fois, format structuré (Programme/Documents/Étapes/Contact), interdiction de certifier l'éligibilité et d'inventer un numéro. **25 scénarios testés contre le modèle réel : 25/25 corrects** (voir tests/SCENARIOS.md), dont le contraste dialyse Bénin (non) / Sénégal (oui), et le pipeline langue africaine de bout en bout.
+
+**Reste à faire** — Tests utilisateurs finaux, script + tournage vidéo, rédaction soumission Devpost, vérification des liens, soumission (objectif sam. 20 juin).
 
 ---
 
