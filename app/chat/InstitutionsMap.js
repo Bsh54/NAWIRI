@@ -54,7 +54,7 @@ function popupHtml(inst) {
     </div>`;
 }
 
-export default function InstitutionsMap({ open = true }) {
+export default function InstitutionsMap({ open = true, target = null }) {
   const containerRef = useRef(null);
   const mapRef = useRef(null);
   const markersRef = useRef([]);
@@ -129,6 +129,27 @@ export default function InstitutionsMap({ open = true }) {
       if (marker) setTimeout(() => marker.openPopup(), 850);
     }
   }
+
+  // When the AI asks to open the map at a specific institution (via a
+  // [[MAP:<id>]] link in the chat), `target` changes → switch to its
+  // country and fly to it. `target.key` makes repeat clicks re-trigger.
+  useEffect(() => {
+    if (!target || !target.id) return;
+    const idx = INSTITUTIONS.findIndex((i) => i.id === target.id);
+    if (idx === -1) return;
+    const inst = INSTITUTIONS[idx];
+    setActive(inst.country);
+    const go = () => {
+      if (!mapRef.current) return;
+      mapRef.current.invalidateSize();
+      mapRef.current.flyTo([inst.lat, inst.lng], 15, { duration: 0.8 });
+      const marker = markersRef.current[idx];
+      if (marker) setTimeout(() => marker.openPopup(), 850);
+    };
+    // Map may still be mounting / hidden — give it a beat.
+    const t = setTimeout(go, 380);
+    return () => clearTimeout(t);
+  }, [target]);
 
   const list = INSTITUTIONS
     .map((inst, idx) => ({ inst, idx }))

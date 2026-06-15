@@ -4,23 +4,54 @@ import { useState, useRef, useEffect, Suspense } from "react";
 import { useRouter } from "next/navigation";
 import InstitutionsMap from "./InstitutionsMap";
 
-// Parse inline markdown (**bold**, *italic*) into React nodes.
-function renderInline(content, keyBase) {
+// Parse inline markdown (**bold**, *italic*) and [[MAP:id|label]] map links
+// into React nodes. `onMap(id)` is called when a map link is clicked.
+function renderInline(content, keyBase, onMap) {
   const parts = [];
-  const regex = /\*\*(.+?)\*\*|\*(.+?)\*/g;
+  // Order matters: match the MAP token first, then bold, then italic.
+  const regex = /\[\[MAP:([^\]|]+)\|([^\]]+)\]\]|\*\*(.+?)\*\*|\*(.+?)\*/g;
   let last = 0, match;
   while ((match = regex.exec(content)) !== null) {
     if (match.index > last) parts.push(content.slice(last, match.index));
     if (match[1] !== undefined) {
+      // [[MAP:<id>|<label>]] → a clickable button that opens the map.
+      const id = match[1].trim();
+      const label = match[2].trim();
+      parts.push(
+        <button
+          key={keyBase + "-map-" + match.index}
+          onClick={() => onMap && onMap(id)}
+          style={{
+            display: "inline-flex", alignItems: "center", gap: 6,
+            verticalAlign: "middle", margin: "2px 0",
+            padding: "4px 11px", borderRadius: 999,
+            border: "1.5px solid var(--primary)",
+            background: "var(--primary-soft)", color: "var(--primary-dark)",
+            fontFamily: "'Space Grotesk', sans-serif", fontWeight: 700,
+            fontSize: 12.5, cursor: "pointer", lineHeight: 1.2,
+            transition: "background 0.12s",
+          }}
+          onMouseEnter={e => e.currentTarget.style.background = "#FBD7CE"}
+          onMouseLeave={e => e.currentTarget.style.background = "var(--primary-soft)"}
+        >
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none"
+               stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+            <circle cx="12" cy="10" r="3" />
+          </svg>
+          {label}
+        </button>
+      );
+    } else if (match[3] !== undefined) {
       parts.push(
         <strong key={keyBase + "-" + match.index} style={{ fontWeight: 700, color: "inherit" }}>
-          {match[1]}
+          {match[3]}
         </strong>
       );
     } else {
       parts.push(
         <em key={keyBase + "-" + match.index} style={{ fontStyle: "italic" }}>
-          {match[2]}
+          {match[4]}
         </em>
       );
     }
@@ -32,7 +63,7 @@ function renderInline(content, keyBase) {
 
 // Renders markdown-like text from Gemini:
 // # headings, **bold**, *italic*, "- " / "* " / "▸ " bullets.
-function renderMessage(text) {
+function renderMessage(text, onMap) {
   const lines = text.split("\n");
   return lines.map((line, li) => {
     // Heading: #, ##, ### ...
@@ -47,7 +78,7 @@ function renderMessage(text) {
           color: "var(--text)",
           marginTop: li === 0 ? 0 : 12, marginBottom: 2,
         }}>
-          {renderInline(heading[2], li)}
+          {renderInline(heading[2], li, onMap)}
         </div>
       );
     }
@@ -60,7 +91,7 @@ function renderMessage(text) {
       return (
         <div key={li} style={{ display: "flex", gap: 8, alignItems: "flex-start", marginTop: li === 0 ? 0 : 4 }}>
           <span style={{ width: 5, height: 5, borderRadius: "50%", background: "var(--primary)", flexShrink: 0, marginTop: 8 }} />
-          <span>{renderInline(content, li)}</span>
+          <span>{renderInline(content, li, onMap)}</span>
         </div>
       );
     }
@@ -68,7 +99,7 @@ function renderMessage(text) {
     // Empty line = spacer
     if (content.trim() === "") return <div key={li} style={{ height: 6 }} />;
 
-    return <div key={li} style={{ marginTop: li === 0 ? 0 : 2 }}>{renderInline(content, li)}</div>;
+    return <div key={li} style={{ marginTop: li === 0 ? 0 : 2 }}>{renderInline(content, li, onMap)}</div>;
   });
 }
 
@@ -79,8 +110,17 @@ function ChatApp() {
   const [loading,  setLoading]  = useState(false);
   const [error,    setError]    = useState("");
   const [tab,      setTab]      = useState("chat"); // "chat" | "map"
+  const [mapTarget, setMapTarget] = useState(null); // { id, key }
   const endRef   = useRef(null);
   const inputRef = useRef(null);
+
+  // Called from a [[MAP:id]] link in the chat: switch to the map tab and
+  // tell the map which institution to fly to. `key` lets repeat clicks
+  // on the same institution re-trigger the fly-to.
+  function openMapAt(id) {
+    setMapTarget({ id, key: Date.now() });
+    setTab("map");
+  }
 
   useEffect(() => {
     endRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -292,7 +332,7 @@ function ChatApp() {
                       </div>
                     ) : (
                       <div style={{ fontSize: 14, lineHeight: 1.65, color: "var(--text)" }}>
-                        {renderMessage(m.content)}
+                        {renderMessage(m.content, openMapAt)}
                       </div>
                     )}
                   </div>
@@ -395,7 +435,7 @@ function ChatApp() {
           flex: 1, minHeight: 0,
           display: tab === "map" ? "block" : "none",
         }}>
-          <InstitutionsMap open={tab === "map"} />
+          <InstitutionsMap open={tab === "map"} target={mapTarget} />
         </div>
       </div>
 
