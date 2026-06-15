@@ -5,13 +5,12 @@ import InstitutionsMap from "./InstitutionsMap";
 
 const SOFT_ERROR = "I could not answer just now. Please wait a moment and try again.";
 
-// Language configuration — native name is what's displayed in the picker
 const LANG_CONFIG = {
-  en:  { native: "English",  label: "English",  flag: "",   sub: "",         local: false },
-  fr:  { native: "Français", label: "Français", flag: "",   sub: "",         local: false },
-  fon: { native: "Fɔngbe",   label: "Fon",      flag: "🇧🇯", sub: "Bénin",   local: true  },
-  wo:  { native: "Wolof",    label: "Wolof",     flag: "🇸🇳", sub: "Sénégal", local: true  },
-  tw:  { native: "Twi",      label: "Twi",       flag: "🇬🇭", sub: "Ghana",   local: true  },
+  en:  { native: "English",  flag: "",   sub: "",         local: false },
+  fr:  { native: "Français", flag: "",   sub: "",         local: false },
+  fon: { native: "Fɔngbe",   flag: "🇧🇯", sub: "Bénin",   local: true  },
+  wo:  { native: "Wolof",    flag: "🇸🇳", sub: "Sénégal", local: true  },
+  tw:  { native: "Twi",      flag: "🇬🇭", sub: "Ghana",   local: true  },
 };
 
 const PLACEHOLDERS = {
@@ -20,6 +19,24 @@ const PLACEHOLDERS = {
   fon: "Wlan nǔ e ɖo wɛ ɖo Fɔngbe...",
   wo:  "Bind sa dëkk bi ci Wolof...",
   tw:  "Ka wo ho asɛm wɔ Twi mu...",
+};
+
+// Static strings for EN and FR; local langs are filled via API on language selection.
+const STATIC_STRINGS = {
+  en: {
+    welcome_title:   "Describe your situation",
+    welcome_sub:     "In plain words. NAWIRI will ask one question at a time to find what fits you.",
+    disclaimer:      "NAWIRI guides you. Always verify with the official body before any step.",
+    you:             "You",
+    new_chat:        "New chat",
+  },
+  fr: {
+    welcome_title:   "Décrivez votre situation",
+    welcome_sub:     "En langage libre. NAWIRI posera une question à la fois pour trouver ce qui vous correspond.",
+    disclaimer:      "NAWIRI vous oriente. Vérifiez toujours avec l'organisme officiel avant d'agir.",
+    you:             "Vous",
+    new_chat:        "Nouvelle conversation",
+  },
 };
 
 // ─── Markdown / MAP-link renderer ──────────────────────────────────────────────
@@ -31,8 +48,7 @@ function renderInline(content, keyBase, onMap) {
   while ((match = regex.exec(content)) !== null) {
     if (match.index > last) parts.push(content.slice(last, match.index));
     if (match[1] !== undefined) {
-      const id    = match[1].trim();
-      const label = match[2].trim();
+      const id = match[1].trim(), label = match[2].trim();
       parts.push(
         <button
           key={keyBase + "-map-" + match.index}
@@ -123,9 +139,7 @@ function LangCard({ code, onSelect }) {
       }}>
         {cfg.native}
       </div>
-      {cfg.sub && (
-        <div style={{ fontSize: 11, color: "var(--text-3)", marginTop: 4 }}>{cfg.sub}</div>
-      )}
+      {cfg.sub && <div style={{ fontSize: 11, color: "var(--text-3)", marginTop: 4 }}>{cfg.sub}</div>}
     </button>
   );
 }
@@ -144,7 +158,6 @@ function LanguagePicker({ onSelect }) {
         boxShadow: "0 24px 64px rgba(0,0,0,0.22)",
         width: "100%", maxWidth: 440, overflow: "hidden",
       }}>
-        {/* Header */}
         <div style={{ padding: "32px 28px 24px", textAlign: "center" }}>
           <div style={{
             fontFamily: "'Space Grotesk', sans-serif", fontWeight: 800,
@@ -160,13 +173,11 @@ function LanguagePicker({ onSelect }) {
           </p>
         </div>
 
-        {/* EN / FR */}
         <div style={{ padding: "0 24px", display: "flex", gap: 12 }}>
           <LangCard code="en" onSelect={onSelect} />
           <LangCard code="fr" onSelect={onSelect} />
         </div>
 
-        {/* Divider */}
         <div style={{ margin: "22px 24px 14px", display: "flex", alignItems: "center", gap: 10 }}>
           <div style={{ flex: 1, height: 1, background: "var(--border-soft)" }} />
           <span style={{
@@ -178,7 +189,6 @@ function LanguagePicker({ onSelect }) {
           <div style={{ flex: 1, height: 1, background: "var(--border-soft)" }} />
         </div>
 
-        {/* African languages */}
         <div style={{ padding: "0 24px 28px", display: "flex", gap: 12 }}>
           <LangCard code="fon" onSelect={onSelect} />
           <LangCard code="wo"  onSelect={onSelect} />
@@ -191,18 +201,14 @@ function LanguagePicker({ onSelect }) {
 
 // ─── Translation helper ─────────────────────────────────────────────────────────
 
-// Translates text via /api/translate.
-// [[MAP:id|label]] tokens: the label is embedded inline so it gets translated too,
-// then reassembled around the preserved id.
+// [[MAP:id|label]] → "label §n§" so the label gets translated but the id is preserved.
 async function translateText(text, src, tgt) {
-  // Extract MAP tokens: [[MAP:id|label]] → "label §n§"
   const mapIds = [];
   const prepared = text.replace(/\[\[MAP:([^\]|]+)\|([^\]]+)\]\]/g, (_, id, label) => {
     const n = mapIds.length;
     mapIds.push(id);
     return `${label} §${n}§`;
   });
-
   try {
     const res = await fetch("/api/translate", {
       method: "POST",
@@ -213,15 +219,12 @@ async function translateText(text, src, tgt) {
     const data = await res.json();
     let result = data.result || null;
     if (!result) return null;
-
-    // Restore: "translated label §n§" → [[MAP:id|translated label]]
     if (mapIds.length > 0) {
       result = result.replace(/([^§\n]+?)\s*§(\d+)§/g, (_, label, n) => {
         const id = mapIds[+n];
         return id ? `[[MAP:${id}|${label.trim()}]]` : label;
       });
     }
-
     return result;
   } catch {
     return null;
@@ -238,11 +241,13 @@ function ChatApp() {
   const [error,       setError]       = useState("");
   const [tab,         setTab]         = useState("chat");
   const [mapTarget,   setMapTarget]   = useState(null);
-  const [chosenLang,  setChosenLang]  = useState(null); // null = picker visible
+  const [chosenLang,  setChosenLang]  = useState(null);
   const [showPicker,  setShowPicker]  = useState(false);
 
-  // Clean English/French conversation history sent to Gemini.
-  // For local langs: always English. For EN/FR: same as display.
+  // UI strings in the chosen language (welcome title, sub, disclaimer, etc.)
+  const [uiStr, setUiStr] = useState(STATIC_STRINGS.en);
+
+  // Clean conversation history sent to Gemini (always EN for local langs, or chosen lang otherwise).
   const aiHistoryRef = useRef([]);
 
   const endRef   = useRef(null);
@@ -257,11 +262,33 @@ function ChatApp() {
 
   useEffect(() => {
     endRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages, loading, translating]);
+  }, [messages, loading]);
 
-  function selectLang(code) {
+  // Called when the user picks a language from the popup.
+  // For local langs: translate the key UI strings via the API so the welcome screen
+  // and hints appear in their language.
+  async function selectLang(code) {
     setChosenLang(code);
     setShowPicker(false);
+
+    if (LANG_CONFIG[code]?.local) {
+      const native = LANG_CONFIG[code].native;
+      const [title, sub, disc] = await Promise.all([
+        translateText("Describe your situation", "en", code),
+        translateText(`NAWIRI understands ${native}. Describe your situation freely.`, "en", code),
+        translateText("NAWIRI guides you. Always verify with the official body before any step.", "en", code),
+      ]);
+      setUiStr({
+        welcome_title: title    || "Describe your situation",
+        welcome_sub:   sub      || `NAWIRI understands ${native}. Describe your situation freely.`,
+        disclaimer:    disc     || "NAWIRI guides you. Always verify with the official body before any step.",
+        you:           "You",
+        new_chat:      "New chat",
+      });
+    } else {
+      setUiStr(STATIC_STRINGS[code] ?? STATIC_STRINGS.en);
+    }
+
     inputRef.current?.focus();
   }
 
@@ -272,6 +299,7 @@ function ChatApp() {
     aiHistoryRef.current = [];
     setChosenLang(null);
     setShowPicker(false);
+    setUiStr(STATIC_STRINGS.en);
   }
 
   async function send() {
@@ -285,7 +313,7 @@ function ChatApp() {
     setLoading(true);
 
     try {
-      // 1. For local languages: translate user input → English for Gemini
+      // For local langs: translate user input → English so Gemini always gets EN.
       let aiText = text;
       if (isLocalLang) {
         const xlated = await translateText(text, "auto", "en");
@@ -294,7 +322,6 @@ function ChatApp() {
 
       const newAiHistory = [...aiHistoryRef.current, { role: "user", content: aiText }];
 
-      // 2. Call Gemini
       const res = await fetch("/api/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -308,7 +335,7 @@ function ChatApp() {
         return;
       }
 
-      // 3. Stream English (or FR) response live
+      // Stream the English response live.
       const reader  = res.body.getReader();
       const decoder = new TextDecoder();
       let acc = "";
@@ -318,10 +345,7 @@ function ChatApp() {
         const { done, value } = await reader.read();
         if (done) break;
         acc += decoder.decode(value, { stream: true });
-        if (!started) {
-          started = true;
-          setLoading(false);
-        }
+        if (!started) { started = true; setLoading(false); }
         setMessages([...newDisplay, { role: "assistant", content: acc }]);
       }
 
@@ -331,19 +355,17 @@ function ChatApp() {
         return;
       }
 
-      // 4. Store English response in AI history
+      // Store English exchange in AI history.
       aiHistoryRef.current = [...newAiHistory, { role: "assistant", content: acc }];
 
-      // 5. For local languages: translate Gemini's English response → local lang
+      // For local langs: silently translate the response to the user's language.
       if (isLocalLang) {
-        setMessages([...newDisplay, { role: "assistant", content: acc, isTranslating: true }]);
         setTranslating(true);
         const xlated = await translateText(acc, "en", chosenLang);
         setTranslating(false);
+        // Show translated version if successful, otherwise keep the English text.
         if (xlated) {
-          setMessages([...newDisplay, { role: "assistant", content: xlated, wasTranslated: true }]);
-        } else {
-          setMessages([...newDisplay, { role: "assistant", content: acc, translateFailed: true }]);
+          setMessages([...newDisplay, { role: "assistant", content: xlated }]);
         }
       }
 
@@ -359,7 +381,6 @@ function ChatApp() {
   }
 
   const isBusy = loading || translating;
-  const cfg     = chosenLang ? LANG_CONFIG[chosenLang] : null;
 
   const suggestions = chosenLang === "fr"
     ? [
@@ -376,10 +397,7 @@ function ChatApp() {
   return (
     <div style={{ display: "flex", flexDirection: "column", height: "100vh", overflow: "hidden", background: "var(--bg)" }}>
 
-      {/* Language picker — shown on first load or when triggered */}
-      {(!chosenLang || showPicker) && (
-        <LanguagePicker onSelect={selectLang} />
-      )}
+      {(!chosenLang || showPicker) && <LanguagePicker onSelect={selectLang} />}
 
       {/* TOP BAR */}
       <header style={{
@@ -400,17 +418,14 @@ function ChatApp() {
           <TabButton active={tab === "map"}  onClick={() => setTab("map")}  label="Institutions"  icon={<MapIcon />} />
         </nav>
 
-        <div style={{ flex: 1, display: "flex", justifyContent: "flex-end", gap: 8 }}>
+        <div style={{ flex: 1, display: "flex", justifyContent: "flex-end", gap: 8, alignItems: "center" }}>
           {messages.length > 0 && (
-            <button
-              onClick={newChat}
-              style={{
-                padding: "5px 12px", borderRadius: "var(--radius)",
-                border: "1px solid var(--border)", background: "transparent",
-                fontSize: 12, fontWeight: 600, color: "var(--text-3)", cursor: "pointer",
-              }}
-            >
-              New chat
+            <button onClick={newChat} style={{
+              padding: "5px 12px", borderRadius: "var(--radius)",
+              border: "1px solid var(--border)", background: "transparent",
+              fontSize: 12, fontWeight: 600, color: "var(--text-3)", cursor: "pointer",
+            }}>
+              {uiStr.new_chat}
             </button>
           )}
         </div>
@@ -424,7 +439,6 @@ function ChatApp() {
           flex: 1, flexDirection: "column", overflow: "hidden",
           display: tab === "chat" ? "flex" : "none",
         }}>
-          {/* Messages */}
           <div style={{ flex: 1, overflowY: "auto", padding: "24px 16px" }}>
             <div style={{
               width: "100%", maxWidth: 820, margin: "0 auto", minHeight: "100%",
@@ -443,15 +457,10 @@ function ChatApp() {
                   }}>N</div>
 
                   <p style={{ fontFamily: "'Space Grotesk', sans-serif", fontWeight: 600, fontSize: 17, color: "var(--text)", marginBottom: 8 }}>
-                    {chosenLang === "fr" ? "Décrivez votre situation" : "Describe your situation"}
+                    {uiStr.welcome_title}
                   </p>
                   <p style={{ fontSize: 14, color: "var(--text-2)", lineHeight: 1.6, marginBottom: 24 }}>
-                    {isLocalLang
-                      ? `NAWIRI understands ${cfg.native}. Describe your situation freely.`
-                      : chosenLang === "fr"
-                        ? "En langage libre. NAWIRI posera une question à la fois pour trouver ce qui vous correspond."
-                        : "In plain words. NAWIRI will ask one question at a time to find what fits you."
-                    }
+                    {uiStr.welcome_sub}
                   </p>
 
                   {!isLocalLang && (
@@ -495,7 +504,7 @@ function ChatApp() {
                         fontFamily: "'Space Grotesk', sans-serif", fontWeight: 700,
                         fontSize: 13, color: "var(--text)", marginBottom: 3,
                       }}>
-                        {isUser ? (chosenLang === "fr" ? "Vous" : "You") : "NAWIRI"}
+                        {isUser ? uiStr.you : "NAWIRI"}
                       </div>
 
                       {isUser ? (
@@ -508,41 +517,16 @@ function ChatApp() {
                           {m.content}
                         </div>
                       ) : (
-                        <>
-                          <div style={{ fontSize: 14, lineHeight: 1.65, color: "var(--text)" }}>
-                            {renderMessage(m.content, openMapAt)}
-                          </div>
-                          {m.isTranslating && (
-                            <div style={{ display: "flex", alignItems: "center", gap: 6, marginTop: 8 }}>
-                              <span style={{
-                                width: 12, height: 12, flexShrink: 0,
-                                border: "2px solid var(--primary)", borderTopColor: "transparent",
-                                borderRadius: "50%", display: "inline-block",
-                                animation: "spin-badge 0.7s linear infinite",
-                              }} />
-                              <span style={{ fontSize: 11, color: "var(--text-3)", fontStyle: "italic" }}>
-                                {cfg?.native ? `Translating to ${cfg.native}...` : "Translating..."}
-                              </span>
-                            </div>
-                          )}
-                          {m.wasTranslated && (
-                            <div style={{ fontSize: 11, color: "var(--text-3)", marginTop: 6 }}>
-                              🌍 translated to {cfg?.native ?? "local language"}
-                            </div>
-                          )}
-                          {m.translateFailed && (
-                            <div style={{ fontSize: 11, color: "var(--text-3)", marginTop: 6, fontStyle: "italic" }}>
-                              Translation unavailable — response in English.
-                            </div>
-                          )}
-                        </>
+                        <div style={{ fontSize: 14, lineHeight: 1.65, color: "var(--text)" }}>
+                          {renderMessage(m.content, openMapAt)}
+                        </div>
                       )}
                     </div>
                   </div>
                 );
               })}
 
-              {loading && (
+              {(loading || translating) && (
                 <div style={{ display: "flex", gap: 12, alignItems: "flex-start" }}>
                   <Avatar role="assistant" />
                   <div style={{ flex: 1, paddingTop: 5 }}>
@@ -584,37 +568,17 @@ function ChatApp() {
           }}>
             <div style={{ width: "100%", maxWidth: 820, margin: "0 auto" }}>
 
-              {/* Language indicator + change button */}
-              {cfg && (
-                <div style={{
-                  display: "flex", alignItems: "center", justifyContent: "space-between",
-                  marginBottom: 8,
-                }}>
-                  <div style={{
-                    display: "flex", alignItems: "center", gap: 6,
-                    fontSize: 12, color: "var(--text-3)", fontWeight: 600,
-                  }}>
-                    {cfg.flag && <span>{cfg.flag}</span>}
-                    <span>{cfg.native}</span>
-                    {isLocalLang && (
-                      <span style={{
-                        fontSize: 10, background: "var(--primary-soft)",
-                        color: "var(--primary)", padding: "1px 7px",
-                        borderRadius: 99, fontWeight: 700,
-                      }}>
-                        Auto-translate
-                      </span>
-                    )}
-                  </div>
+              {/* Change language link */}
+              {chosenLang && (
+                <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: 6 }}>
                   <button
                     onClick={() => setShowPicker(true)}
                     style={{
                       fontSize: 11, color: "var(--primary)", fontWeight: 600,
-                      background: "none", border: "none", cursor: "pointer",
-                      padding: "2px 4px",
+                      background: "none", border: "none", cursor: "pointer", padding: "2px 4px",
                     }}
                   >
-                    Change ›
+                    Change language ›
                   </button>
                 </div>
               )}
@@ -656,10 +620,7 @@ function ChatApp() {
               </div>
 
               <p style={{ fontSize: 11, color: "var(--text-3)", marginTop: 8, textAlign: "center" }}>
-                {chosenLang === "fr"
-                  ? "NAWIRI vous oriente. Vérifiez toujours avec l'organisme officiel avant d'agir."
-                  : "NAWIRI guides you. Always verify with the official body before any step."
-                }
+                {uiStr.disclaimer}
               </p>
             </div>
           </div>
@@ -685,9 +646,6 @@ function ChatApp() {
         @keyframes dot-bounce {
           0%, 80%, 100% { transform: translateY(0); opacity: 0.4; }
           40% { transform: translateY(-5px); opacity: 1; }
-        }
-        @keyframes spin-badge {
-          to { transform: rotate(360deg); }
         }
         .bottom-nav { display: none; }
         @media (max-width: 640px) {
@@ -780,8 +738,6 @@ function MapIcon() {
     </svg>
   );
 }
-
-// ─── Page wrapper ───────────────────────────────────────────────────────────────
 
 export default function ChatPage() {
   return (
