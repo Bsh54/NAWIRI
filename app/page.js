@@ -32,15 +32,15 @@ const T = {
     ],
     why_title: "Why AI and not a search engine",
     why_items: [
-      { icon: "🧠", title: "It understands your situation",       desc: "A form cannot grasp a free-text description mixing health, finances and family signals at once. NAWIRI can." },
-      { icon: "⚖️", title: "It crosses eligibility criteria",    desc: "Dozens of variables per program. A static tool cannot handle the combinatorics. NAWIRI does." },
-      { icon: "🛡️", title: "It guides — it never decides",      desc: "NAWIRI orients. It never certifies eligibility. Only an official agent can validate a file." },
+      { icon: "brain", title: "It understands your situation",       desc: "A form cannot grasp a free-text description mixing health, finances and family signals at once. NAWIRI can." },
+      { icon: "scale", title: "It crosses eligibility criteria",    desc: "Dozens of variables per program. A static tool cannot handle the combinatorics. NAWIRI does." },
+      { icon: "shield", title: "It guides — it never decides",      desc: "NAWIRI orients. It never certifies eligibility. Only an official agent can validate a file." },
     ],
     countries_title: "Programs covered",
     countries: [
-      { flag: "🇧🇯", name: "Benin",   count: "11 programs", items: ["Mandatory health insurance (AMO/ARCH)", "Free malaria care for children under 5 and pregnant women", "Free cesarean section", "Alafia microcredit (FNM)", "GBESSOKÉ cash transfers", "Free ARVs and HIV care", "CNSS old-age pension"] },
-      { flag: "🇸🇳", name: "Senegal", count: "7 programs",  items: ["Community health mutuals (CMU)", "Free care for children under 5", "Plan Sésame (60+)", "Family Security Grant (PNBSF)", "Free cesarean section", "Free dialysis", "Equal Opportunity Card (disability)"] },
-      { flag: "🇬🇭", name: "Ghana",   count: "4 programs",  items: ["National Health Insurance (NHIS)", "Free maternal health care", "Free dialysis (since December 2024)", "LEAP cash transfer"] },
+      { flag: "BJ", name: "Benin",   count: "11 programs", items: ["Mandatory health insurance (AMO/ARCH)", "Free malaria care for children under 5 and pregnant women", "Free cesarean section", "Alafia microcredit (FNM)", "GBESSOKÉ cash transfers", "Free ARVs and HIV care", "CNSS old-age pension"] },
+      { flag: "SN", name: "Senegal", count: "7 programs",  items: ["Community health mutuals (CMU)", "Free care for children under 5", "Plan Sésame (60+)", "Family Security Grant (PNBSF)", "Free cesarean section", "Free dialysis", "Equal Opportunity Card (disability)"] },
+      { flag: "GH", name: "Ghana",   count: "4 programs",  items: ["National Health Insurance (NHIS)", "Free maternal health care", "Free dialysis (since December 2024)", "LEAP cash transfer"] },
     ],
     ai_title:    "Responsible AI by design",
     ai_items: [
@@ -81,15 +81,15 @@ const T = {
     ],
     why_title: "Pourquoi l'IA et pas un moteur de recherche",
     why_items: [
-      { icon: "🧠", title: "Elle comprend votre situation",        desc: "Un formulaire ne peut pas saisir une description libre mêlant santé, finances et signaux familiaux. NAWIRI le peut." },
-      { icon: "⚖️", title: "Elle croise les critères d'éligibilité", desc: "Des dizaines de variables par programme. Un outil statique ne peut pas gérer la combinatoire. NAWIRI le fait." },
-      { icon: "🛡️", title: "Elle oriente — elle ne décide jamais", desc: "NAWIRI oriente. Elle ne certifie jamais l'éligibilité. Seul un agent officiel peut valider un dossier." },
+      { icon: "brain", title: "Elle comprend votre situation",        desc: "Un formulaire ne peut pas saisir une description libre mêlant santé, finances et signaux familiaux. NAWIRI le peut." },
+      { icon: "scale", title: "Elle croise les critères d'éligibilité", desc: "Des dizaines de variables par programme. Un outil statique ne peut pas gérer la combinatoire. NAWIRI le fait." },
+      { icon: "shield", title: "Elle oriente — elle ne décide jamais", desc: "NAWIRI oriente. Elle ne certifie jamais l'éligibilité. Seul un agent officiel peut valider un dossier." },
     ],
     countries_title: "Programmes couverts",
     countries: [
-      { flag: "🇧🇯", name: "Bénin",    count: "11 programmes", items: ["Assurance maladie obligatoire (AMO/ARCH)", "Gratuité paludisme <5 ans et femmes enceintes", "Gratuité césarienne", "Microcrédit Alafia (FNM)", "Transferts cash GBESSOKÉ", "ARV et soins VIH gratuits", "Pension vieillesse CNSS"] },
-      { flag: "🇸🇳", name: "Sénégal",  count: "7 programmes",  items: ["Mutuelles de santé CMU", "Gratuité soins enfants <5 ans", "Plan Sésame (60+)", "Bourse de Sécurité Familiale (PNBSF)", "Gratuité césarienne", "Gratuité dialyse", "Carte d'Égalité des Chances (handicap)"] },
-      { flag: "🇬🇭", name: "Ghana",    count: "4 programmes",  items: ["Assurance nationale NHIS", "Soins maternels gratuits", "Dialyse gratuite (depuis décembre 2024)", "Transfert cash LEAP"] },
+      { flag: "BJ", name: "Bénin",    count: "11 programmes", items: ["Assurance maladie obligatoire (AMO/ARCH)", "Gratuité paludisme <5 ans et femmes enceintes", "Gratuité césarienne", "Microcrédit Alafia (FNM)", "Transferts cash GBESSOKÉ", "ARV et soins VIH gratuits", "Pension vieillesse CNSS"] },
+      { flag: "SN", name: "Sénégal",  count: "7 programmes",  items: ["Mutuelles de santé CMU", "Gratuité soins enfants <5 ans", "Plan Sésame (60+)", "Bourse de Sécurité Familiale (PNBSF)", "Gratuité césarienne", "Gratuité dialyse", "Carte d'Égalité des Chances (handicap)"] },
+      { flag: "GH", name: "Ghana",    count: "4 programmes",  items: ["Assurance nationale NHIS", "Soins maternels gratuits", "Dialyse gratuite (depuis décembre 2024)", "Transfert cash LEAP"] },
     ],
     ai_title:    "IA responsable par conception",
     ai_items: [
@@ -105,6 +105,46 @@ const T = {
     footer_privacy: "Aucune donnée personnelle stockée sur nos serveurs.",
   },
 };
+
+// ─── SVG icon set ──────────────────────────────────────────────────────────────
+
+const ICONS = {
+  brain: (
+    <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96-.44 2.5 2.5 0 0 1-2.96-3.08 3 3 0 0 1-.34-5.58 2.5 2.5 0 0 1 1.32-4.24 2.5 2.5 0 0 1 1.98-3A2.5 2.5 0 0 1 9.5 2Z"/>
+      <path d="M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96-.44 2.5 2.5 0 0 0 2.96-3.08 3 3 0 0 0 .34-5.58 2.5 2.5 0 0 0-1.32-4.24 2.5 2.5 0 0 0-1.98-3A2.5 2.5 0 0 0 14.5 2Z"/>
+    </svg>
+  ),
+  scale: (
+    <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
+      <path d="m16 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/>
+      <path d="m2 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/>
+      <path d="M7 21h10"/>
+      <path d="M12 3v18"/>
+      <path d="M3 7h2c2 0 5-1 7-2 2 1 5 2 7 2h2"/>
+    </svg>
+  ),
+  shield: (
+    <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+      <polyline points="9 12 11 14 15 10"/>
+    </svg>
+  ),
+};
+
+function FlagBadge({ code }) {
+  return (
+    <div style={{
+      width: 36, height: 36, borderRadius: 10, flexShrink: 0,
+      background: "var(--primary)", color: "#fff",
+      display: "flex", alignItems: "center", justifyContent: "center",
+      fontFamily: "'Space Grotesk', sans-serif", fontWeight: 800, fontSize: 11,
+      letterSpacing: "0.05em",
+    }}>
+      {code}
+    </div>
+  );
+}
 
 // ─── Landing page ───────────────────────────────────────────────────────────────
 
@@ -396,7 +436,13 @@ export default function Landing() {
                 border: "1px solid var(--border-soft)",
                 borderRadius: "var(--radius-lg)",
               }}>
-                <div style={{ fontSize: 28, marginBottom: 18 }}>{item.icon}</div>
+                <div style={{
+                  width: 48, height: 48, borderRadius: 12, marginBottom: 18,
+                  background: "var(--primary-soft)", color: "var(--primary)",
+                  display: "flex", alignItems: "center", justifyContent: "center",
+                }}>
+                  {ICONS[item.icon]}
+                </div>
                 <div style={{
                   fontFamily: "'Space Grotesk', sans-serif",
                   fontWeight: 700, fontSize: 16, color: "var(--text)", marginBottom: 10, lineHeight: 1.3,
@@ -442,7 +488,7 @@ export default function Landing() {
                   display: "flex", alignItems: "center", justifyContent: "space-between",
                 }}>
                   <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-                    <span style={{ fontSize: 24 }}>{c.flag}</span>
+                    <FlagBadge code={c.flag} />
                     <span style={{
                       fontFamily: "'Space Grotesk', sans-serif",
                       fontWeight: 700, fontSize: 18, color: "var(--text)",
