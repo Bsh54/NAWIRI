@@ -6,7 +6,7 @@ const nextConfig = {
   // under `experimental`. (Next 16 moved it to the top level.)
   experimental: {
     outputFileTracingIncludes: {
-      "/api/chat": ["./data/**", "./prompts/**"],
+      "/api/chat": ["./data/**/*.md", "./prompts/**"],
     },
   },
 };

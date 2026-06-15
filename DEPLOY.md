@@ -77,4 +77,4 @@ Vercel redéploie automatiquement. ✅
 - `app/api/chat/route.js` — le backend qui appelle Gemini (cache la clé)
 - `lib/context.js` — assemble le system prompt + les données du pays choisi
 - `prompts/system-prompt.md` — le « cerveau » (rôle, garde-fous, format)
-- `data/BENIN.md` / `SENEGAL.md` / `GHANA.md` — la base des programmes
+- `data/benin/BENIN.md` / `senegal/SENEGAL.md` / `ghana/GHANA.md` — la base des programmes (+ `SOURCES.md` et `documents/` par pays)

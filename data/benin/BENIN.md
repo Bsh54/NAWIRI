@@ -16,7 +16,7 @@
 ## LEGAL REFERENCE FRAMEWORK — RAMU (context, not a service desk)
 
 - **Official name:** Universal Health Insurance Scheme (RAMU — Régime d'Assurance Maladie Universelle)
-- **Legal basis:** Law No. 2015-42 of 17 March 2016 (adopted 28 December 2015), promulgated by decree. Local source file: `loi-2015-42.pdf`.
+- **Legal basis:** Law No. 2015-42 of 17 March 2016 (adopted 28 December 2015), promulgated by decree. Local source file: `documents/loi-2015-42.pdf` (see `SOURCES.md`).
 - **Nature:** **mandatory** scheme with progressive rollout (Art. 3).
 - **What RAMU legally covers (Art. 24, 26):** preventive, curative and rehabilitative care, required medication, maternity — including: consultations and hospitalization; medication, medical consumables and labile blood products; laboratory tests and radiology; surgical procedures; physical rehabilitation/functional readaptation; mandatory vaccines; locally manufactured orthopedic devices; medical referral transport; pregnancy- and childbirth-related care.
 - **Legal exclusions (Art. 29):** comfort care, cosmetic surgery, thermal cures, mesotherapy, thalassotherapy, homeopathy/alternative medicine, care provided outside the national territory, non-contracted providers.
