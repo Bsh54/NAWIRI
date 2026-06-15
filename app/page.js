@@ -104,6 +104,120 @@ const T = {
     footer_tagline: "USAII Global AI Hackathon 2026 · Équipe EVOLUTICS · Université d'Abomey-Calavi, Bénin",
     footer_privacy: "Aucune donnée personnelle stockée sur nos serveurs.",
   },
+
+  // African-language copy, pre-translated from English via the Google Translate API
+  // (same engine the chat uses). Static so the landing renders instantly with no spinner.
+  fon: {
+    nav_countries: "Benin · Sénégal · Gana",
+    h1a: "Alɔdó togun tɔn tíìn.",
+    h1b: "Mi nú mǐ ni ba towe.",
+    sub: "Hwɛndo lɛ nɔ gɔn alɔdó e ye ɖó acɛ na ɖò sɛ́n linu é — azǎn ɖokpo ɖokpo jí. É nyí ɖó é ma tíìn ǎ wutu wɛ ǎ, loɔ, ɖó tutoblonunu ɔ vɛwǔ tawun bɔ è na zán wutu wɛ. NAWIRI wɛ nyí pont ɔ.",
+    quote: "« Mɛ lɛ nɔ gɔn alɔdo hwɛhwɛ ɖó é ma tíìn ǎ wutu wɛ ǎ, loɔ, ɖó tuto ɔ vɛwǔ tawun bɔ è na zán. »",
+    cta: "Bɛ̌ din, vɔ̌nu",
+    demo_user: "Vi ce ɖo xwe 3 bo nɔ jɛ azɔn hwɛhwɛ. Mǐ ɖó akwɛzinzan ɖě ǎ. Un nɔ nɔ Bénin.",
+    demo_q: "A ka wlan nyikɔ towe dó ANIP sín tuto biométrique (carte d’identité nationale) mɛ à?",
+    stats: [
+      { value: "22", label: "tuto e è wlan lɛ é" },
+      { value: "3",  label: "tò e mɛ è ɖɔ xó dó lɛ é" },
+      { value: "5",  label: "gbè e è nɔ gudo nú lɛ é" },
+    ],
+    how_title: "Lee é nɔ w’azɔ̌ gbɔn é",
+    steps: [
+      { n: "01", title: "Wlan kpo xógbe e ɖò wɛn lɛ é kpo", desc: "Glɛnsigbe, Flanségbe, alǒ gbè xá towe tɔn. Tinmɛ ninɔmɛ towe ɖò vivo mɛ — xógbe alɔkpa lɛ ɖě, xógbe syɛnsyɛn lɛ ɖě ǎ." },
+      { n: "02", title: "NAWIRI kàn nǔ ɖokpo byɔ", desc: "Hweɖelɛnu ɔ, bo na dó tuùn tuto ɖěɖee sɔgbe xá ninɔmɛ towe lɛ é pɛ́pɛ́pɛ́pɛ́." },
+      { n: "03", title: "A mɔ tuto nǔwiwa tɔn ɖé bɔ é ɖò wɛn", desc: "Tuto ɔ sín nyikɔ, wema e mi ɖo na sɔnu tɔn lɛ e, afɔ e bɔ d'ewu e, mɛ e è na ylɔ e." },
+      { n: "04", title: "A nɔ gbéjé kpɔ́n bo nɔ wà nǔ", desc: "NAWIRI sín alixlɛ́mɛtɔ́ lɛ. Agbaza acɛkpikpa tɔn wɛ nɔ ɖexlɛ́ ɖɔ nǔgbo wɛ. A nɔ wá gbeta ɔ kɔn — hwebǐnu." },
+    ],
+    why_title: "Etɛwu AI ma ka nyí nǔbiba sín mɔ̌to ɖé ǎ",
+    why_items: [
+      { icon: "brain",  title: "É mɔ nukúnnú jɛ ninɔmɛ towe mɛ", desc: "Fómu ɖé sixu mɔ nukúnnú jɛ tinmɛ e è wlan dó wema mɛ bo nɔ xò lanmɛ na nɔ ganji, akwɛzinzan kpo wuntun xwédo tɔn lɛ kpo kplé é wu azɔn ɖokpo ǎ. NAWIRI sixu." },
+      { icon: "scale",  title: "É gbɔn nǔ e è byɔ ɖò mɛ sí lɛ é jí", desc: "Nǔ vovo mɔkpan wɛ ɖò tuto ɖokpo ɖokpo mɛ. Azɔwanú e ɖò te é ɖé sixu kpé nukún dó nǔ e è nɔ ylɔ ɖɔ combinatoire lɛ é wu ǎ. NAWIRI nɔ wà mɔ̌." },
+      { icon: "shield", title: "É nɔ xlɛ́ ali — é nɔ wá gbeta ɔ kɔn gbeɖé ǎ", desc: "NAWIRI nɔ xlɛ́ ali. É nɔ ɖexlɛ́ gbeɖé ɖɔ è jɛxa ǎ. Mɛ e nɔ w’azɔ̌ ɖò acɛkpikpa ɔ glɔ́ é kɛɖɛ wɛ sixu gbéjé wěma ɖé kpɔ́n." },
+    ],
+    countries_title: "Tuto e è kplɔ́n lɛ é",
+    countries: [
+      { flag: "BJ", name: "Benin",   count: "Tuto 11", items: ["Akwɛzinzan lanmɛ na nɔ ganji tɔn e ɖò dandan é (AMO/ARCH)", "Zansukpɛ zɔn vɔ̌nu nú yɔkpɔvu e ma ko ɖó xwè atɔ́ɔ́n ǎ lɛ é kpo nyɔnu e ɖò xomɛ lɛ é kpo", "Cesarean vɔ̌nu", "Alafia sín akwɛ kpɛví (FNM)", "GBESSOKÉ akwɛ ɖiɖe", "ARV kpo VIH kpo sín nukúnkpédómɛwu vɔ̌nu", "CNSS pension mɛxoxwe tɔn"] },
+      { flag: "SN", name: "Sénégal", count: "Tuto 7",  items: ["Lanmɛ na nɔ ganji mɛ lɛ tɔn (CMU)", "Nukúnkpédómɛwu vɔ̌nu nú vǐ e ma ko ɖó xwè 5 ǎ lɛ é", "Sésame sín tito (60 jɛji)", "Akwɛzinzan nú Acɛkpikpa Xwédo Tɔn (PNBSF)", "Cesarean vɔ̌nu", "Dialyse vɔ̌nu", "Kati Ali ɖokpo ɔ tɔn (azinzɔnnɔ)"] },
+      { flag: "GH", name: "Ghana",   count: "Tuto 4",  items: ["Assurance lanmɛ na nɔ ganji tɔn tò ɔ tɔn (NHIS)", "Nɔ lɛ sín lanmɛ na nɔ ganji vɔ̌nu", "Dialyse vɔ̌nu (sín décembre 2024)", "LEAP akwɛ ɖiɖe"] },
+    ],
+    cta2_title: "A ɖò gbesisɔmɛ bo na mɔ nǔ e jɛxa we é à?",
+    cta2_sub: "Blǒ xóɖɔɖókpɔ́ ɖé. É nɔ ɖu cɛju 2 mɔ̌ ǎ.",
+    cta2_btn: "Bɛ̌ dìn →",
+  },
+  wo: {
+    nav_countries: "Bénin · Sénégal · Ghana",
+    h1a: "Ndimbalu mbooloo am na.",
+    h1b: "Nanu wut sa bos.",
+    sub: "Njaboot yi duñu am ndimmbal lu leen yelloo ci yoon — bis bu nekk. Du ndax amul, waaye ndax sistem bi jafe navigate. NAWIRI moy pont bi.",
+    quote: "« Nit ñi dañuy faral di ñàkka am ndimbal, te du ndax amul, waaye ndax sistem bi dafa jafe lool ngir doxal. »",
+    cta: "Tambalil leegi, doo fay",
+    demo_user: "Sama doom amna 3 at te dafay faral di feebar. Amu nu assurance wérgi-yaram. Maa ngi dëkk Bénin.",
+    demo_q: "Ndax bind nga sa tur ci sistem biometrik ANIP (kàrtu identite nasonaal)?",
+    stats: [
+      { value: "22", label: "prograam yuñ bind" },
+      { value: "3",  label: "réew yiñ wax" },
+      { value: "5",  label: "làkk yiñ jàppale" },
+    ],
+    how_title: "Nimuy doxee",
+    steps: [
+      { n: "01", title: "Bindal ci kàddu yu leer", desc: "Angale, Français wala sa làkku dëkk bi. Waxñu sa dundu ci lu leer — amul benn xeetu mbind, amul benn jargon." },
+      { n: "02", title: "NAWIRI dafa laaj benn laaj", desc: "Benn yoon, ngir xam bu baax ban prograam moo méngoo ak sa dundu." },
+      { n: "03", title: "Danga am pexe jëf bu leer", desc: "Turu prograam bi, këyitu waajal yi, jéego yi ci topp, jokkool ofisel bi." },
+      { n: "04", title: "Yaa ngi xool ba noppi jëfandikoo", desc: "NAWIRI dafay jubal. Baŋxaas ofisel bi mooy firndeel. Yaay jël dogal — saa yu nekk." },
+    ],
+    why_title: "Lu tax IA te du motëru seetlu",
+    why_items: [
+      { icon: "brain",  title: "Dafa xam sa dundu", desc: "Formileer mënul jàpp tegtal bu amul benn mbind buy jaxase wérgi-yaram, xaalis ak siñaal famiy ci benn yoon. NAWIRI mën na." },
+      { icon: "scale",  title: "Dafay romb kritër yiñ tëral", desc: "Fukki-fukki variable ci prograam bu nekk. Jumtukaay bu taxaw mënul jëfandikoo kombinatorik. NAWIRI def ko." },
+      { icon: "shield", title: "Dafay tegtal — du musa jël dogal", desc: "NAWIRI dafay jubal. Du musa firndeel ni yelloo nañu ko. Agent ofisel kese moo mëna saytu fichier bi." },
+    ],
+    countries_title: "Prograam yiñ wax",
+    countries: [
+      { flag: "BJ", name: "Bénin",   count: "11 prograam", items: ["Assurance wérgi-yaram bu war (AMO/ARCH)", "Faj sibbiru bu amul fey ngir xale yu tolluwul ci 5 at ak jigéen ñu ëmb", "Sesarean gratuit", "Microcrédit Alafia (FNM)", "GBESSOKÉ xaliss", "ARV ak pajum VIH te doo fay", "Pension magget yu CNSS"] },
+      { flag: "SN", name: "Sénégal", count: "7 prograam",  items: ["Mutuel yu wérgi-yaram ci askan wi (CMU)", "Xale yu tolluwul ci 5 at ñu ngi koy toppatoo te doo fay", "Plan Sésame (60+)", "Kaaraange njaboot (PNBSF)", "Sesarean gratuit", "Dialyse buy maye", "Kartu yamale sañ-sañ (invalidite)"] },
+      { flag: "GH", name: "Gana",    count: "4 prograam",  items: ["Assurance Wérgi-yaram bu Réew mi (NHIS)", "Toppatoo wérgi-yaramu yaay bu amul fey", "Dialyse buy maye (decembre 2024 ba leegi)", "LEAP xaalis"] },
+    ],
+    cta2_title: "Ndax waajal nga gis li nga yelloo?",
+    cta2_sub: "Tambalil waxtaan. Du def lu ëpp 2 simili.",
+    cta2_btn: "Tambalil leegi →",
+  },
+  tw: {
+    nav_countries: "Benin · Senegal · Ghana",
+    h1a: "Ɔmanfo mmoa wɔ hɔ.",
+    h1b: "Momma yɛnhwehwɛ wo de.",
+    sub: "Mmusua hwere mmoa a wɔwɔ hokwan wɔ mmara mu — da biara da. Ɛnyɛ sɛ enni hɔ nti, na mmom esiane sɛ ɛyɛ den dodo sɛ wobɛfa nhyehyɛe no mu nti. NAWIRI ne bridge no.",
+    quote: "« Nkurɔfo taa hwere mmoa ɛnyɛ sɛ enni hɔ nti, na mmom esiane sɛ nhyehyɛe no yɛ den dodo sɛ wɔbɛfa mu nti. »",
+    cta: "Fi ase mprempren, ɛyɛ kwa",
+    demo_user: "Me ba adi mfe 3 na ɔtaa yare. Yenni akwahosan ho insurance biara. Mete Benin.",
+    demo_q: "So woakyerɛw wo din wɔ ANIP biometric nhyehyɛe (ɔman ID krataa) mu?",
+    stats: [
+      { value: "22", label: "nhyehyɛe ahorow a wɔakyerɛw ato hɔ" },
+      { value: "3",  label: "aman a wɔka ho asɛm" },
+      { value: "5",  label: "kasa horow a wɔboa" },
+    ],
+    how_title: "Sɛnea ɛyɛ adwuma",
+    steps: [
+      { n: "01", title: "Fa nsɛmfua a emu da hɔ kyerɛw", desc: "Borɔfo, Franse kasa, anaa wo kurom kasa. Kyerɛkyerɛ wo tebea no mu kwa — ɔkwan biara nni hɔ, kasakoa biara nni hɔ." },
+      { n: "02", title: "NAWIRI bisa asɛm biako", desc: "Bere bi mu no, sɛnea ɛbɛyɛ a wobɛkyerɛ dwumadi ahorow a ɛne wo tebea no hyia pɛpɛɛpɛ." },
+      { n: "03", title: "Wo nsa ka adeyɛ nhyehyɛe a emu da hɔ", desc: "Dwumadi no din, nkrataa a ɛsɛ sɛ wosiesie, anammɔn a edi hɔ pɛpɛɛpɛ, aban nkitahodi." },
+      { n: "04", title: "Wohwɛ sɛ ɛyɛ nokware na woyɛ ho biribi", desc: "NAWIRI akwankyerɛfo. Aban kuw no gye tom. Wo na wo si gyinae — bere nyinaa." },
+    ],
+    why_title: "Dɛn nti na AI na ɛnyɛ search engine",
+    why_items: [
+      { icon: "brain",  title: "Ɛte wo tebea no ase", desc: "Krataa bi ntumi nte nkyerɛkyerɛmu a wɔde nsɛm a wɔakyerɛw a wɔmfa hwee nto mu a ɛde akwahosan, sikasɛm ne abusua nsɛnkyerɛnne frafra prɛko pɛ no ase. NAWIRI betumi." },
+      { icon: "scale",  title: "Ɛtwa gyinapɛn ahorow a wɔde fata ho", desc: "Nsakrae ahorow du du pii wɔ dwumadi biara mu. Adwinnade a ɛyɛ static ntumi nni combinatorics no ho dwuma. NAWIRI yɛ saa." },
+      { icon: "shield", title: "Ɛkyerɛ kwan — ɛnsi gyinae da", desc: "NAWIRI kyerɛ kwan. Ɛnkyerɛ sɛ obi fata da. Ɔmanpanyin a ɔyɛ ɔnanmusifo nkutoo na obetumi agye fael bi atom." },
+    ],
+    countries_title: "Dwumadi ahorow a wɔka ho asɛm",
+    countries: [
+      { flag: "BJ", name: "Benin",   count: "11 dwumadi", items: ["Akwahosan ho insurance a ɛyɛ ahyɛde (AMO/ARCH)", "Mmofra a wonnii mfe 5 ne mmea a wɔyem a wɔhwɛ wɔn a wontua hwee wɔ asramma ho", "Oprehyɛn a wontua hwee", "Alafia bosea nketewa (FNM)", "GBESSOKÉ sika a wɔde kɔma afoforo", "ARV ne HIV hwɛ a wontua hwee", "CNSS nkwakoraa ne mmerewa pɛnhyen sika"] },
+      { flag: "SN", name: "Senegal", count: "7 dwumadi",  items: ["Mpɔtam hɔ akwahosan ho nhyehyɛe (CMU)", "Wɔhwɛ mmofra a wonnii mfe 5 a wontua hwee", "Nhyehyɛe Sésame (60+)", "Abusua Ahobammɔ Ho Mmoa (PNBSF)", "Oprehyɛn a wontua hwee", "Dialysis a wɔde ma kwa", "Hokwan a Ɛyɛ Pɛ Kaad (dɛmdi)"] },
+      { flag: "GH", name: "Ghana",   count: "4 dwumadi",  items: ["Ɔman Akwahosan Insurance (NHIS)", "Ɛnanom akwahosan ho nhyehyɛe a wontua hwee", "Dialysis a wontua hwee (efi December 2024)", "LEAP sika a wɔde mena"] },
+    ],
+    cta2_title: "Woasiesie wo ho sɛ wubenya nea wowɔ hokwan sɛ wunya?",
+    cta2_sub: "Fi ase mmɔ nkɔmmɔ. Egye nea ennu simma 2.",
+    cta2_btn: "Fi ase mprempren →",
+  },
 };
 
 // ─── SVG icon set ──────────────────────────────────────────────────────────────
@@ -152,6 +266,14 @@ const UI_LANGS = [
   { code: "en", label: "English" },
   { code: "fr", label: "Français" },
 ];
+const UI_LANGS_AFRICAN = [
+  { code: "fon", label: "Fɔngbe" },
+  { code: "wo",  label: "Wolof" },
+  { code: "tw",  label: "Twi" },
+];
+const LANG_SHORT = { en: "EN", fr: "FR", fon: "Fɔn", wo: "Wol", tw: "Twi" };
+const NAV_START  = { en: "Start", fr: "Commencer", fon: "Bɛ̌ dìn", wo: "Tambalil", tw: "Fi ase" };
+const ONLINE     = { en: "Online", fr: "En ligne", fon: "Ðò te", wo: "Ci kaw", tw: "Wɔ hɔ" };
 
 function LangSwitcher({ lang, setLang }) {
   const [open, setOpen] = useState(false);
@@ -185,7 +307,7 @@ function LangSwitcher({ lang, setLang }) {
           <circle cx="12" cy="12" r="10" />
           <path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
         </svg>
-        <span>{lang.toUpperCase()}</span>
+        <span>{LANG_SHORT[lang] || lang.toUpperCase()}</span>
         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"
              style={{ opacity: 0.6, transition: "transform 0.2s", transform: open ? "rotate(180deg)" : "none" }}>
           <polyline points="6,9 12,15 18,9" />
@@ -194,39 +316,58 @@ function LangSwitcher({ lang, setLang }) {
 
       {open && (
         <div style={{
-          position: "absolute", right: 0, top: "calc(100% + 8px)", width: 168,
+          position: "absolute", right: 0, top: "calc(100% + 8px)", width: 184,
           background: "var(--bg-card)", border: "1.5px solid var(--border)",
           borderRadius: 12, boxShadow: "0 12px 32px rgba(0,0,0,0.13)",
           overflow: "hidden", padding: 4, zIndex: 500,
         }}>
-          {UI_LANGS.map(({ code, label }) => {
-            const active = lang === code;
-            return (
-              <button
-                key={code}
-                onClick={() => { setLang(code); setOpen(false); }}
-                style={{
-                  display: "flex", alignItems: "center", gap: 10, width: "100%",
-                  padding: "11px 14px", borderRadius: 8, border: "none", cursor: "pointer",
-                  textAlign: "left", background: active ? "var(--primary-soft)" : "transparent",
-                  color: active ? "var(--primary)" : "var(--text-2)",
-                  fontFamily: "'Space Grotesk', sans-serif", fontWeight: 600, fontSize: 14,
-                  transition: "background 0.12s, color 0.12s",
-                }}
-                onMouseEnter={e => { if (!active) e.currentTarget.style.background = "var(--bg-subtle)"; }}
-                onMouseLeave={e => { if (!active) e.currentTarget.style.background = "transparent"; }}
-              >
-                <span style={{
-                  width: 8, height: 8, borderRadius: "50%", flexShrink: 0,
-                  background: active ? "var(--primary)" : "var(--border)",
-                }} />
-                {label}
-              </button>
-            );
-          })}
+          {UI_LANGS.map(({ code, label }) => (
+            <LangItem key={code} code={code} label={label} active={lang === code}
+                      onPick={() => { setLang(code); setOpen(false); }} />
+          ))}
+
+          <div style={{ display: "flex", alignItems: "center", gap: 8, padding: "8px 10px 6px" }}>
+            <div style={{ flex: 1, height: 1, background: "var(--border-soft)" }} />
+            <span style={{
+              fontSize: 9, fontWeight: 700, color: "var(--text-3)",
+              textTransform: "uppercase", letterSpacing: "0.08em", whiteSpace: "nowrap",
+            }}>
+              African Languages
+            </span>
+            <div style={{ flex: 1, height: 1, background: "var(--border-soft)" }} />
+          </div>
+
+          {UI_LANGS_AFRICAN.map(({ code, label }) => (
+            <LangItem key={code} code={code} label={label} active={lang === code}
+                      onPick={() => { setLang(code); setOpen(false); }} />
+          ))}
         </div>
       )}
     </div>
+  );
+}
+
+function LangItem({ label, active, onPick }) {
+  return (
+    <button
+      onClick={onPick}
+      style={{
+        display: "flex", alignItems: "center", gap: 10, width: "100%",
+        padding: "11px 14px", borderRadius: 8, border: "none", cursor: "pointer",
+        textAlign: "left", background: active ? "var(--primary-soft)" : "transparent",
+        color: active ? "var(--primary)" : "var(--text-2)",
+        fontFamily: "'Space Grotesk', sans-serif", fontWeight: 600, fontSize: 14,
+        transition: "background 0.12s, color 0.12s",
+      }}
+      onMouseEnter={e => { if (!active) e.currentTarget.style.background = "var(--bg-subtle)"; }}
+      onMouseLeave={e => { if (!active) e.currentTarget.style.background = "transparent"; }}
+    >
+      <span style={{
+        width: 8, height: 8, borderRadius: "50%", flexShrink: 0,
+        background: active ? "var(--primary)" : "var(--border)",
+      }} />
+      {label}
+    </button>
   );
 }
 
@@ -240,7 +381,7 @@ export default function Landing() {
   // Restore the chosen UI language from a previous visit.
   useEffect(() => {
     const saved = localStorage.getItem("nawiri_lang");
-    if (saved === "en" || saved === "fr") setLang(saved);
+    if (saved && T[saved]) setLang(saved);
   }, []);
 
   function changeLang(code) {
@@ -284,7 +425,7 @@ export default function Landing() {
             onMouseEnter={e => e.currentTarget.style.background = "var(--primary-dark)"}
             onMouseLeave={e => e.currentTarget.style.background = "var(--primary)"}
           >
-            {lang === "en" ? "Start" : "Commencer"} →
+            {NAV_START[lang] || "Start"} →
           </button>
         </div>
       </nav>
@@ -364,7 +505,7 @@ export default function Landing() {
               }}>N</div>
               <div>
                 <div style={{ fontFamily: "'Space Grotesk', sans-serif", fontWeight: 700, fontSize: 13, color: "var(--text)" }}>NAWIRI</div>
-                <div style={{ fontSize: 11, color: "#4A7C59", fontWeight: 600 }}>● {lang === "en" ? "Online" : "En ligne"}</div>
+                <div style={{ fontSize: 11, color: "#4A7C59", fontWeight: 600 }}>● {ONLINE[lang] || "Online"}</div>
               </div>
             </div>
 
