@@ -1,4 +1,4 @@
-import { buildSystemInstruction } from "../../../lib/context";
+import { buildSystemInstruction, detectCountry } from "../../../lib/context";
 
 export const runtime = "nodejs";
 
@@ -38,7 +38,12 @@ export async function POST(request) {
       return Response.json({ error: "No messages provided." }, { status: 400 });
     }
 
-    const systemInstruction = buildSystemInstruction();
+    // Detect the country from the whole conversation (latest mention wins).
+    // Until a country is confirmed, all 3 are loaded; once confirmed, only that
+    // one is sent (faster/lighter). If the user switches country later, the next
+    // request re-detects it and switches automatically.
+    const country = detectCountry(messages);
+    const systemInstruction = buildSystemInstruction(country);
 
     const contents = messages.map((m) => ({
       role:  m.role === "assistant" ? "model" : "user",
