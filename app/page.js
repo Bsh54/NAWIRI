@@ -175,18 +175,6 @@ export default function Landing() {
 
           {/* Copy */}
           <div className="anim-fade-up" style={{ flex: "1 1 400px" }}>
-            <div style={{
-              display: "flex", alignItems: "center", gap: 8, marginBottom: 24,
-            }}>
-              <span style={{ fontSize: 20 }}>🇧🇯</span>
-              <span style={{ fontSize: 20 }}>🇸🇳</span>
-              <span style={{ fontSize: 20 }}>🇬🇭</span>
-              <span style={{ width: 1, height: 16, background: "var(--border)", margin: "0 4px" }} />
-              <span style={{ fontSize: 12, color: "var(--text-3)", fontWeight: 500 }}>
-                {t.nav_countries}
-              </span>
-            </div>
-
             <h1 style={{
               fontSize: "clamp(36px, 5vw, 60px)",
               color: "var(--text)", marginBottom: 20, lineHeight: 1.1,
@@ -227,9 +215,6 @@ export default function Landing() {
             >
               {t.cta}
             </button>
-            <p style={{ fontSize: 11, color: "var(--text-3)", marginTop: 10, letterSpacing: "0.01em" }}>
-              {t.cta_sub}
-            </p>
           </div>
 
           {/* Chat demo mockup */}
@@ -308,15 +293,6 @@ export default function Landing() {
               </div>
             </div>
 
-            {/* Demo label */}
-            <div style={{
-              padding: "10px 16px 14px",
-              borderTop: "1px solid var(--border-soft)",
-              fontSize: 11, color: "var(--text-3)",
-              fontStyle: "italic", textAlign: "center",
-            }}>
-              {t.demo_label}
-            </div>
           </div>
 
         </div>
@@ -497,47 +473,6 @@ export default function Landing() {
         </div>
       </section>
 
-      {/* ── RESPONSIBLE AI ─────────────────────────────────────────────────── */}
-      <section style={{
-        padding: "80px clamp(16px, 4vw, 40px)",
-        background: "var(--bg-card)",
-        borderTop: "1px solid var(--border-soft)",
-      }}>
-        <div style={{ maxWidth: 1120, margin: "0 auto" }}>
-          <h2 style={{ fontSize: "clamp(24px, 3vw, 32px)", textAlign: "center", marginBottom: 56 }}>
-            {t.ai_title}
-          </h2>
-          <div style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))",
-            gap: 16,
-          }}>
-            {t.ai_items.map((item, i) => (
-              <div key={i} style={{
-                padding: "24px 22px",
-                background: "var(--bg)",
-                border: "1px solid var(--border-soft)",
-                borderRadius: "var(--radius-lg)",
-                display: "flex", gap: 14, alignItems: "flex-start",
-              }}>
-                <span style={{ fontSize: 22, flexShrink: 0, marginTop: 2 }}>{item.icon}</span>
-                <div>
-                  <div style={{
-                    fontFamily: "'Space Grotesk', sans-serif",
-                    fontWeight: 700, fontSize: 14, color: "var(--text)", marginBottom: 6, lineHeight: 1.3,
-                  }}>
-                    {item.title}
-                  </div>
-                  <div style={{ fontSize: 13, color: "var(--text-2)", lineHeight: 1.65 }}>
-                    {item.desc}
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
       {/* ── PRE-FOOTER CTA ─────────────────────────────────────────────────── */}
       <section style={{
         padding: "80px clamp(16px, 4vw, 40px)",
@@ -570,9 +505,6 @@ export default function Landing() {
           >
             {t.cta2_btn}
           </button>
-          <p style={{ fontSize: 11, color: "rgba(255,255,255,0.55)", marginTop: 12, letterSpacing: "0.01em" }}>
-            {t.cta_sub}
-          </p>
         </div>
       </section>
 
