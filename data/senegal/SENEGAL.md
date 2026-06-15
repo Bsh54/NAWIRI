@@ -112,12 +112,13 @@
 - **Body:** Ministry of Family and Solidarity (steered via national community-development services)
 - **Who it is for:** **households in extreme poverty** with **school-age children (6–12 years)**. Beneficiaries are selected from the **RNU** (National Single Registry).
 - **What it offers:** a quarterly **cash transfer of 35,000 FCFA** → **140,000 FCFA per year** (raised from 100,000 FCFA/year since December 2022). Targets ~500,000 households.
+- ⚠️ **Status (2026):** payments were **paused pending an audit of the RNU**, then **resumed**. The **Q1 2026 instalment (35,000 FCFA) began on 19 March 2026** for **~355,013 beneficiary households** (second phase of the PNBSF). The program is **active again but being re-targeted via the audited RNU** — getting registered at the town hall / departmental social services is what matters.
 - **Conditions/commitments:** households are expected to keep children in school, follow health/vaccination check-ups, and register births (social conditionalities).
 - **Documents required:** be registered in the **RNU**; family/household identification documents.
 - **Procedure:** households are **identified and selected via the RNU** (not a free application). To have a chance of being included, get the household registered at the **departmental social services / town hall**. Payments are made quarterly to selected beneficiaries.
 - **Contact:** Ministry of Family and Solidarity — devcommunautaire.gouv.sn | departmental social services / town hall.
 - **Limits:** targeting by RNU (you do not "apply" to receive it directly); tied to a household; subject to available budget and payment schedule.
-- **Sources:** senegal-emergent.com (PNBSF), devcommunautaire.gouv.sn, World Bank, senegalservices.sn.
+- **Sources:** senegal-emergent.com (PNBSF), devcommunautaire.gouv.sn, World Bank, senegalservices.sn; **2026 resumption:** APS (aps.sn, 18 Mar 2026), ndarinfo.com, senenews.com (355,013 beneficiaries, 35,000 FCFA Q1 2026).
 
 ---
 

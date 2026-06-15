@@ -1,7 +1,7 @@
 # SOURCES & PROVENANCE — BENIN
 
 **Country:** Republic of Benin
-**Data file:** `BENIN.md` (11 programs)
+**Data file:** `BENIN.md` (12 programs)
 **Compiled:** 14 June 2026 · **Reviewed:** 15 June 2026
 **Purpose:** Prove the provenance of every figure and rule in `BENIN.md`. Nothing in the database is invented — each program cites its source below, and primary documents are stored in `documents/`.
 
@@ -32,7 +32,8 @@
 ## 3. International / institutional sources
 
 - **WHO** (Benin & Afro regional office) — free cesarean, free malaria, HIV, screening.
-- **UNICEF Benin** — free malaria for under-5s.
+- **UNICEF Benin** — free malaria for under-5s; **FAABA / Cash+Care** cash transfers for schoolgirls (Program 12).
+- **World Bank — SWEDD project** (Sahel Women's Empowerment and Demographic Dividend) — finances **FAABA** conditional cash transfers (Program 12).
 - **UN Benin / UNDP** — joint HIV program (free ARVs).
 - **CLEISS** — social security for the self-employed in Benin (ARCH retirement, CNSS).
 - **Benin Social Security Code** (via Droit-Afrique) — CNSS pensions.
@@ -56,3 +57,4 @@
 - ⚠️ **Dialysis and insulin are NOT free in Benin** — only a Sept. 2024 customs/tax exemption on dialysis-kit components. Do not state these are free.
 - **ANIP biometric card** is a cross-cutting prerequisite for most programs.
 - Many programs use **survey-based targeting (PMT/RSU)** — beneficiaries are selected, not self-enrolled.
+- **FAABA (Program 12)** added 15 June 2026: conditional cash transfers for girls 9-15 (450 FCFA/day primary, 600 FCFA/day secondary, 3 years) in Atacora/Donga/Borgou/Alibori, SWEDD-financed, through 2026. Verified via gouv.bj (article 2068), social.gouv.bj, UNICEF, sgg.gouv.bj (Conseil des Ministres 12 Mar 2025).

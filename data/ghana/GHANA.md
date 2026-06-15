@@ -1,11 +1,11 @@
 # PROGRAMS DATABASE — GHANA
 ### NAWIRI — Structured data for the AI engine
 **Country:** Republic of Ghana
-**Last updated:** 14 June 2026
-**Verification status:** Data collected from official public sources (nhis.gov.gh, NHIA, mogcsp.gov.gh, leap.mogcsp.gov.gh, socialprotection.org, UNICEF, World Bank). Each program lists its source.
+**Last updated:** 15 June 2026
+**Verification status:** Data collected from official public sources (nhis.gov.gh, NHIA, presidency.gov.gh, mogcsp.gov.gh, leap.mogcsp.gov.gh, socialprotection.org, UNICEF, World Bank). Each program lists its source.
 
 > ℹ️ NOTE
-> Ghana is the **English-speaking** anchor of NAWIRI. Its flagship program, the **NHIS**, is one of the best-documented health insurance schemes on the continent (overseen by the **NHIA — National Health Insurance Authority**). Two updates vs NAWIRI.md: (1) the elderly premium exemption is for **70+** (not just "elderly"); (2) **free dialysis** has been added to the NHIS benefits package since **1 Dec 2024** (now for all NHIS members, not only under-18/over-60).
+> Ghana is the **English-speaking** anchor of NAWIRI. Its flagship program, the **NHIS**, is one of the best-documented health insurance schemes on the continent (overseen by the **NHIA — National Health Insurance Authority**). Updates vs NAWIRI.md: (1) the elderly premium exemption is for **70+** (not just "elderly"); (2) **free dialysis** has been added to the NHIS benefits package since **1 Dec 2024** (now for all NHIS members, not only under-18/over-60); (3) **two new national policies (2025-2026)** added below — **Free Primary Healthcare (Program 5)** and the **Ghana Medical Trust Fund "MahamaCares" (Program 6)**.
 
 ---
 
@@ -74,7 +74,7 @@
 - **Documents required:** active **NHIS membership**; nephrologist's diagnosis/referral for kidney disease.
 - **Procedure:** be an active NHIS member → obtain a kidney-disease diagnosis/referral → access free dialysis at a designated NHIS dialysis hospital.
 - **Contact:** NHIA — nhis.gov.gh | designated dialysis hospital.
-- **Limits:** delivered at **designated hospitals** (capacity/location constraints); continues "until the Ghana Medical Care Trust Fund becomes fully operational"; requires active NHIS membership.
+- **Limits:** delivered at **designated hospitals** (capacity/location constraints); requires active NHIS membership. ℹ️ The **Ghana Medical Trust Fund "MahamaCares" (Program 6)** is now operational and finances advanced kidney care/dialysis as a third tier — so dialysis funding is consolidating there.
 - **Sources:** nhis.gov.gh/News, NHIA, MyJoyOnline, Citi Newsroom (2025), GhanaWeb.
 
 ---
@@ -92,7 +92,8 @@
   - **Bi-monthly cash transfer**, amount by number of eligible members:
     - 1 member: **GH¢256** · 2 members: **GH¢304** · 3 members: **GH¢352** · 4+ members: **GH¢424** (per bi-monthly cycle).
   - **Free NHIS enrolment** (premium fee waiver) for beneficiary households.
-  - Reaches ~360,000 households (as of 2024).
+  - Reaches ~360,000 households (2024), **expanded to 400,000 households from July 2025**; 2025 budget GH¢953.5M.
+  - **LEAP 1000** is a sub-window targeting **pregnant women and mothers with infants** (first 1,000 days of life) for nutrition/poverty support, with free NHIS enrolment.
 - **Documents required:** household identification; eligibility confirmed via a **Proxy Means Test (PMT)** during community data collection.
 - **Procedure:**
   1. Communities are **selected and sensitized** about LEAP.
@@ -105,15 +106,46 @@
 
 ---
 
+## PROGRAM 5 — FREE PRIMARY HEALTHCARE (FPHC) ⭐ NEW (2026)
+
+- **Name:** Free Primary Healthcare Programme (FPHC)
+- **Body:** Ministry of Health / Ghana Health Service (flagship policy launched by President Mahama, April 2026). **Complements — does not replace — the NHIS.**
+- **Who it is for:** **every citizen and legal resident of Ghana**, regardless of NHIS membership status, at the primary level.
+- **What it offers:** **free care at designated primary facilities** — CHPS compounds, health centres, public health units, community pharmacies, health kiosks, mobile clinics and outreach points. Covers **basic illnesses** (e.g. malaria, cholera) and **routine screening for non-communicable diseases** (hypertension, diabetes). Emphasis on prevention, early detection and **at least annual health screening**.
+- **Documents required:** proof of Ghanaian citizenship or legal residency — **Ghana Card** or any valid ID showing community residency.
+- **Procedure:** go to a **designated primary facility (CHPS/health centre/polyclinic)** in your district with your Ghana Card; basic care and screening are free on the spot. **Complex cases are referred up** to higher-level facilities **covered under NHIS** → keep your NHIS membership active.
+- **Coverage / rollout:** **Phase 1 = 150 selected underserved/deprived districts**; nationwide rollout planned **2027-2028**.
+- **Contact:** NHIA / Ministry of Health — **nhis.gov.gh** | Ghana Health Service | nearest CHPS/health centre.
+- **Limits:** Phase 1 only in 150 districts (check if your district is covered); **primary level only** — anything complex still needs NHIS; not a substitute for NHIS membership.
+- **Sources:** nhis.gov.gh/News (presidential launch), presidency.gov.gh, Ghana Business News (16 Apr 2026), The Ghanaian Chronicle, News Ghana.
+
+---
+
+## PROGRAM 6 — GHANA MEDICAL TRUST FUND ("MahamaCares") ⭐ NEW (2025-2026)
+
+- **Name:** Ghana Medical Trust Fund, popularly **"MahamaCares"** — the **third tier** of Ghana's healthcare system.
+- **Body:** statutory fund (board inaugurated, secretariat operational). **Primarily funded by 20% of the National Health Insurance Fund (NHIF)** allocation, plus government and donor funds (≈GH¢2.3 billion allocated).
+- **Who it is for:** patients with **advanced and chronic non-communicable diseases (NCDs)** — **cancer, hypertension, diabetes, stroke, and kidney failure (including dialysis)**.
+- **What it offers:** financing of **specialized treatment** for these chronic conditions, to reduce the financial burden on families (care that sits beyond the NHIS primary/secondary package).
+- **Documents required:** active **NHIS membership** and a medical diagnosis/referral for the qualifying chronic condition (specifics rolling out via the fund's secretariat).
+- **Procedure:** be diagnosed with a covered NCD at an NHIS/GHS facility → referral into the MahamaCares-financed specialized care pathway. Verify current covered conditions and designated centres with the NHIA / fund secretariat.
+- **Contact:** NHIA — **nhis.gov.gh** | Ministry of Health / Ghana Medical Trust Fund secretariat.
+- **Limits:** **newly operational (2025-2026)** — exact covered procedures, centres and patient pathways are still being detailed; requires diagnosis/referral; works alongside (not instead of) NHIS.
+- **Sources:** presidency.gov.gh (launch), nhis.gov.gh, The Business & Financial Times (Budget 2025), ModernGhana, GBC Ghana (WHA address 2026).
+
+---
+
 ## SUMMARY — QUICK ROUTING BY NEED (for the AI engine)
 
 | Expressed need | Program(s) to suggest |
 |---|---|
 | No health insurance / wants coverage | **NHIS (1)** — register at district office, \*929# to renew |
+| Basic care now, no insurance / can't afford | **Free Primary Healthcare (5)** at a CHPS/health centre (Ghana Card) — if in a Phase-1 district — + register NHIS (1) |
 | Child under 18 | **NHIS (1)** — exempt (free), bring birth certificate / parents' card |
 | Person 70+ or SSNIT pensioner | **NHIS (1)** — exempt (free) |
 | Pregnant woman | **Free Maternal Care (2)** under NHIS — free registration with proof of pregnancy |
-| Kidney failure / needs dialysis | **Free Dialysis (3)** — must be an active NHIS member |
+| Kidney failure / needs dialysis | **Free Dialysis (3)** (active NHIS member) — now also financed via **MahamaCares (6)** |
+| Cancer, stroke, diabetes, hypertension (advanced) | **MahamaCares (6)** — chronic-NCD financing (active NHIS + diagnosis) |
 | Extremely poor household (65+, disabled, OVC, mother+infant) | **LEAP (4)** — via PMT + free NHIS enrolment |
 | Indigent, can't afford premium | **NHIS indigent exemption (1)** + **LEAP (4)** if eligible |
 
@@ -126,3 +158,5 @@
 - NHIS exemption categories must bring **proof of exemption** (age, pregnancy, SSNIT, LEAP, indigent status).
 - Remind informal-group members to **renew annually** (via \*929# or a district office) to keep benefits active.
 - Free dialysis and free maternal care both **require active NHIS membership** — first step is often NHIS registration.
+- **Free Primary Healthcare (5)** is rolling out in **Phase 1 (150 districts)** — tell the user to **check whether their district is covered**, and to keep NHIS for anything beyond primary care.
+- **MahamaCares (6)** is **newly operational** — covered conditions/centres are still being detailed; advise verifying current scope with the NHIA before relying on it.

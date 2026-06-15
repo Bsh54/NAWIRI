@@ -1,7 +1,7 @@
 # SOURCES & PROVENANCE — GHANA
 
 **Country:** Republic of Ghana
-**Data file:** `GHANA.md` (4 programs)
+**Data file:** `GHANA.md` (6 programs)
 **Compiled:** 14 June 2026 · **Reviewed:** 15 June 2026
 **Purpose:** Prove the provenance of every figure and rule in `GHANA.md`. Nothing is invented — each program cites its source below. Primary documents collected for Ghana are stored in `documents/` (see note).
 
@@ -24,6 +24,15 @@
 - **mogcsp.gov.gh** — Ministry of Gender, Children and Social Protection (LEAP).
 - **leap.mogcsp.gov.gh** — LEAP Management Secretariat (eligibility, bi-monthly amounts GH¢256-424, PMT targeting).
 - **Department of Social Welfare** (district level) — LEAP enrolment point.
+- **presidency.gov.gh** — Office of the President (launch of Free Primary Healthcare, April 2026; Ghana Medical Trust Fund / MahamaCares).
+- **nhis.gov.gh/News** — NHIA news (presidential FPHC launch announcement, dialysis benefit).
+- **Ministry of Health / Ghana Health Service** — FPHC delivery (CHPS/health centres).
+
+## NEW 2025-2026 programs — provenance
+
+- **Free Primary Healthcare (Program 5):** nhis.gov.gh/News (`prez-mahama-launches-free-primary-healthcare-policy`), presidency.gov.gh, Ghana Business News (16 Apr 2026), The Ghanaian Chronicle, News Ghana. Key facts verified: free primary care for all residents regardless of NHIS, Ghana Card to access, Phase 1 = 150 underserved districts, nationwide 2027-2028, complements NHIS.
+- **MahamaCares / Ghana Medical Trust Fund (Program 6):** presidency.gov.gh, The Business & Financial Times (Budget 2025), ModernGhana, GBC Ghana (Mahama WHA address 2026). Key facts verified: third tier for chronic NCDs (cancer, hypertension, diabetes, stroke, kidney failure/dialysis), ≈GH¢2.3bn, funded by 20% of the NHIF.
+- **LEAP update:** expanded to **400,000 households from July 2025** (UNICEF Ghana Social Protection Budget Brief 2025; thebftonline Budget 2025); LEAP 1000 sub-window for pregnant women/infants (ReliefWeb LEAP 1000 endline).
 
 ## 3. International / institutional sources
 

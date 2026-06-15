@@ -38,6 +38,8 @@
 ## 4. Press / secondary corroboration (figures and dates)
 
 - senegal-emergent.com — PNBSF (35,000 FCFA/quarter = 140,000 FCFA/year since Dec. 2022), RNU role.
+- aps.sn (APS, 18 Mar 2026), ndarinfo.com, senenews.com — **2026 PNBSF resumption** after RNU audit: Q1 2026 payment from 19 March 2026, ~355,013 beneficiary households, 35,000 FCFA/quarter confirmed.
+- allafrica.com (10 Dec 2025) — PNBSF resumption tied to RNU audit completion.
 - Cairn / Santé Publique, Jeune Afrique — Plan Sésame analysis and constraints.
 - allodocteurs.fr — free dialysis context.
 - getreliancehealth.com — CMU mutual coverage rates.

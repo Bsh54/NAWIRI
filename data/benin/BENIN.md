@@ -1,8 +1,8 @@
 # PROGRAMS DATABASE — BENIN
 ### NAWIRI — Structured data for the AI engine
 **Country:** Republic of Benin
-**Last updated:** 14 June 2026
-**Verification status:** Data collected from official public sources (gouv.bj, social.gouv.bj, anps.social.gouv.bj, fnm.bj, cnss.bj, WHO, Law 2015-42). Each program lists its source.
+**Last updated:** 15 June 2026
+**Verification status:** Data collected from official public sources (gouv.bj, social.gouv.bj, anps.social.gouv.bj, fnm.bj, cnss.bj, UNICEF, World Bank, WHO, Law 2015-42). Each program lists its source. (12 programs.)
 
 > ⚠️ IMPORTANT METHODOLOGICAL NOTE — HOW BENIN'S HEALTH INSURANCE ACTUALLY WORKS (verified June 2026)
 > The system has evolved in three legal layers — get this right, it is the #1 credibility point:
@@ -234,6 +234,21 @@ Already covered (≈21, extending to all 77): Abomey-Calavi, Sô-Ava, Dassa-Zoum
 
 ---
 
+## PROGRAM 12 — FAABA: CONDITIONAL CASH TRANSFERS TO KEEP GIRLS IN SCHOOL (SWEDD)
+
+- **Name:** **FAABA** ("help/support" in a local language) — conditional cash transfers for schoolgirls, under the **SWEDD project** (Autonomisation des Femmes et Dividende Démographique au Sahel).
+- **Body:** Ministry of Social Affairs and Microfinance (implemented via ANPS / community relays), **World Bank-financed (SWEDD)** with **UNICEF** support.
+- **Who it is for:** **girls aged 9–15** from households in difficulty, **enrolled in public primary schools and lower-secondary colleges**, in the most affected departments: **Atacora, Donga, Borgou, Alibori**.
+- **What it offers:** a **conditional cash transfer** to cover schooling costs and keep girls in school: **450 FCFA/day for primary** and **600 FCFA/day for secondary**, over **3 years**. Around **30,000 girls** targeted (≈9 billion FCFA); ~29,272 beneficiaries in the Jan–June 2025 cycle.
+- **Documents required:** identification of the girl/household as eligible (school enrollment + social targeting survey); the transfer is conditional on **staying enrolled and attending school**.
+- **Procedure:** beneficiaries are **identified and selected** via the school + social survey in the covered departments (no free application) → enrollment → periodic conditional payments.
+- **Coverage / timeline:** the four northern departments above; program runs **through 2026**.
+- **Contact:** Ministry of Social Affairs — **social.gouv.bj** | ANPS — +229 20 21 34 14 | school authorities in the covered departments.
+- **Limits:** **geographically targeted** (4 departments) and age/enrollment-conditional; targeting by survey (not an open application); tied to school attendance.
+- **Sources:** gouv.bj (article 2068), social.gouv.bj, UNICEF Benin (Cash+Care Faaba 2024-2025), sgg.gouv.bj (Conseil des Ministres 12 March 2025), World Bank SWEDD.
+
+---
+
 ## SUMMARY — QUICK ROUTING BY NEED (for the AI engine)
 
 | Expressed need | Program(s) to suggest |
@@ -247,6 +262,7 @@ Already covered (≈21, extending to all 77): Abomey-Calavi, Sô-Ava, Dassa-Zoum
 | Contraception, women's cancer screening | **Family planning & screening campaigns (10)** (check dates) |
 | Very poor household, needs money/support | **GBESSOKÉ (6)** (targeting by survey) |
 | Wants to start/grow an activity (women++) | **Alafia Microcredit (5)** or **ARCH Credit (3)** if a trained artisan |
+| Girl 9–15 at risk of dropping out (North) | **FAABA / SWEDD (12)** — conditional cash transfer (Atacora, Donga, Borgou, Alibori) |
 | Artisan wants training | **ARCH Training (2)** |
 | Self-employed/informal wants a pension | **ARCH Retirement (4)** or CNSS if salaried |
 | Formal-sector employee, retirement | **CNSS old-age pension (11)** |
