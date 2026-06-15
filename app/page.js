@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
 
 // ─── Copy (EN / FR) ────────────────────────────────────────────────────────────
@@ -146,12 +146,107 @@ function FlagBadge({ code }) {
   );
 }
 
+// ─── UI language switcher (globe dropdown, Oreus-style) ─────────────────────────
+
+const UI_LANGS = [
+  { code: "en", label: "English" },
+  { code: "fr", label: "Français" },
+];
+
+function LangSwitcher({ lang, setLang }) {
+  const [open, setOpen] = useState(false);
+  const wrapRef = useRef(null);
+
+  useEffect(() => {
+    function onClick(e) {
+      if (wrapRef.current && !wrapRef.current.contains(e.target)) setOpen(false);
+    }
+    document.addEventListener("click", onClick);
+    return () => document.removeEventListener("click", onClick);
+  }, []);
+
+  return (
+    <div ref={wrapRef} style={{ position: "relative", flexShrink: 0 }}>
+      <button
+        onClick={() => setOpen(o => !o)}
+        style={{
+          display: "inline-flex", alignItems: "center", gap: 7,
+          fontFamily: "'Space Grotesk', sans-serif", fontSize: 13, fontWeight: 700,
+          color: open ? "var(--primary)" : "var(--text-2)",
+          background: open ? "var(--primary-soft)" : "var(--bg-card)",
+          border: "1.5px solid " + (open ? "var(--primary)" : "var(--border)"),
+          cursor: "pointer", padding: "6px 12px", borderRadius: "var(--radius)",
+          letterSpacing: "0.02em", transition: "all 0.15s",
+        }}
+        onMouseEnter={e => { if (!open) { e.currentTarget.style.borderColor = "var(--primary)"; e.currentTarget.style.color = "var(--primary)"; } }}
+        onMouseLeave={e => { if (!open) { e.currentTarget.style.borderColor = "var(--border)"; e.currentTarget.style.color = "var(--text-2)"; } }}
+      >
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round">
+          <circle cx="12" cy="12" r="10" />
+          <path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
+        </svg>
+        <span>{lang.toUpperCase()}</span>
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"
+             style={{ opacity: 0.6, transition: "transform 0.2s", transform: open ? "rotate(180deg)" : "none" }}>
+          <polyline points="6,9 12,15 18,9" />
+        </svg>
+      </button>
+
+      {open && (
+        <div style={{
+          position: "absolute", right: 0, top: "calc(100% + 8px)", width: 168,
+          background: "var(--bg-card)", border: "1.5px solid var(--border)",
+          borderRadius: 12, boxShadow: "0 12px 32px rgba(0,0,0,0.13)",
+          overflow: "hidden", padding: 4, zIndex: 500,
+        }}>
+          {UI_LANGS.map(({ code, label }) => {
+            const active = lang === code;
+            return (
+              <button
+                key={code}
+                onClick={() => { setLang(code); setOpen(false); }}
+                style={{
+                  display: "flex", alignItems: "center", gap: 10, width: "100%",
+                  padding: "11px 14px", borderRadius: 8, border: "none", cursor: "pointer",
+                  textAlign: "left", background: active ? "var(--primary-soft)" : "transparent",
+                  color: active ? "var(--primary)" : "var(--text-2)",
+                  fontFamily: "'Space Grotesk', sans-serif", fontWeight: 600, fontSize: 14,
+                  transition: "background 0.12s, color 0.12s",
+                }}
+                onMouseEnter={e => { if (!active) e.currentTarget.style.background = "var(--bg-subtle)"; }}
+                onMouseLeave={e => { if (!active) e.currentTarget.style.background = "transparent"; }}
+              >
+                <span style={{
+                  width: 8, height: 8, borderRadius: "50%", flexShrink: 0,
+                  background: active ? "var(--primary)" : "var(--border)",
+                }} />
+                {label}
+              </button>
+            );
+          })}
+        </div>
+      )}
+    </div>
+  );
+}
+
 // ─── Landing page ───────────────────────────────────────────────────────────────
 
 export default function Landing() {
   const [lang, setLang] = useState("en");
   const router = useRouter();
   const t = T[lang];
+
+  // Restore the chosen UI language from a previous visit.
+  useEffect(() => {
+    const saved = localStorage.getItem("nawiri_lang");
+    if (saved === "en" || saved === "fr") setLang(saved);
+  }, []);
+
+  function changeLang(code) {
+    setLang(code);
+    localStorage.setItem("nawiri_lang", code);
+  }
 
   return (
     <div style={{ minHeight: "100vh", display: "flex", flexDirection: "column", background: "var(--bg)" }}>
@@ -175,19 +270,7 @@ export default function Landing() {
           <span style={{ fontSize: 12, color: "var(--text-3)", display: "none" }} className="nav-countries">
             {t.nav_countries}
           </span>
-          <button
-            onClick={() => setLang(l => l === "en" ? "fr" : "en")}
-            style={{
-              padding: "5px 14px", borderRadius: "var(--radius)",
-              border: "1px solid var(--border)", background: "var(--bg-card)",
-              fontSize: 13, fontWeight: 600, color: "var(--text-2)",
-              cursor: "pointer", transition: "border-color 0.15s",
-            }}
-            onMouseEnter={e => e.currentTarget.style.borderColor = "var(--primary)"}
-            onMouseLeave={e => e.currentTarget.style.borderColor = "var(--border)"}
-          >
-            {lang === "en" ? "FR" : "EN"}
-          </button>
+          <LangSwitcher lang={lang} setLang={changeLang} />
 
           <button
             onClick={() => router.push("/chat")}
