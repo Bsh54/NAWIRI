@@ -21,7 +21,9 @@ const PLACEHOLDERS = {
   tw:  "Ka wo ho asɛm wɔ Twi mu...",
 };
 
-// Static strings for EN and FR; local langs are filled via API on language selection.
+// UI strings per language. African languages are pre-translated (via the Google
+// Translate API, same engine the chat uses) so picking a language is instant —
+// no API round-trip on selection.
 const STATIC_STRINGS = {
   en: {
     welcome_title:   "Describe your situation",
@@ -36,6 +38,27 @@ const STATIC_STRINGS = {
     disclaimer:      "NAWIRI vous oriente. Vérifiez toujours avec l'organisme officiel avant d'agir.",
     you:             "Vous",
     new_chat:        "Nouvelle conversation",
+  },
+  fon: {
+    welcome_title:   "Tinmɛ ninɔmɛ towe",
+    welcome_sub:     "NAWIRI mɔ nu jɛ Fɔngbe mɛ. Ðɔ ninɔmɛ towe kpo xomɛhunhun kpo.",
+    disclaimer:      "NAWIRI nɔ xlɛ́ ali we. Hwebǐnu ɔ, nɔ gbéjé kpɔ́n xá gbɛ̌ta acɛkpikpa ɔ tɔn cobo nɔ ɖè afɔ ɖebǔ.",
+    you:             "Hwi",
+    new_chat:        "Xóɖɔɖókpɔ́ yɔyɔ̌",
+  },
+  wo: {
+    welcome_title:   "Waxñu sa jafe-jafe",
+    welcome_sub:     "NAWIRI dégg na wolof. Waxñu bu baax sa dundu.",
+    disclaimer:      "NAWIRI moo leen di gindi. Laata ngay def benn jéego, laajteel ko bu baax ak kilifa gi yor liggéey bi.",
+    you:             "Yow",
+    new_chat:        "Waxtaan bu bees",
+  },
+  tw: {
+    welcome_title:   "Ka wo tebea no ho asɛm",
+    welcome_sub:     "NAWIRI te Twi ase. Ka wo tebea no ho asɛm wɔ ahofadi mu.",
+    disclaimer:      "NAWIRI kyerɛ wo kwan. Bere nyinaa wo ne aban kuw no hwɛ sɛ ɛyɛ nokware ansa na woatu anammɔn biara.",
+    you:             "Wo",
+    new_chat:        "Nkɔmmɔbɔ foforo",
   },
 };
 
@@ -265,30 +288,12 @@ function ChatApp() {
   }, [messages, loading]);
 
   // Called when the user picks a language from the popup.
-  // For local langs: translate the key UI strings via the API so the welcome screen
-  // and hints appear in their language.
-  async function selectLang(code) {
+  // All languages (including the African ones) have pre-translated UI strings,
+  // so switching the interface is instant — no API call here.
+  function selectLang(code) {
     setChosenLang(code);
     setShowPicker(false);
-
-    if (LANG_CONFIG[code]?.local) {
-      const native = LANG_CONFIG[code].native;
-      const [title, sub, disc] = await Promise.all([
-        translateText("Describe your situation", "en", code),
-        translateText(`NAWIRI understands ${native}. Describe your situation freely.`, "en", code),
-        translateText("NAWIRI guides you. Always verify with the official body before any step.", "en", code),
-      ]);
-      setUiStr({
-        welcome_title: title    || "Describe your situation",
-        welcome_sub:   sub      || `NAWIRI understands ${native}. Describe your situation freely.`,
-        disclaimer:    disc     || "NAWIRI guides you. Always verify with the official body before any step.",
-        you:           "You",
-        new_chat:      "New chat",
-      });
-    } else {
-      setUiStr(STATIC_STRINGS[code] ?? STATIC_STRINGS.en);
-    }
-
+    setUiStr(STATIC_STRINGS[code] ?? STATIC_STRINGS.en);
     inputRef.current?.focus();
   }
 
