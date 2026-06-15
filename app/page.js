@@ -176,13 +176,15 @@ export default function Landing() {
           {/* Copy */}
           <div className="anim-fade-up" style={{ flex: "1 1 400px" }}>
             <div style={{
-              display: "inline-block", fontSize: 11, fontWeight: 700,
-              letterSpacing: "0.1em", textTransform: "uppercase",
-              color: "var(--primary)", marginBottom: 28,
-              padding: "5px 14px", borderRadius: 99,
-              background: "var(--primary-soft)", border: "1px solid #F6AB99",
+              display: "flex", alignItems: "center", gap: 8, marginBottom: 24,
             }}>
-              {t.badge}
+              <span style={{ fontSize: 20 }}>🇧🇯</span>
+              <span style={{ fontSize: 20 }}>🇸🇳</span>
+              <span style={{ fontSize: 20 }}>🇬🇭</span>
+              <span style={{ width: 1, height: 16, background: "var(--border)", margin: "0 4px" }} />
+              <span style={{ fontSize: 12, color: "var(--text-3)", fontWeight: 500 }}>
+                {t.nav_countries}
+              </span>
             </div>
 
             <h1 style={{
