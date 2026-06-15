@@ -4,17 +4,23 @@ import { useState, useRef, useEffect, Suspense } from "react";
 import { useRouter } from "next/navigation";
 import InstitutionsMap from "./InstitutionsMap";
 
+const SOFT_ERROR = "I could not answer just now. Please wait a moment and try again.";
+
+const LOCAL_LANGS = {
+  fon: { label: "Fon",   flag: "🇧🇯" },
+  wo:  { label: "Wolof", flag: "🇸🇳" },
+  tw:  { label: "Twi",   flag: "🇬🇭" },
+};
+
 // Parse inline markdown (**bold**, *italic*) and [[MAP:id|label]] map links
 // into React nodes. `onMap(id)` is called when a map link is clicked.
 function renderInline(content, keyBase, onMap) {
   const parts = [];
-  // Order matters: match the MAP token first, then bold, then italic.
   const regex = /\[\[MAP:([^\]|]+)\|([^\]]+)\]\]|\*\*(.+?)\*\*|\*(.+?)\*/g;
   let last = 0, match;
   while ((match = regex.exec(content)) !== null) {
     if (match.index > last) parts.push(content.slice(last, match.index));
     if (match[1] !== undefined) {
-      // [[MAP:<id>|<label>]] → a clickable button that opens the map.
       const id = match[1].trim();
       const label = match[2].trim();
       parts.push(
@@ -61,32 +67,25 @@ function renderInline(content, keyBase, onMap) {
   return parts;
 }
 
-// Renders markdown-like text from Gemini:
-// # headings, **bold**, *italic*, "- " / "* " / "▸ " bullets.
+// Renders markdown-like text: # headings, **bold**, *italic*, bullet lists.
 function renderMessage(text, onMap) {
   const lines = text.split("\n");
   return lines.map((line, li) => {
-    // Heading: #, ##, ### ...
     const heading = line.match(/^\s*(#{1,6})\s+(.*)$/);
     if (heading) {
       const level = heading[1].length;
       return (
         <div key={li} style={{
-          fontFamily: "'Space Grotesk', sans-serif",
-          fontWeight: 700,
-          fontSize: level <= 2 ? 15 : 14,
-          color: "var(--text)",
+          fontFamily: "'Space Grotesk', sans-serif", fontWeight: 700,
+          fontSize: level <= 2 ? 15 : 14, color: "var(--text)",
           marginTop: li === 0 ? 0 : 12, marginBottom: 2,
         }}>
           {renderInline(heading[2], li, onMap)}
         </div>
       );
     }
-
-    // Bullet line
     const isBullet = /^(\s*[-*]|\s*▸)\s+/.test(line);
     const content  = isBullet ? line.replace(/^(\s*[-*▸])\s+/, "") : line;
-
     if (isBullet) {
       return (
         <div key={li} style={{ display: "flex", gap: 8, alignItems: "flex-start", marginTop: li === 0 ? 0 : 4 }}>
@@ -95,28 +94,29 @@ function renderMessage(text, onMap) {
         </div>
       );
     }
-
-    // Empty line = spacer
     if (content.trim() === "") return <div key={li} style={{ height: 6 }} />;
-
     return <div key={li} style={{ marginTop: li === 0 ? 0 : 2 }}>{renderInline(content, li, onMap)}</div>;
   });
 }
 
 function ChatApp() {
   const router = useRouter();
-  const [messages, setMessages] = useState([]);
-  const [input,    setInput]    = useState("");
-  const [loading,  setLoading]  = useState(false);
-  const [error,    setError]    = useState("");
-  const [tab,      setTab]      = useState("chat"); // "chat" | "map"
-  const [mapTarget, setMapTarget] = useState(null); // { id, key }
+  const [messages,    setMessages]    = useState([]);
+  const [input,       setInput]       = useState("");
+  const [loading,     setLoading]     = useState(false);
+  const [translating, setTranslating] = useState(false);
+  const [error,       setError]       = useState("");
+  const [tab,         setTab]         = useState("chat");
+  const [mapTarget,   setMapTarget]   = useState(null);
+  const [localLang,   setLocalLang]   = useState(null); // null | "fon" | "wo" | "tw"
+
+  // Keeps a clean FR version of the conversation for Gemini.
+  // Display messages may be in a local language; the AI always gets French.
+  const aiHistoryRef = useRef([]);
+
   const endRef   = useRef(null);
   const inputRef = useRef(null);
 
-  // Called from a [[MAP:id]] link in the chat: switch to the map tab and
-  // tell the map which institution to fly to. `key` lets repeat clicks
-  // on the same institution re-trigger the fly-to.
   function openMapAt(id) {
     setMapTarget({ id, key: Date.now() });
     setTab("map");
@@ -124,32 +124,68 @@ function ChatApp() {
 
   useEffect(() => {
     endRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages, loading]);
+  }, [messages, loading, translating]);
+
+  // Calls /api/translate. Preserves [[MAP:...]] tokens around the translation.
+  async function translateText(text, src, tgt) {
+    const tokens = [];
+    const clean = text.replace(/\[\[MAP:[^\]]+\]\]/g, (m) => {
+      tokens.push(m);
+      return `__MAP_${tokens.length - 1}__`;
+    });
+    try {
+      const res = await fetch("/api/translate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ text: clean, src, tgt }),
+      });
+      if (!res.ok) return null;
+      const data = await res.json();
+      let result = data.result || null;
+      if (!result) return null;
+      // Restore [[MAP:...]] tokens
+      result = result.replace(/__MAP_(\d+)__/g, (_, i) => tokens[+i] ?? "");
+      return result;
+    } catch {
+      return null;
+    }
+  }
 
   async function send() {
     const text = input.trim();
-    if (!text || loading) return;
-    const next = [...messages, { role: "user", content: text }];
-    setMessages(next);
+    if (!text || loading || translating) return;
+
+    const userMsg    = { role: "user", content: text };
+    const newDisplay = [...messages, userMsg];
+    setMessages(newDisplay);
     setInput("");
     setError("");
     setLoading(true);
+
     try {
+      // Translate user input to French if a local language is selected.
+      // source_lang = "auto" so that if the user accidentally typed in French, it still works.
+      let aiText = text;
+      if (localLang) {
+        const xlated = await translateText(text, "auto", "fr");
+        if (xlated) aiText = xlated;
+      }
+
+      const newAiHistory = [...aiHistoryRef.current, { role: "user", content: aiText }];
+
       const res = await fetch("/api/chat", {
-        method:  "POST",
+        method: "POST",
         headers: { "Content-Type": "application/json" },
-        body:    JSON.stringify({ messages: next }),
+        body: JSON.stringify({ messages: newAiHistory }),
       });
 
-      // Hard failure: read the JSON soft-error, no streaming.
       if (!res.ok || !res.body) {
         const data = await res.json().catch(() => ({}));
-        setError(data.error || "I could not answer just now. Please wait a moment and try again.");
+        setError(data.error || SOFT_ERROR);
         setLoading(false);
         return;
       }
 
-      // Stream the answer in, appending to a growing assistant bubble.
       const reader  = res.body.getReader();
       const decoder = new TextDecoder();
       let acc = "";
@@ -162,19 +198,38 @@ function ChatApp() {
         if (!started) {
           started = true;
           setLoading(false);
-          setMessages([...next, { role: "assistant", content: acc }]);
+        }
+        // Stream the French response live
+        setMessages([...newDisplay, { role: "assistant", content: acc }]);
+      }
+
+      if (!started) {
+        setError(SOFT_ERROR);
+        setLoading(false);
+        return;
+      }
+
+      // Store the French exchange in AI history (always French for Gemini)
+      aiHistoryRef.current = [...newAiHistory, { role: "assistant", content: acc }];
+
+      // Translate the assistant response to the local language
+      if (localLang) {
+        setMessages([...newDisplay, { role: "assistant", content: acc, isTranslating: true }]);
+        setTranslating(true);
+        const xlated = await translateText(acc, "fr", localLang);
+        setTranslating(false);
+        if (xlated) {
+          setMessages([...newDisplay, { role: "assistant", content: xlated, wasTranslated: true }]);
         } else {
-          setMessages([...next, { role: "assistant", content: acc }]);
+          // Translation failed: show French with a note
+          setMessages([...newDisplay, { role: "assistant", content: acc, translateFailed: true }]);
         }
       }
-      // Nothing came through at all.
-      if (!started) {
-        setError("I could not answer just now. Please wait a moment and try again.");
-        setLoading(false);
-      }
+
     } catch {
-      setError("I could not answer just now. Please check your connection and try again.");
+      setError(SOFT_ERROR);
       setLoading(false);
+      setTranslating(false);
     }
   }
 
@@ -182,21 +237,32 @@ function ChatApp() {
     if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); send(); }
   }
 
+  function newChat() {
+    setMessages([]);
+    setError("");
+    aiHistoryRef.current = [];
+  }
+
+  const placeholder = localLang
+    ? `Écris en ${LOCAL_LANGS[localLang].label} ou en français...`
+    : "Describe your situation in English or French...";
+
   const suggestions = [
     "My child is 3 years old, often sick, and we have no health insurance. We live in Benin.",
     "Je suis enceinte et je ne peux pas payer les frais d'hôpital. Je suis au Sénégal.",
     "I am an informal worker in Ghana and want to know my social protection rights.",
   ];
 
+  const isBusy = loading || translating;
+
   return (
     <div style={{ display: "flex", flexDirection: "column", height: "100vh", overflow: "hidden", background: "var(--bg)" }}>
 
-      {/* TOP BAR — logo left, Facebook-style icon tabs centered, action right */}
+      {/* TOP BAR */}
       <header style={{
         display: "flex", alignItems: "center", justifyContent: "space-between",
         padding: "0 16px", height: 56, flexShrink: 0,
-        background: "var(--bg-card)",
-        borderBottom: "1px solid var(--border-soft)",
+        background: "var(--bg-card)", borderBottom: "1px solid var(--border-soft)",
       }}>
         <a href="/" className="brand-text" style={{
           fontFamily: "'Space Grotesk', sans-serif", fontWeight: 700,
@@ -206,26 +272,15 @@ function ChatApp() {
           NAWIRI
         </a>
 
-        {/* Center icon tabs (desktop) */}
         <nav className="top-tabs" style={{ display: "flex", gap: 6, alignItems: "stretch", height: "100%" }}>
-          <TabButton
-            active={tab === "chat"}
-            onClick={() => setTab("chat")}
-            label="Conversation"
-            icon={<ChatIcon />}
-          />
-          <TabButton
-            active={tab === "map"}
-            onClick={() => setTab("map")}
-            label="Institutions"
-            icon={<MapIcon />}
-          />
+          <TabButton active={tab === "chat"} onClick={() => setTab("chat")} label="Conversation" icon={<ChatIcon />} />
+          <TabButton active={tab === "map"}  onClick={() => setTab("map")}  label="Institutions"  icon={<MapIcon />} />
         </nav>
 
         <div style={{ flex: 1, display: "flex", justifyContent: "flex-end" }}>
           {tab === "chat" && messages.length > 0 && (
             <button
-              onClick={() => { setMessages([]); setError(""); }}
+              onClick={newChat}
               style={{
                 padding: "5px 12px", borderRadius: "var(--radius)",
                 border: "1px solid var(--border)", background: "transparent",
@@ -239,7 +294,7 @@ function ChatApp() {
         </div>
       </header>
 
-      {/* BODY: two full-page views toggled by the tabs (both stay mounted) */}
+      {/* BODY */}
       <div style={{ flex: 1, display: "flex", overflow: "hidden" }}>
 
         {/* Chat view */}
@@ -248,212 +303,259 @@ function ChatApp() {
           display: tab === "chat" ? "flex" : "none",
         }}>
 
-          {/* Messages (scroll area is full width; content is centered) */}
+          {/* Messages */}
           <div style={{ flex: 1, overflowY: "auto", padding: "24px 16px" }}>
-          <div style={{
-            width: "100%", maxWidth: 820, margin: "0 auto", minHeight: "100%",
-            display: "flex", flexDirection: "column", gap: 16,
-          }}>
+            <div style={{
+              width: "100%", maxWidth: 820, margin: "0 auto", minHeight: "100%",
+              display: "flex", flexDirection: "column", gap: 16,
+            }}>
 
-            {messages.length === 0 && (
-              <div style={{ margin: "auto", maxWidth: 520, textAlign: "center", padding: "32px 16px" }}>
-                <div style={{
-                  width: 48, height: 48, borderRadius: "50%",
-                  background: "var(--primary-soft)",
-                  border: "1.5px solid #F6AB99",
-                  display: "flex", alignItems: "center", justifyContent: "center",
-                  margin: "0 auto 20px",
-                  fontFamily: "'Space Grotesk', sans-serif", fontWeight: 700,
-                  fontSize: 18, color: "var(--primary)",
-                }}>N</div>
-
-                <p style={{
-                  fontFamily: "'Space Grotesk', sans-serif", fontWeight: 600,
-                  fontSize: 17, color: "var(--text)", marginBottom: 8,
-                }}>
-                  Describe your situation
-                </p>
-                <p style={{ fontSize: 14, color: "var(--text-2)", lineHeight: 1.6, marginBottom: 24 }}>
-                  In plain words, in English or French. NAWIRI will detect your language and ask one question at a time to find what fits you.
-                </p>
-
-                <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-                  {suggestions.map((s, i) => (
-                    <button
-                      key={i}
-                      onClick={() => { setInput(s); inputRef.current?.focus(); }}
-                      style={{
-                        padding: "10px 14px",
-                        background: "var(--bg-card)",
-                        border: "1px solid var(--border-soft)",
-                        borderRadius: "var(--radius-lg)",
-                        fontSize: 13, color: "var(--text-2)",
-                        cursor: "pointer", textAlign: "left", lineHeight: 1.5,
-                        transition: "border-color 0.12s",
-                      }}
-                      onMouseEnter={e => e.currentTarget.style.borderColor = "var(--primary)"}
-                      onMouseLeave={e => e.currentTarget.style.borderColor = "var(--border-soft)"}
-                    >
-                      {s}
-                    </button>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {messages.map((m, i) => {
-              const isUser = m.role === "user";
-              return (
-                <div key={i} style={{
-                  display: "flex", gap: 12, alignItems: "flex-start", width: "100%",
-                  flexDirection: isUser ? "row-reverse" : "row",
-                }}>
-                  <Avatar role={m.role} />
+              {messages.length === 0 && (
+                <div style={{ margin: "auto", maxWidth: 520, textAlign: "center", padding: "32px 16px" }}>
                   <div style={{
-                    minWidth: 0, paddingTop: 5,
-                    flex: isUser ? "0 1 auto" : 1,
-                    maxWidth: isUser ? "82%" : "100%",
-                    textAlign: isUser ? "right" : "left",
-                  }}>
-                    <div style={{
-                      fontFamily: "'Space Grotesk', sans-serif", fontWeight: 700,
-                      fontSize: 13, color: "var(--text)", marginBottom: 3,
-                    }}>
-                      {isUser ? "You" : "NAWIRI"}
-                    </div>
-                    {isUser ? (
-                      <div style={{
-                        display: "inline-block", textAlign: "left",
-                        padding: "10px 14px", borderRadius: "14px 4px 14px 14px",
-                        background: "var(--primary)", color: "#fff",
-                        fontSize: 14, lineHeight: 1.6,
-                      }}>
-                        {m.content}
-                      </div>
-                    ) : (
-                      <div style={{ fontSize: 14, lineHeight: 1.65, color: "var(--text)" }}>
-                        {renderMessage(m.content, openMapAt)}
-                      </div>
-                    )}
-                  </div>
-                </div>
-              );
-            })}
-
-            {loading && (
-              <div style={{ display: "flex", gap: 12, alignItems: "flex-start", width: "100%" }}>
-                <Avatar role="assistant" />
-                <div style={{ flex: 1, paddingTop: 5 }}>
-                  <div style={{
+                    width: 48, height: 48, borderRadius: "50%",
+                    background: "var(--primary-soft)", border: "1.5px solid #F6AB99",
+                    display: "flex", alignItems: "center", justifyContent: "center",
+                    margin: "0 auto 20px",
                     fontFamily: "'Space Grotesk', sans-serif", fontWeight: 700,
-                    fontSize: 13, color: "var(--text)", marginBottom: 6,
-                  }}>
-                    NAWIRI
-                  </div>
-                  <div style={{ display: "flex", gap: 5, alignItems: "center", height: 16 }}>
-                    {[0, 1, 2].map(i => (
-                      <span key={i} style={{
-                        width: 6, height: 6, borderRadius: "50%",
-                        background: "var(--text-3)", display: "inline-block",
-                        animation: `dot-bounce 1.2s ease-in-out ${i * 0.2}s infinite`,
-                      }} />
+                    fontSize: 18, color: "var(--primary)",
+                  }}>N</div>
+
+                  <p style={{ fontFamily: "'Space Grotesk', sans-serif", fontWeight: 600, fontSize: 17, color: "var(--text)", marginBottom: 8 }}>
+                    Describe your situation
+                  </p>
+                  <p style={{ fontSize: 14, color: "var(--text-2)", lineHeight: 1.6, marginBottom: 24 }}>
+                    In plain words, in English, French, <strong>Fon, Wolof or Twi</strong>. NAWIRI will detect your language and ask one question at a time.
+                  </p>
+
+                  <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+                    {suggestions.map((s, i) => (
+                      <button
+                        key={i}
+                        onClick={() => { setInput(s); inputRef.current?.focus(); }}
+                        style={{
+                          padding: "10px 14px", background: "var(--bg-card)",
+                          border: "1px solid var(--border-soft)", borderRadius: "var(--radius-lg)",
+                          fontSize: 13, color: "var(--text-2)", cursor: "pointer",
+                          textAlign: "left", lineHeight: 1.5, transition: "border-color 0.12s",
+                        }}
+                        onMouseEnter={e => e.currentTarget.style.borderColor = "var(--primary)"}
+                        onMouseLeave={e => e.currentTarget.style.borderColor = "var(--border-soft)"}
+                      >
+                        {s}
+                      </button>
                     ))}
                   </div>
                 </div>
-              </div>
-            )}
+              )}
 
-            {error && (
-              <div style={{
-                alignSelf: "center", maxWidth: 380, textAlign: "center",
-                padding: "10px 16px", marginTop: 4,
-                background: "var(--bg-card)", border: "1px solid var(--border-soft)",
-                borderRadius: "var(--radius-lg)", fontSize: 13, color: "var(--text-3)",
-                lineHeight: 1.5,
-              }}>
-                {error}
-              </div>
-            )}
+              {messages.map((m, i) => {
+                const isUser = m.role === "user";
+                return (
+                  <div key={i} style={{
+                    display: "flex", gap: 12, alignItems: "flex-start", width: "100%",
+                    flexDirection: isUser ? "row-reverse" : "row",
+                  }}>
+                    <Avatar role={m.role} />
+                    <div style={{
+                      minWidth: 0, paddingTop: 5,
+                      flex: isUser ? "0 1 auto" : 1,
+                      maxWidth: isUser ? "82%" : "100%",
+                      textAlign: isUser ? "right" : "left",
+                    }}>
+                      <div style={{
+                        fontFamily: "'Space Grotesk', sans-serif", fontWeight: 700,
+                        fontSize: 13, color: "var(--text)", marginBottom: 3,
+                      }}>
+                        {isUser ? "You" : "NAWIRI"}
+                      </div>
 
-            <div ref={endRef} />
-          </div>
+                      {isUser ? (
+                        <div style={{
+                          display: "inline-block", textAlign: "left",
+                          padding: "10px 14px", borderRadius: "14px 4px 14px 14px",
+                          background: "var(--primary)", color: "#fff",
+                          fontSize: 14, lineHeight: 1.6,
+                        }}>
+                          {m.content}
+                        </div>
+                      ) : (
+                        <>
+                          <div style={{ fontSize: 14, lineHeight: 1.65, color: "var(--text)" }}>
+                            {renderMessage(m.content, openMapAt)}
+                          </div>
+
+                          {/* Translation status badges */}
+                          {m.isTranslating && (
+                            <div style={{ display: "flex", alignItems: "center", gap: 6, marginTop: 8 }}>
+                              <span style={{
+                                display: "inline-block", width: 12, height: 12,
+                                border: "2px solid var(--primary)", borderTopColor: "transparent",
+                                borderRadius: "50%", animation: "spin-badge 0.7s linear infinite",
+                              }} />
+                              <span style={{ fontSize: 11, color: "var(--text-3)", fontStyle: "italic" }}>
+                                Traduction en cours...
+                              </span>
+                            </div>
+                          )}
+                          {m.wasTranslated && (
+                            <div style={{ fontSize: 11, color: "var(--text-3)", marginTop: 6 }}>
+                              🌍 traduit depuis le français
+                            </div>
+                          )}
+                          {m.translateFailed && (
+                            <div style={{ fontSize: 11, color: "var(--text-3)", marginTop: 6, fontStyle: "italic" }}>
+                              Traduction indisponible — réponse en français.
+                            </div>
+                          )}
+                        </>
+                      )}
+                    </div>
+                  </div>
+                );
+              })}
+
+              {loading && (
+                <div style={{ display: "flex", gap: 12, alignItems: "flex-start", width: "100%" }}>
+                  <Avatar role="assistant" />
+                  <div style={{ flex: 1, paddingTop: 5 }}>
+                    <div style={{ fontFamily: "'Space Grotesk', sans-serif", fontWeight: 700, fontSize: 13, color: "var(--text)", marginBottom: 6 }}>
+                      NAWIRI
+                    </div>
+                    <div style={{ display: "flex", gap: 5, alignItems: "center", height: 16 }}>
+                      {[0, 1, 2].map(i => (
+                        <span key={i} style={{
+                          width: 6, height: 6, borderRadius: "50%", background: "var(--text-3)",
+                          display: "inline-block",
+                          animation: `dot-bounce 1.2s ease-in-out ${i * 0.2}s infinite`,
+                        }} />
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {error && (
+                <div style={{
+                  alignSelf: "center", maxWidth: 380, textAlign: "center",
+                  padding: "10px 16px", marginTop: 4,
+                  background: "var(--bg-card)", border: "1px solid var(--border-soft)",
+                  borderRadius: "var(--radius-lg)", fontSize: 13, color: "var(--text-3)",
+                  lineHeight: 1.5,
+                }}>
+                  {error}
+                </div>
+              )}
+
+              <div ref={endRef} />
+            </div>
           </div>
 
           {/* Input bar */}
           <div style={{
-            padding: "14px 16px",
-            borderTop: "1px solid var(--border-soft)",
+            padding: "14px 16px", borderTop: "1px solid var(--border-soft)",
             background: "var(--bg-card)", flexShrink: 0,
           }}>
             <div style={{ width: "100%", maxWidth: 820, margin: "0 auto" }}>
-            <div style={{ display: "flex", gap: 10, alignItems: "flex-end" }}>
-              <textarea
-                ref={inputRef}
-                value={input}
-                onChange={e => setInput(e.target.value)}
-                onKeyDown={onKeyDown}
-                rows={2}
-                placeholder="Describe your situation in English or French..."
-                style={{
-                  flex: 1, resize: "none",
-                  padding: "10px 14px",
-                  border: "1.5px solid var(--border)",
-                  borderRadius: "var(--radius-lg)",
-                  fontSize: 14, color: "var(--text)",
-                  background: "var(--bg)", outline: "none",
-                  lineHeight: 1.5, fontFamily: "'Inter', sans-serif",
-                  transition: "border-color 0.15s",
-                }}
-                onFocus={e => e.target.style.borderColor = "var(--primary)"}
-                onBlur={e => e.target.style.borderColor = "var(--border)"}
-              />
-              <button
-                onClick={send}
-                disabled={loading || !input.trim()}
-                style={{
-                  width: 46, height: 46, flexShrink: 0,
-                  borderRadius: "var(--radius-lg)", border: "none",
-                  background: loading || !input.trim() ? "var(--border)" : "var(--primary)",
-                  color: "#FFF", fontSize: 18,
-                  cursor: loading || !input.trim() ? "default" : "pointer",
-                  display: "flex", alignItems: "center", justifyContent: "center",
-                  transition: "background 0.12s",
-                }}
-              >
-                ↑
-              </button>
-            </div>
-            <p style={{ fontSize: 11, color: "var(--text-3)", marginTop: 8, textAlign: "center" }}>
-              NAWIRI guides you. Always verify with the official body before any step.
-            </p>
+
+              {/* Language selector */}
+              <div style={{ display: "flex", gap: 6, marginBottom: 10, alignItems: "center", flexWrap: "wrap" }}>
+                <span style={{ fontSize: 11, fontWeight: 600, color: "var(--text-3)", marginRight: 2, userSelect: "none" }}>
+                  🌍
+                </span>
+                {[
+                  { code: null, label: "FR / EN", flag: "" },
+                  { code: "fon", ...LOCAL_LANGS.fon },
+                  { code: "wo",  ...LOCAL_LANGS.wo  },
+                  { code: "tw",  ...LOCAL_LANGS.tw  },
+                ].map(({ code, label, flag }) => (
+                  <button
+                    key={code ?? "auto"}
+                    onClick={() => setLocalLang(code)}
+                    style={{
+                      padding: "3px 11px", borderRadius: 99,
+                      border: "1.5px solid " + (localLang === code ? "var(--primary)" : "var(--border)"),
+                      background: localLang === code ? "var(--primary-soft)" : "transparent",
+                      color: localLang === code ? "var(--primary)" : "var(--text-3)",
+                      fontSize: 12, fontWeight: 600, cursor: "pointer",
+                      transition: "all 0.12s", lineHeight: 1.5,
+                    }}
+                  >
+                    {flag ? `${flag} ${label}` : label}
+                  </button>
+                ))}
+                {localLang && (
+                  <span style={{ fontSize: 11, color: "var(--text-3)", fontStyle: "italic", marginLeft: 2 }}>
+                    — réponses en {LOCAL_LANGS[localLang].label}
+                  </span>
+                )}
+              </div>
+
+              <div style={{ display: "flex", gap: 10, alignItems: "flex-end" }}>
+                <textarea
+                  ref={inputRef}
+                  value={input}
+                  onChange={e => setInput(e.target.value)}
+                  onKeyDown={onKeyDown}
+                  rows={2}
+                  placeholder={placeholder}
+                  style={{
+                    flex: 1, resize: "none", padding: "10px 14px",
+                    border: "1.5px solid var(--border)", borderRadius: "var(--radius-lg)",
+                    fontSize: 14, color: "var(--text)", background: "var(--bg)",
+                    outline: "none", lineHeight: 1.5, fontFamily: "'Inter', sans-serif",
+                    transition: "border-color 0.15s",
+                  }}
+                  onFocus={e => e.target.style.borderColor = "var(--primary)"}
+                  onBlur={e  => e.target.style.borderColor = "var(--border)"}
+                />
+                <button
+                  onClick={send}
+                  disabled={isBusy || !input.trim()}
+                  style={{
+                    width: 46, height: 46, flexShrink: 0,
+                    borderRadius: "var(--radius-lg)", border: "none",
+                    background: isBusy || !input.trim() ? "var(--border)" : "var(--primary)",
+                    color: "#FFF", fontSize: 18,
+                    cursor: isBusy || !input.trim() ? "default" : "pointer",
+                    display: "flex", alignItems: "center", justifyContent: "center",
+                    transition: "background 0.12s",
+                  }}
+                >
+                  ↑
+                </button>
+              </div>
+
+              <p style={{ fontSize: 11, color: "var(--text-3)", marginTop: 8, textAlign: "center" }}>
+                NAWIRI guides you. Always verify with the official body before any step.
+              </p>
             </div>
           </div>
         </div>
 
-        {/* Map view (full page) */}
-        <div style={{
-          flex: 1, minHeight: 0,
-          display: tab === "map" ? "block" : "none",
-        }}>
+        {/* Map view */}
+        <div style={{ flex: 1, minHeight: 0, display: tab === "map" ? "block" : "none" }}>
           <InstitutionsMap open={tab === "map"} target={mapTarget} />
         </div>
       </div>
 
-      {/* BOTTOM NAV (mobile only) */}
+      {/* BOTTOM NAV (mobile) */}
       <nav className="bottom-nav" style={{
-        flexShrink: 0,
-        background: "var(--bg-card)",
+        flexShrink: 0, background: "var(--bg-card)",
         borderTop: "1px solid var(--border-soft)",
         paddingBottom: "env(safe-area-inset-bottom, 0px)",
       }}>
         <BottomTab active={tab === "chat"} onClick={() => setTab("chat")} label="Conversation" icon={<ChatIcon />} />
-        <BottomTab active={tab === "map"}  onClick={() => setTab("map")}  label="Institutions" icon={<MapIcon />} />
+        <BottomTab active={tab === "map"}  onClick={() => setTab("map")}  label="Institutions"  icon={<MapIcon />} />
       </nav>
 
       <style>{`
         @keyframes dot-bounce {
           0%, 80%, 100% { transform: translateY(0);    opacity: 0.4; }
           40%            { transform: translateY(-5px); opacity: 1;   }
+        }
+        @keyframes spin-badge {
+          to { transform: rotate(360deg); }
         }
         .bottom-nav { display: none; }
         @media (max-width: 640px) {
@@ -510,7 +612,7 @@ function BottomTab({ active, onClick, label, icon }) {
   );
 }
 
-// ---- Circular app-style avatars (both participants) ----
+// ---- Avatars ----
 function Avatar({ role }) {
   if (role === "user") {
     return (
@@ -518,8 +620,7 @@ function Avatar({ role }) {
         width: 34, height: 34, borderRadius: "50%", flexShrink: 0,
         background: "var(--sage, #4A7C59)",
         display: "flex", alignItems: "center", justifyContent: "center",
-        boxShadow: "0 1px 4px rgba(0,0,0,0.12)",
-        color: "#fff",
+        boxShadow: "0 1px 4px rgba(0,0,0,0.12)", color: "#fff",
       }}>
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
              stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
@@ -541,7 +642,7 @@ function Avatar({ role }) {
   );
 }
 
-// ---- Tab icons ----
+// ---- Icons ----
 function ChatIcon() {
   return (
     <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
