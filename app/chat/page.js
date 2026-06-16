@@ -595,6 +595,7 @@ function ChatApp() {
                   onChange={e => setInput(e.target.value)}
                   onKeyDown={onKeyDown}
                   rows={2}
+                  aria-label="Describe your situation"
                   placeholder={chosenLang ? PLACEHOLDERS[chosenLang] : ""}
                   disabled={!chosenLang}
                   style={{
@@ -610,6 +611,7 @@ function ChatApp() {
                 <button
                   onClick={send}
                   disabled={isBusy || !input.trim() || !chosenLang}
+                  aria-label="Send message"
                   style={{
                     width: 46, height: 46, flexShrink: 0,
                     borderRadius: "var(--radius-lg)", border: "none",
