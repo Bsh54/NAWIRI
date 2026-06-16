@@ -19,7 +19,7 @@ const T = {
     demo_q:        "Are you registered in the ANIP biometric system (national ID card)?",
     demo_label:    "NAWIRI asks one question at a time",
     stats: [
-      { value: "22",  label: "programs documented" },
+      { value: "25",  label: "programs documented" },
       { value: "3",   label: "countries covered" },
       { value: "5",   label: "languages supported" },
     ],
@@ -38,9 +38,9 @@ const T = {
     ],
     countries_title: "Programs covered",
     countries: [
-      { flag: "BJ", name: "Benin",   count: "11 programs", items: ["Mandatory health insurance (AMO/ARCH)", "Free malaria care for children under 5 and pregnant women", "Free cesarean section", "Alafia microcredit (FNM)", "GBESSOKÉ cash transfers", "Free ARVs and HIV care", "CNSS old-age pension"] },
+      { flag: "BJ", name: "Benin",   count: "12 programs", items: ["Mandatory health insurance (AMO/ARCH)", "Free malaria care for children under 5 and pregnant women", "Free cesarean section", "Alafia microcredit (FNM)", "GBESSOKÉ cash transfers", "Free ARVs and HIV care", "CNSS old-age pension"] },
       { flag: "SN", name: "Senegal", count: "7 programs",  items: ["Community health mutuals (CMU)", "Free care for children under 5", "Plan Sésame (60+)", "Family Security Grant (PNBSF)", "Free cesarean section", "Free dialysis", "Equal Opportunity Card (disability)"] },
-      { flag: "GH", name: "Ghana",   count: "4 programs",  items: ["National Health Insurance (NHIS)", "Free maternal health care", "Free dialysis (since December 2024)", "LEAP cash transfer"] },
+      { flag: "GH", name: "Ghana",   count: "6 programs",  items: ["National Health Insurance (NHIS)", "Free Primary Healthcare (launched April 2026)", "Free maternal health care", "Free dialysis (since December 2024)", "Ghana Medical Trust Fund (MahamaCares)", "LEAP cash transfer"] },
     ],
     ai_title:    "Responsible AI by design",
     ai_items: [
@@ -68,7 +68,7 @@ const T = {
     demo_q:        "Êtes-vous enregistré dans le système biométrique ANIP (carte nationale d'identité) ?",
     demo_label:    "NAWIRI pose une question à la fois",
     stats: [
-      { value: "22", label: "programmes documentés" },
+      { value: "25", label: "programmes documentés" },
       { value: "3",  label: "pays couverts" },
       { value: "5",  label: "langues supportées" },
     ],
@@ -87,9 +87,9 @@ const T = {
     ],
     countries_title: "Programmes couverts",
     countries: [
-      { flag: "BJ", name: "Bénin",    count: "11 programmes", items: ["Assurance maladie obligatoire (AMO/ARCH)", "Gratuité paludisme <5 ans et femmes enceintes", "Gratuité césarienne", "Microcrédit Alafia (FNM)", "Transferts cash GBESSOKÉ", "ARV et soins VIH gratuits", "Pension vieillesse CNSS"] },
+      { flag: "BJ", name: "Bénin",    count: "12 programmes", items: ["Assurance maladie obligatoire (AMO/ARCH)", "Gratuité paludisme <5 ans et femmes enceintes", "Gratuité césarienne", "Microcrédit Alafia (FNM)", "Transferts cash GBESSOKÉ", "ARV et soins VIH gratuits", "Pension vieillesse CNSS"] },
       { flag: "SN", name: "Sénégal",  count: "7 programmes",  items: ["Mutuelles de santé CMU", "Gratuité soins enfants <5 ans", "Plan Sésame (60+)", "Bourse de Sécurité Familiale (PNBSF)", "Gratuité césarienne", "Gratuité dialyse", "Carte d'Égalité des Chances (handicap)"] },
-      { flag: "GH", name: "Ghana",    count: "4 programmes",  items: ["Assurance nationale NHIS", "Soins maternels gratuits", "Dialyse gratuite (depuis décembre 2024)", "Transfert cash LEAP"] },
+      { flag: "GH", name: "Ghana",    count: "6 programmes",  items: ["Assurance nationale NHIS", "Soins primaires gratuits (lancés avril 2026)", "Soins maternels gratuits", "Dialyse gratuite (depuis décembre 2024)", "Fonds médical MahamaCares", "Transfert cash LEAP"] },
     ],
     ai_title:    "IA responsable par conception",
     ai_items: [
@@ -117,7 +117,7 @@ const T = {
     demo_user: "Vi ce ɖo xwe 3 bo nɔ jɛ azɔn hwɛhwɛ. Mǐ ɖó akwɛzinzan ɖě ǎ. Un nɔ nɔ Bénin.",
     demo_q: "A ka wlan nyikɔ towe dó ANIP sín tuto biométrique (carte d’identité nationale) mɛ à?",
     stats: [
-      { value: "22", label: "tuto e è wlan lɛ é" },
+      { value: "25", label: "tuto e è wlan lɛ é" },
       { value: "3",  label: "tò e mɛ è ɖɔ xó dó lɛ é" },
       { value: "5",  label: "gbè e è nɔ gudo nú lɛ é" },
     ],
@@ -136,9 +136,9 @@ const T = {
     ],
     countries_title: "Tuto e è kplɔ́n lɛ é",
     countries: [
-      { flag: "BJ", name: "Benin",   count: "Tuto 11", items: ["Akwɛzinzan lanmɛ na nɔ ganji tɔn e ɖò dandan é (AMO/ARCH)", "Zansukpɛ zɔn vɔ̌nu nú yɔkpɔvu e ma ko ɖó xwè atɔ́ɔ́n ǎ lɛ é kpo nyɔnu e ɖò xomɛ lɛ é kpo", "Cesarean vɔ̌nu", "Alafia sín akwɛ kpɛví (FNM)", "GBESSOKÉ akwɛ ɖiɖe", "ARV kpo VIH kpo sín nukúnkpédómɛwu vɔ̌nu", "CNSS pension mɛxoxwe tɔn"] },
+      { flag: "BJ", name: "Benin",   count: "Tuto 12", items: ["Akwɛzinzan lanmɛ na nɔ ganji tɔn e ɖò dandan é (AMO/ARCH)", "Zansukpɛ zɔn vɔ̌nu nú yɔkpɔvu e ma ko ɖó xwè atɔ́ɔ́n ǎ lɛ é kpo nyɔnu e ɖò xomɛ lɛ é kpo", "Cesarean vɔ̌nu", "Alafia sín akwɛ kpɛví (FNM)", "GBESSOKÉ akwɛ ɖiɖe", "ARV kpo VIH kpo sín nukúnkpédómɛwu vɔ̌nu", "CNSS pension mɛxoxwe tɔn"] },
       { flag: "SN", name: "Sénégal", count: "Tuto 7",  items: ["Lanmɛ na nɔ ganji mɛ lɛ tɔn (CMU)", "Nukúnkpédómɛwu vɔ̌nu nú vǐ e ma ko ɖó xwè 5 ǎ lɛ é", "Sésame sín tito (60 jɛji)", "Akwɛzinzan nú Acɛkpikpa Xwédo Tɔn (PNBSF)", "Cesarean vɔ̌nu", "Dialyse vɔ̌nu", "Kati Ali ɖokpo ɔ tɔn (azinzɔnnɔ)"] },
-      { flag: "GH", name: "Ghana",   count: "Tuto 4",  items: ["Assurance lanmɛ na nɔ ganji tɔn tò ɔ tɔn (NHIS)", "Nɔ lɛ sín lanmɛ na nɔ ganji vɔ̌nu", "Dialyse vɔ̌nu (sín décembre 2024)", "LEAP akwɛ ɖiɖe"] },
+      { flag: "GH", name: "Ghana",   count: "Tuto 6",  items: ["Assurance lanmɛ na nɔ ganji tɔn tò ɔ tɔn (NHIS)", "Nɔ lɛ sín lanmɛ na nɔ ganji vɔ̌nu", "Dialyse vɔ̌nu (sín décembre 2024)", "LEAP akwɛ ɖiɖe"] },
     ],
     cta2_title: "A ɖò gbesisɔmɛ bo na mɔ nǔ e jɛxa we é à?",
     cta2_sub: "Blǒ xóɖɔɖókpɔ́ ɖé. É nɔ ɖu cɛju 2 mɔ̌ ǎ.",
@@ -154,7 +154,7 @@ const T = {
     demo_user: "Sama doom amna 3 at te dafay faral di feebar. Amu nu assurance wérgi-yaram. Maa ngi dëkk Bénin.",
     demo_q: "Ndax bind nga sa tur ci sistem biometrik ANIP (kàrtu identite nasonaal)?",
     stats: [
-      { value: "22", label: "prograam yuñ bind" },
+      { value: "25", label: "prograam yuñ bind" },
       { value: "3",  label: "réew yiñ wax" },
       { value: "5",  label: "làkk yiñ jàppale" },
     ],
@@ -173,9 +173,9 @@ const T = {
     ],
     countries_title: "Prograam yiñ wax",
     countries: [
-      { flag: "BJ", name: "Bénin",   count: "11 prograam", items: ["Assurance wérgi-yaram bu war (AMO/ARCH)", "Faj sibbiru bu amul fey ngir xale yu tolluwul ci 5 at ak jigéen ñu ëmb", "Sesarean gratuit", "Microcrédit Alafia (FNM)", "GBESSOKÉ xaliss", "ARV ak pajum VIH te doo fay", "Pension magget yu CNSS"] },
+      { flag: "BJ", name: "Bénin",   count: "12 prograam", items: ["Assurance wérgi-yaram bu war (AMO/ARCH)", "Faj sibbiru bu amul fey ngir xale yu tolluwul ci 5 at ak jigéen ñu ëmb", "Sesarean gratuit", "Microcrédit Alafia (FNM)", "GBESSOKÉ xaliss", "ARV ak pajum VIH te doo fay", "Pension magget yu CNSS"] },
       { flag: "SN", name: "Sénégal", count: "7 prograam",  items: ["Mutuel yu wérgi-yaram ci askan wi (CMU)", "Xale yu tolluwul ci 5 at ñu ngi koy toppatoo te doo fay", "Plan Sésame (60+)", "Kaaraange njaboot (PNBSF)", "Sesarean gratuit", "Dialyse buy maye", "Kartu yamale sañ-sañ (invalidite)"] },
-      { flag: "GH", name: "Gana",    count: "4 prograam",  items: ["Assurance Wérgi-yaram bu Réew mi (NHIS)", "Toppatoo wérgi-yaramu yaay bu amul fey", "Dialyse buy maye (decembre 2024 ba leegi)", "LEAP xaalis"] },
+      { flag: "GH", name: "Gana",    count: "6 prograam",  items: ["Assurance Wérgi-yaram bu Réew mi (NHIS)", "Toppatoo wérgi-yaramu yaay bu amul fey", "Dialyse buy maye (decembre 2024 ba leegi)", "LEAP xaalis"] },
     ],
     cta2_title: "Ndax waajal nga gis li nga yelloo?",
     cta2_sub: "Tambalil waxtaan. Du def lu ëpp 2 simili.",
@@ -191,7 +191,7 @@ const T = {
     demo_user: "Me ba adi mfe 3 na ɔtaa yare. Yenni akwahosan ho insurance biara. Mete Benin.",
     demo_q: "So woakyerɛw wo din wɔ ANIP biometric nhyehyɛe (ɔman ID krataa) mu?",
     stats: [
-      { value: "22", label: "nhyehyɛe ahorow a wɔakyerɛw ato hɔ" },
+      { value: "25", label: "nhyehyɛe ahorow a wɔakyerɛw ato hɔ" },
       { value: "3",  label: "aman a wɔka ho asɛm" },
       { value: "5",  label: "kasa horow a wɔboa" },
     ],
@@ -210,9 +210,9 @@ const T = {
     ],
     countries_title: "Dwumadi ahorow a wɔka ho asɛm",
     countries: [
-      { flag: "BJ", name: "Benin",   count: "11 dwumadi", items: ["Akwahosan ho insurance a ɛyɛ ahyɛde (AMO/ARCH)", "Mmofra a wonnii mfe 5 ne mmea a wɔyem a wɔhwɛ wɔn a wontua hwee wɔ asramma ho", "Oprehyɛn a wontua hwee", "Alafia bosea nketewa (FNM)", "GBESSOKÉ sika a wɔde kɔma afoforo", "ARV ne HIV hwɛ a wontua hwee", "CNSS nkwakoraa ne mmerewa pɛnhyen sika"] },
+      { flag: "BJ", name: "Benin",   count: "12 dwumadi", items: ["Akwahosan ho insurance a ɛyɛ ahyɛde (AMO/ARCH)", "Mmofra a wonnii mfe 5 ne mmea a wɔyem a wɔhwɛ wɔn a wontua hwee wɔ asramma ho", "Oprehyɛn a wontua hwee", "Alafia bosea nketewa (FNM)", "GBESSOKÉ sika a wɔde kɔma afoforo", "ARV ne HIV hwɛ a wontua hwee", "CNSS nkwakoraa ne mmerewa pɛnhyen sika"] },
       { flag: "SN", name: "Senegal", count: "7 dwumadi",  items: ["Mpɔtam hɔ akwahosan ho nhyehyɛe (CMU)", "Wɔhwɛ mmofra a wonnii mfe 5 a wontua hwee", "Nhyehyɛe Sésame (60+)", "Abusua Ahobammɔ Ho Mmoa (PNBSF)", "Oprehyɛn a wontua hwee", "Dialysis a wɔde ma kwa", "Hokwan a Ɛyɛ Pɛ Kaad (dɛmdi)"] },
-      { flag: "GH", name: "Ghana",   count: "4 dwumadi",  items: ["Ɔman Akwahosan Insurance (NHIS)", "Ɛnanom akwahosan ho nhyehyɛe a wontua hwee", "Dialysis a wontua hwee (efi December 2024)", "LEAP sika a wɔde mena"] },
+      { flag: "GH", name: "Ghana",   count: "6 dwumadi",  items: ["Ɔman Akwahosan Insurance (NHIS)", "Ɛnanom akwahosan ho nhyehyɛe a wontua hwee", "Dialysis a wontua hwee (efi December 2024)", "LEAP sika a wɔde mena"] },
     ],
     cta2_title: "Woasiesie wo ho sɛ wubenya nea wowɔ hokwan sɛ wunya?",
     cta2_sub: "Fi ase mmɔ nkɔmmɔ. Egye nea ennu simma 2.",

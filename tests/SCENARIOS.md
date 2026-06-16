@@ -30,7 +30,7 @@ Legend for Result: ✅ pass · ⚠️ partial · ❌ fail
 | 6 | "Je suis à Cotonou." | Recognises Benin (city → country), proceeds to gather situation. | City-level detection. | |
 | 7 | Start about Senegal, then 3 messages later: "En fait je suis rentré au Bénin." | Switches to Benin data for the new answers. | Latest-country-wins re-detection. | |
 
-## C. Benin (11 programs)
+## C. Benin (12 programs)
 
 | # | Input | Expected | Tests | Result |
 |---|-------|----------|-------|--------|
@@ -51,7 +51,7 @@ Legend for Result: ✅ pass · ⚠️ partial · ❌ fail
 | 17 | "Sénégal, mon frère est handicapé, qu'est-ce qui existe ?" | Carte d'Égalité des Chances; how to obtain; contact. | Disability path. | |
 | 18 | "Sénégal, j'ai une insuffisance rénale." | Free dialysis exists (prescription néphrologue + waiting list). Honest about the list. | Senegal dialysis = yes, with condition (contrast with #10). | |
 
-## E. Ghana (4 programs)
+## E. Ghana (6 programs)
 
 | # | Input | Expected | Tests | Result |
 |---|-------|----------|-------|--------|

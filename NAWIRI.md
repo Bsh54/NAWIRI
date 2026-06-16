@@ -125,7 +125,7 @@ Le quatrième programme est la Bourse de Sécurité Familiale (PNBSF). Elle cibl
 
 ⚠️ Correction majeure depuis la rédaction initiale : le RAMU (loi 2015-42) n'est plus le guichet pratique. La santé au Bénin est passée à l'**AMO — Assurance Maladie Obligatoire** (décrets 2023-327 puis 2025-672), avec le volet **ARCH** pour les pauvres, géré par l'**ANPS** (Agence Nationale de Protection Sociale), pas l'ANAM. Bon contact : ANPS — +229 20 21 34 14 — anps.social.gouv.bj. Prérequis transversal : la **carte biométrique ANIP**.
 
-Le Bénin compte 11 programmes documentés (voir data/benin/) : AMO/ARCH, gratuité paludisme <5 ans + femmes enceintes, gratuité césarienne, microcrédit Alafia (FNM), transferts GBESSOKÉ (ciblage enquête), ARV/VIH gratuits, pension CNSS, etc. ⚠️ La dialyse et l'insuline NE sont PAS gratuites au Bénin (ne jamais créer ce faux espoir).
+Le Bénin compte 12 programmes documentés (voir data/benin/) : AMO/ARCH, gratuité paludisme <5 ans + femmes enceintes, gratuité césarienne, microcrédit Alafia (FNM), transferts GBESSOKÉ (ciblage enquête), ARV/VIH gratuits, pension CNSS, transferts conditionnels FAABA/SWEDD pour maintenir les filles à l'école, etc. ⚠️ La dialyse et l'insuline NE sont PAS gratuites au Bénin (ne jamais créer ce faux espoir).
 
 **Ghana**
 
@@ -332,7 +332,7 @@ Ce qui est construit et déployé (repo GitHub Bsh54/NAWIRI, hébergé sur Verce
 
 **Nom & moteur** — Produit renommé NAWIRI. Moteur = Google Gemini `gemini-flash-lite-latest` en streaming SSE (pas Claude/GPT-4 : l'équipe dispose d'une clé Gemini gratuite, rapide, bon FR/EN). Stack : Next.js 14 + Vercel, styles inline, zéro dépendance lourde.
 
-**Données vérifiées** — 22 programmes sur 3 pays, datés et sourcés (data/benin = 11, data/senegal = 7, data/ghana = 4), avec pour chaque pays un fichier de programmes + SOURCES.md + DOCUMENTS.md (pièces exactes à fournir, vrai différenciateur vs Google). Corrections clés intégrées : SEN-CSU (ex-CMU), bourse 140 000 FCFA/an, ARCH/AMO/ANPS au Bénin (ex-RAMU/ANAM), dialyse/insuline NON gratuites au Bénin, prime NHIS réelle GH¢7-42 + GH¢6.
+**Données vérifiées** — 25 programmes sur 3 pays, datés et sourcés (data/benin = 12, data/senegal = 7, data/ghana = 6), avec pour chaque pays un fichier de programmes + SOURCES.md + DOCUMENTS.md (pièces exactes à fournir, vrai différenciateur vs Google). **Fraîcheur = atout** : dispositifs de mars/avril 2026 inclus (Ghana Free Primary Healthcare lancé avril 2026, Ghana Medical Trust Fund « MahamaCares » 2025-26, reprise PNBSF Sénégal 19 mars 2026). Corrections clés intégrées : SEN-CSU (ex-CMU), bourse 140 000 FCFA/an, ARCH/AMO/ANPS au Bénin (ex-RAMU/ANAM), dialyse/insuline NON gratuites au Bénin, prime NHIS réelle GH¢7-42 + GH¢6.
 
 **Langues** — Anglais et français + **trois langues africaines** : fɔngbe, wolof, twi. Sélecteur de langue en popup. Pour les langues africaines : le texte de l'utilisateur passe par une API de traduction (Google Translate via un worker) → anglais → Gemini → retour dans la langue locale. Les chaînes d'interface (accueil, landing) sont pré-traduites et figées → bascule de langue instantanée.
 
