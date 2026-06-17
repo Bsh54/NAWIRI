@@ -13,137 +13,97 @@ const COUNTRIES = [
     verified: "15 June 2026",
     programs: [
       {
-        name: "Mandatory Health Insurance — AMO / ARCH (Program 1)",
+        name: "Mandatory Health Insurance — AMO / ARCH",
         official: [
-          { label: "ANPS — National Social Protection Agency", url: "https://anps.social.gouv.bj", note: "Official desk for ARCH health insurance, AMO for the poor, training, credit, pension. Contact: +229 20 21 34 14" },
-          { label: "gouv.bj — Government of Benin portal", url: "https://gouv.bj", note: "AMO rollout articles (IDs: 1145, 505, 1536, 913, 3479)" },
-          { label: "Decree 2023-327 of 21 June 2023", note: "Establishes AMO (Assurance Maladie Obligatoire)" },
-          { label: "Decree 2025-672 of 29 October 2025", note: "Makes AMO mandatory for all — employer deadline 29 Oct 2026, penalty 200,000 FCFA/uncovered employee" },
-          { label: "Law No. 2015-42 of 17 March 2016 (RAMU)", note: "Founding legal framework — 91 articles. PDF stored in data/benin/documents/loi-2015-42.pdf" },
-        ],
-        institutional: [
-          { label: "CLEISS", note: "Social security framework for the self-employed in Benin (ARCH retirement)" },
-          { label: "WHO Benin & Afro regional office", note: "Corroboration of health coverage parameters" },
+          { label: "ANPS — Agence Nationale de Protection Sociale", url: "https://anps.social.gouv.bj/", note: "Official operational desk for ARCH health insurance and AMO for the poor" },
+          { label: "ANPS — Présentation du projet ARCH", url: "https://anps.social.gouv.bj/arch/presentation", note: "Official presentation of the ARCH project (health, training, credit, pension)" },
+          { label: "Décret N° 2023-327 du 21 juin 2023 — sgg.gouv.bj", url: "https://sgg.gouv.bj/doc/decret-2023-327/", note: "Decree establishing AMO (Assurance Maladie Obligatoire)" },
+          { label: "Décret N° 2025-672 du 29 octobre 2025 — sgg.gouv.bj", url: "https://sgg.gouv.bj/doc/decret-2025-672/", note: "Makes AMO mandatory for all — employer deadline 29 Oct 2026, penalty 200,000 FCFA/uncovered employee" },
+          { label: "gouv.bj — AMO: syndicats, patronat et assureurs informés", url: "https://www.gouv.bj/article/2309/assurance-maladie-obligatoire-syndicats-patronat-assureurs-informes-contenu-decret-application/", note: "Government article on AMO implementation decree" },
+          { label: "social.gouv.bj — Ministère des Affaires Sociales", url: "https://social.gouv.bj/", note: "Ministry overseeing ARCH, GBESSOKÉ and social protection programs" },
         ],
         press: [
-          "lanouvelletribune.info / La Nouvelle Tribune (2024-2025) — AMO rollout, ARCH training",
-          "baobab-courtage.com — AMO premiums (private-insurer angle)",
-          "Cairn / Afrique contemporaine (2025) — AMO analysis",
+          "baobab-courtage.com — AMO premiums and employer obligations",
         ],
       },
       {
-        name: "Alafia Microcredit — FNM (Program 2)",
+        name: "Alafia Microcredit — FNM",
         official: [
-          { label: "fnm.bj — National Microfinance Fund", url: "https://fnm.bj", note: "Alafia microcredit; SFD directory at fnm.bj/repartition-des-sfd-microcredit-alafia" },
-          { label: "social.gouv.bj — Ministry of Social Affairs", url: "https://social.gouv.bj", note: "Alafia credit as part of ARCH project" },
+          { label: "fnm.bj — Fonds National de la Microfinance", url: "https://www.fnm.bj/", note: "Official FNM site — Alafia microcredit (30k / 50k / 100k FCFA)" },
+          { label: "social.gouv.bj — FNM page", url: "https://social.gouv.bj/ministere/fnm", note: "FNM under the Ministry of Social Affairs" },
+          { label: "gouv.bj — Microcrédit Alafia: mise en garde contre faux intermédiaires", url: "https://www.gouv.bj/article/2169/microcredit-alafia-anssfd-mettent-faux-intermediaires-garde-invitent-populations-vigilance/", note: "Official government article on Alafia microcredit" },
         ],
         press: [
-          "beninrevele.bj / beninrevele.com — Alafia microcredit details",
+          "beninrevele.bj — Lancement microcrédit Alafia dans le Zou",
+          "beninrevele.bj — Microcrédit Alafia passe à 100 000 FCFA",
         ],
       },
       {
-        name: "GBESSOKÉ Cash Transfers (Program 3)",
+        name: "GBESSOKÉ Cash Transfers",
         official: [
-          { label: "social.gouv.bj — Ministry of Social Affairs", url: "https://social.gouv.bj", note: "GBESSOKÉ cash transfers for vulnerable households" },
-          { label: "sgg.gouv.bj — Secrétariat Général du Gouvernement", url: "https://sgg.gouv.bj", note: "Official decrees and Conseil des Ministres records" },
-        ],
-        institutional: [
-          { label: "World Bank", note: "Social protection and PMT targeting methodology" },
-        ],
-        press: [
-          "lanationbenin.info, banouto.bj (Sept. 2025) — GBESSOKÉ cash-transfer details and amounts",
+          { label: "social.gouv.bj — Lancement du programme GBESSOKÉ", url: "https://social.gouv.bj/actualite/actualites/lancement-du-programme-de-filets-de-protection-sociale-productifs-gbessoke", note: "Official launch announcement of productive social protection networks GBESSOKÉ" },
+          { label: "gouv.bj — GBESSOKÉ: des CIP offerts à 34 000 bénéficiaires", url: "https://www.gouv.bj/article/2660/programme-social-gbessoke-offerts-beneficiaires-prelude-demarrage./", note: "Government article on GBESSOKÉ beneficiaries receiving ANIP cards" },
         ],
       },
       {
-        name: "Free Cesarean Section (Program 4)",
+        name: "Free Cesarean Section",
         official: [
-          { label: "sante.gouv.bj (beninsante.bj) — Ministry of Health Benin", url: "https://sante.gouv.bj", note: "Free cesarean at public hospitals" },
-        ],
-        institutional: [
-          { label: "WHO Benin", note: "Free cesarean policy" },
-          { label: "Cairn / Santé Publique", note: "Free cesarean program analysis" },
-        ],
-        press: [
-          "santetropicale.com, abmsbj.org (ABMS) — cesarean program coverage",
+          { label: "sante.gouv.bj — Ministère de la Santé du Bénin", url: "https://sante.gouv.bj/", note: "Ministry of Health — free cesarean at public hospitals" },
         ],
       },
       {
-        name: "Free Malaria Care — children <5 and pregnant women (Program 5)",
+        name: "Free Malaria Care — children under 5 and pregnant women",
         official: [
-          { label: "sante.gouv.bj — Ministry of Health Benin", url: "https://sante.gouv.bj", note: "Free malaria treatment for children under 5 and pregnant women" },
-        ],
-        institutional: [
-          { label: "WHO Benin & Afro regional office", note: "Free malaria policy" },
-          { label: "UNICEF Benin", note: "Free malaria for under-5s" },
-        ],
-        press: [
-          "baatonu.info (April 2026) — figures on malaria campaign",
+          { label: "sante.gouv.bj — Ministère de la Santé du Bénin", url: "https://sante.gouv.bj/", note: "Ministry of Health — free malaria treatment" },
+          { label: "UNICEF Bénin — Cash+Care Faaba (2024-2025)", url: "https://www.unicef.org/benin/recits/cashcare-faaba-un-appui-renforc%C3%A9-en-2024-2025", note: "UNICEF Benin — social protection programs including malaria and child health" },
         ],
       },
       {
-        name: "Free ARV / HIV Treatment (Program 6)",
+        name: "Free ARV / HIV Treatment",
         official: [
-          { label: "sante.gouv.bj — Ministry of Health Benin", url: "https://sante.gouv.bj", note: "Free antiretrovirals at certified centers" },
-        ],
-        institutional: [
-          { label: "UN Benin / UNDP", note: "Joint HIV program, free ARVs" },
-          { label: "WHO", note: "HIV treatment protocols" },
-        ],
-        press: [
-          "abmsbj.org (ABMS) — HIV testing and ARV access",
+          { label: "sante.gouv.bj — Ministère de la Santé du Bénin", url: "https://sante.gouv.bj/", note: "Ministry of Health — free antiretrovirals at certified centers" },
         ],
       },
       {
-        name: "Family Planning & Cancer Screening Campaigns (Program 7)",
+        name: "Family Planning & Cancer Screening Campaigns",
         official: [
-          { label: "sante.gouv.bj — Ministry of Health Benin", url: "https://sante.gouv.bj", note: "Periodic screening campaigns" },
-        ],
-        press: [
-          "baatonu.info (April 2026) — family planning and cancer screening campaign figures",
-          "beninrevele.bj — screening campaign coverage",
+          { label: "sante.gouv.bj — Ministère de la Santé du Bénin", url: "https://sante.gouv.bj/", note: "Ministry of Health — periodic free screening campaigns" },
         ],
       },
       {
-        name: "CNSS Old-Age Pension (Program 8)",
+        name: "CNSS Old-Age Pension",
         official: [
-          { label: "cnss.bj — National Social Security Fund", url: "https://cnss.bj", note: "Old-age pension, formal sector. Contact: +229 90 19 00 00" },
-        ],
-        institutional: [
-          { label: "CLEISS", note: "Benin social security code (via Droit-Afrique)" },
+          { label: "cnss.bj — Caisse Nationale de Sécurité Sociale du Bénin", url: "https://cnss.bj/", note: "Official CNSS site — old-age pension, formal sector" },
+          { label: "cnss.bj — La pension de vieillesse", url: "https://cnss.bj/branches-des-pensions/la-pension-de-vieillesse/", note: "Full eligibility details: 180 months (15 years) of insurance required, age 60" },
+          { label: "cnss.bj — Services en ligne / pension vieillesse anticipée", url: "https://cnss.bj/services/public/pension-vieillesse-anticipee", note: "Online pension calculation and early retirement service" },
+          { label: "CLEISS — Le régime béninois de sécurité sociale", url: "https://www.cleiss.fr/docs/regimes/regime_benin-salaries.html", note: "French official cross-border social security reference" },
         ],
       },
       {
-        name: "ARCH Professional Training (Program 9)",
+        name: "ARCH Professional Training",
         official: [
-          { label: "anps.social.gouv.bj — ANPS", url: "https://anps.social.gouv.bj", note: "Free vocational training for the poor under ARCH" },
-        ],
-        press: [
-          "lanouvelletribune.info (March 2025) — ARCH training of 4,000 artisans",
+          { label: "ANPS — anps.social.gouv.bj", url: "https://anps.social.gouv.bj/", note: "ANPS manages ARCH formation (vocational training for the poor)" },
         ],
       },
       {
-        name: "ARCH Credit (Program 10)",
+        name: "ARCH Credit",
         official: [
-          { label: "anps.social.gouv.bj — ANPS", url: "https://anps.social.gouv.bj", note: "Microcredit component of ARCH for the poor" },
+          { label: "ANPS — anps.social.gouv.bj", url: "https://anps.social.gouv.bj/", note: "ANPS manages ARCH credit (microcredit for the poor)" },
         ],
       },
       {
-        name: "ARCH Pension — informal workers (Program 11)",
+        name: "ARCH Pension — informal workers",
         official: [
-          { label: "anps.social.gouv.bj — ANPS", url: "https://anps.social.gouv.bj", note: "Annual allowance (30,000 FCFA/year) for informal workers aged 60+" },
-          { label: "CLEISS", note: "Informal-sector pension framework" },
+          { label: "ANPS — anps.social.gouv.bj", url: "https://anps.social.gouv.bj/", note: "ANPS manages ARCH retraite — 30,000 FCFA/year for informal workers aged 60+" },
         ],
       },
       {
-        name: "FAABA / SWEDD — Conditional cash transfers for schoolgirls (Program 12)",
+        name: "FAABA / SWEDD — Conditional cash transfers for schoolgirls",
         official: [
-          { label: "gouv.bj — Government of Benin portal (article 2068)", url: "https://gouv.bj", note: "FAABA program announcement" },
-          { label: "social.gouv.bj — Ministry of Social Affairs", url: "https://social.gouv.bj", note: "FAABA implementation" },
-          { label: "sgg.gouv.bj — Conseil des Ministres 12 March 2025", url: "https://sgg.gouv.bj", note: "Official decision for FAABA" },
-        ],
-        institutional: [
-          { label: "UNICEF Benin", note: "FAABA / Cash+Care — conditional cash transfers for girls 9–15 in school" },
-          { label: "World Bank — SWEDD Project", note: "Sahel Women's Empowerment and Demographic Dividend project — finances FAABA in 6 northern departments (Atacora, Donga, Borgou, Alibori, Collines, Zou)" },
+          { label: "gouv.bj — Transferts monétaires à 30 000 filles scolarisées au Bénin", url: "https://www.gouv.bj/article/2068/transferts-monetaires-filles-issues-famille-situation-difficile-plus-9-milliards-fcfa-distribuer-30-mille-filles-scolarisees-benin/", note: "Official government article — 9+ billion FCFA for FAABA cash transfers" },
+          { label: "social.gouv.bj — Lancement des transferts monétaires à des filles", url: "https://social.gouv.bj/actualite/actualites/lancement-des-transferts-monetaires-a-des-filles-issues-de-famille-en-situation-difficile---plus-de-9-milliards-fcfa-a-distribuer-a-30-mille-filles-scolarisees-au-benin", note: "Ministry of Social Affairs official announcement" },
+          { label: "social.gouv.bj — Projet SWEDD-Bénin", url: "https://social.gouv.bj/actualite/actualites/mise-en-oeuvre-du-projet-swedd-benin---le-gouvernement-met-en-formation-1-200-adolescentes-et-filles-jeunes-descolarisees", note: "SWEDD project implementation in Benin" },
+          { label: "UNICEF Bénin — Cash+Care Faaba: un appui renforcé en 2024-2025", url: "https://www.unicef.org/benin/recits/cashcare-faaba-un-appui-renforc%C3%A9-en-2024-2025", note: "UNICEF Benin — FAABA program, girls 9–15, 6 northern departments" },
         ],
       },
     ],
@@ -155,93 +115,70 @@ const COUNTRIES = [
     verified: "15 June 2026",
     programs: [
       {
-        name: "CMU — Community Health Mutuals (Program 1)",
+        name: "CMU — Community Health Mutuals",
         official: [
-          { label: "sencsu.sn — SEN-CSU (ex-ANACMU)", url: "https://sencsu.sn", note: "Universal health coverage agency — renamed by Decree 2024-832 of 27 March 2024" },
-          { label: "agencecmu.sn — former ANACMU site", url: "https://agencecmu.sn", note: "Still active as fallback; CMU, 0–5 care, dialysis pages" },
-          { label: "sante.gouv.sn — Ministry of Health and Social Action", url: "https://sante.gouv.sn", note: "CMU dossier, coverage rates" },
-          { label: "Decree No. 2024-832 of 27 March 2024", note: "Renames ANACMU → SEN-CSU, placed under Ministry of Family and Solidarity" },
+          { label: "sencsu.sn — SEN-CSU (Agence Sénégalaise de la Couverture Sanitaire Universelle)", url: "https://sencsu.sn/", note: "Official site — renamed from ANACMU by Decree 2024-832 of 27 March 2024. Contact: +221 33 859 15 15" },
+          { label: "sencsu.sn — Historique de la CMU", url: "https://sencsu.sn/csu.php?page=article&id_article=1", note: "History and legal basis of universal health coverage in Senegal" },
+          { label: "agencecmu.sn — Ancienne ANACMU (still active)", url: "https://www.agencecmu.sn/", note: "Former ANACMU site — still accessible with CMU, under-5 and dialysis information" },
+          { label: "sante.gouv.sn — Ministère de la Santé et de l'Action Sociale", url: "https://www.sante.gouv.sn/", note: "Ministry of Health — CMU dossier and free care programs" },
+        ],
+        press: [
+          "cleiss.fr — La sécurité sociale au Sénégal (French cross-border social security reference)",
+        ],
+      },
+      {
+        name: "Free Healthcare for Children Under 5",
+        official: [
+          { label: "sante.gouv.sn — Ministère de la Santé", url: "https://www.sante.gouv.sn/", note: "Free consultations and treatment at public facilities for children under 5" },
+          { label: "agencecmu.sn — Gratuité soins 0–5 ans", url: "https://www.agencecmu.sn/", note: "CMU agency page on free under-5 care" },
+        ],
+      },
+      {
+        name: "Plan Sésame — Free Healthcare for 60+",
+        official: [
+          { label: "senegalservices.sn — Demander à bénéficier du Plan Sésame", url: "https://senegalservices.sn/demarche/demander-a-beneficier-du-plan-sesame-1337", note: "Official Senegal public services portal — exact procedure and required documents" },
+          { label: "senegalservices.sn — Le Plan Sésame du Sénégal", url: "https://senegalservices.sn/texte/le-plan-sesame-du-senegal", note: "Official description of the Plan Sésame" },
+          { label: "agencecmu.sn — Plan Sésame", url: "https://www.agencecmu.sn/plan-sesame-0", note: "CMU agency page on Plan Sésame" },
+        ],
+        press: [
+          "Cairn.info — Analyse du fonctionnement du Plan Sésame (Santé Publique, 2013)",
+          "Jeune Afrique — Plan Sésame: le Sénégal aux petits soins avec les seniors",
+        ],
+      },
+      {
+        name: "Free Dialysis",
+        official: [
+          { label: "senegalservices.sn — Demander à bénéficier de la gratuité de la dialyse", url: "https://senegalservices.sn/demarche/demander-a-beneficier-de-la-gratuite-de-la-dialyse", note: "Official procedure: register on a waiting list at a public dialysis center + nephrologist prescription" },
+          { label: "sante.gouv.sn — Contribution sur la gratuité de la prise en charge de l'insuffisance rénale", url: "https://www.sante.gouv.sn/Actualites/contribution-du-docteur-annette-seck-ndiaye-directrice-de-la-pharmacie-nationale-d", note: "Ministry of Health official article on free dialysis in Senegal" },
+          { label: "agencecmu.sn — Dialyse", url: "https://www.agencecmu.sn/", note: "CMU agency — free dialysis information" },
+        ],
+      },
+      {
+        name: "Free Cesarean Section",
+        official: [
+          { label: "senegalservices.sn — Demander à bénéficier de la gratuité de la césarienne", url: "https://senegalservices.sn/demarche/demander-a-beneficier-de-la-gratuite-de-la-cesarienne-des-femmes-dans-les-structures-de-sante-publiq", note: "Official procedure — all public health structures with operating rooms" },
+          { label: "sencsu.sn — Gratuité de la césarienne", url: "https://sencsu.sn/csu.php?id_article=8&page=article", note: "SEN-CSU official page on free cesarean" },
+        ],
+      },
+      {
+        name: "PNBSF — Family Security Grant",
+        official: [
+          { label: "devcommunautaire.gouv.sn — Bénéficiaires du PNBSF", url: "https://devcommunautaire.gouv.sn/actualite/la-rencontre-des-beneficiaires-du-programme-national-de-bourse-de-securite-familiale", note: "Ministry of Family and Solidarity — PNBSF beneficiaries article" },
+          { label: "devcommunautaire.gouv.sn — Évaluation du RNU", url: "https://devcommunautaire.gouv.sn/actualite/le-ministere-de-la-famille-et-des-solidarites-evalue-le-registre-national-unique-rnu", note: "Ministry evaluating the National Single Registry (RNU) — gateway to PNBSF" },
+          { label: "senegal-emergent.com — PNBSF", url: "http://senegal-emergent.com/fr/programme-national-de-bourses-de-securite-familiale-pnbsf", note: "Official Senegal Emergent portal — 35,000 FCFA/quarter confirmed since Dec. 2022" },
+        ],
+        press: [
+          "socialprotection.org — PNBSF program profile (World Bank / ILO database)",
+          "aps.sn (18 March 2026) — PNBSF resumption: Q1 2026 payments to ~355,013 households",
+        ],
+      },
+      {
+        name: "Equal Opportunity Card — Disability",
+        official: [
+          { label: "devcommunautaire.gouv.sn — Ministère de la Famille et des Solidarités", url: "https://devcommunautaire.gouv.sn/", note: "Ministry issuing the Equal Opportunity Card (Carte d'Égalité des Chances) via DGAS" },
         ],
         institutional: [
-          { label: "WHO Afro", note: "CMU policy" },
-          { label: "Better Than Cash Alliance", note: "CMU financing and impact" },
-          { label: "World Bank", note: "CMU program profile" },
-        ],
-        press: [
-          "getreliancehealth.com — CMU mutual coverage rates (80% public / 50% private pharmacy)",
-        ],
-      },
-      {
-        name: "Free Healthcare for Children Under 5 (Program 2)",
-        official: [
-          { label: "sante.gouv.sn — Ministry of Health", url: "https://sante.gouv.sn", note: "Free consultations and treatment at public facilities for children under 5" },
-          { label: "senegalservices.sn — official public-service portal", url: "https://senegalservices.sn", note: "Under-5 care procedures and documents" },
-          { label: "agencecmu.sn", url: "https://agencecmu.sn", note: "Under-5 free care pages" },
-        ],
-        press: [
-          "santetropicale.com — under-5 free care coverage",
-        ],
-      },
-      {
-        name: "Plan Sésame — Free Healthcare for 60+ (Program 3)",
-        official: [
-          { label: "sante.gouv.sn — Ministry of Health", url: "https://sante.gouv.sn", note: "Plan Sésame: free healthcare for all persons 60 and above" },
-          { label: "senegalservices.sn", url: "https://senegalservices.sn", note: "Plan Sésame procedures" },
-        ],
-        press: [
-          "Cairn / Santé Publique, Jeune Afrique — Plan Sésame analysis and implementation constraints",
-        ],
-      },
-      {
-        name: "Free Dialysis (Program 4)",
-        official: [
-          { label: "sante.gouv.sn — Ministry of Health", url: "https://sante.gouv.sn", note: "Free kidney dialysis with nephrologist prescription + waiting list" },
-          { label: "agencecmu.sn", url: "https://agencecmu.sn", note: "Dialysis free-care page" },
-          { label: "senegalservices.sn", url: "https://senegalservices.sn", note: "Dialysis procedures" },
-        ],
-        press: [
-          "allodocteurs.fr — free dialysis context and waiting-list information",
-        ],
-      },
-      {
-        name: "Free Cesarean Section (Program 5)",
-        official: [
-          { label: "sante.gouv.sn — Ministry of Health", url: "https://sante.gouv.sn", note: "Free cesarean sections at public maternity wards" },
-          { label: "senegalservices.sn", url: "https://senegalservices.sn", note: "Cesarean procedures" },
-        ],
-        institutional: [
-          { label: "WHO Afro", note: "Free cesarean policy" },
-          { label: "Cairn / Santé Publique", note: "Free cesarean outcomes" },
-        ],
-      },
-      {
-        name: "PNBSF — Family Security Grant (Program 6)",
-        official: [
-          { label: "devcommunautaire.gouv.sn — Ministry of Family and Solidarity", url: "https://devcommunautaire.gouv.sn", note: "PNBSF family grant, RNU registration" },
-          { label: "senegalservices.sn", url: "https://senegalservices.sn", note: "PNBSF eligibility and registration" },
-        ],
-        institutional: [
-          { label: "World Bank", note: "PNBSF targeting, coverage, and impact (RNU-based PMT)" },
-        ],
-        press: [
-          "senegal-emergent.com — PNBSF: 35,000 FCFA/quarter = 140,000 FCFA/year (since Dec. 2022), RNU role",
-          "aps.sn (18 March 2026) — 2026 PNBSF resumption after RNU audit, ~355,013 beneficiary households",
-          "ndarinfo.com, senenews.com — Q1 2026 payment from 19 March 2026",
-          "allafrica.com (10 Dec 2025) — PNBSF resumption tied to RNU audit completion",
-        ],
-      },
-      {
-        name: "Equal Opportunity Card — Disability (Program 7)",
-        official: [
-          { label: "Direction Générale de l'Action Sociale (DGAS)", note: "Equal Opportunity Card issuance + departmental social services" },
-          { label: "Social Orientation Law (Senegal)", note: "Legal basis of the Equal Opportunity Card (rights of persons with disabilities)" },
-        ],
-        institutional: [
-          { label: "socialprotection-pfm.org", note: "Equal Opportunity Card / disability social protection profile" },
-          { label: "WATHI, Journal Officiel", note: "Social Orientation Law analysis" },
-        ],
-        press: [
-          "APS (Agence de Presse Sénégalaise) — Equal Opportunity Card reporting",
+          { label: "socialprotection.org — Carte d'Égalité des Chances", url: "https://socialprotection.org/", note: "International Social Protection database profile" },
         ],
       },
     ],
@@ -253,84 +190,61 @@ const COUNTRIES = [
     verified: "15 June 2026",
     programs: [
       {
-        name: "NHIS — National Health Insurance Scheme (Program 1)",
+        name: "NHIS — National Health Insurance Scheme",
         official: [
-          { label: "nhis.gov.gh — NHIS official site", url: "https://nhis.gov.gh", note: "Benefits package, news, renewal. USSD: *929#. MyNHIS App." },
-          { label: "NHIA — National Health Insurance Authority", note: "Premiums GH¢7–42 + GH¢6 card fee, exemptions, ~95% disease coverage" },
-          { label: "National Health Insurance Act / NHIA tariff schedule", note: "Statutory basis of NHIS premiums, exemptions and benefits package" },
+          { label: "nhis.gov.gh — National Health Insurance Scheme", url: "https://nhis.gov.gh/", note: "Official NHIS site — benefits, renewal (*929# / MyNHIS App), district offices" },
+          { label: "socialprotection.org — Ghana NHIS Fee Exemptions", url: "https://socialprotection.org/discover/programmes/ghana%E2%80%99s-national-health-insurance-scheme-fee-exemptions", note: "Comprehensive NHIS program profile — exemptions, coverage, premiums" },
+          { label: "PMC / NIH — Implementation of the NHIS in Ghana", url: "https://pmc.ncbi.nlm.nih.gov/articles/PMC7537808/", note: "Peer-reviewed study — NHIS structure, coverage and outcomes" },
+        ],
+      },
+      {
+        name: "Free Primary Healthcare — launched April 2026",
+        official: [
+          { label: "presidency.gov.gh — Mahama launches Free Primary Healthcare Programme", url: "https://presidency.gov.gh/mahama-launches-landmark-free-primary-healthcare-programme-to-tackle-disease-burden-and-achieve-universal-coverage/", note: "Official presidential launch announcement — April 2026" },
+          { label: "ghs.gov.gh — President Mahama launches Free Primary Health Care Initiative", url: "https://ghs.gov.gh/news-and-events/president-mahama-launches-free-primary-health-care-initiative-", note: "Ghana Health Service official announcement" },
+          { label: "moh.gov.gh — Free Primary Healthcare Rollout in 150 Districts", url: "https://moh.gov.gh/free-primary-healthcare/", note: "Ministry of Health — Phase 1: 150 underserved districts" },
+          { label: "ghs.gov.gh — GHS Advances Development of FPHC Implementation Guidelines", url: "https://ghs.gov.gh/news-and-events/ghs-advances-development-of-free-primary-health-care-implementation-guidelines", note: "Implementation guidelines for FPHC at CHPS compounds and health centres" },
+        ],
+      },
+      {
+        name: "Free Maternal Health Care — under NHIS",
+        official: [
+          { label: "nhis.gov.gh — National Health Insurance Scheme", url: "https://nhis.gov.gh/", note: "NHIS benefits: 6 ANC visits, delivery incl. c-section, 2 postnatal visits, 1-year cover mother + 3 months newborn" },
         ],
         institutional: [
-          { label: "socialprotection.org", note: "NHIS program profile" },
-          { label: "BMC / PLOS One / PMC peer-reviewed studies", note: "NHIS outcomes and coverage analysis" },
-          { label: "Wikipedia (NHIS Ghana)", note: "Background corroboration only — not a primary source" },
-        ],
-        press: [
-          "Accra Street Journal (2025) — NHIS premium and active-month details",
-          "Pulse Ghana (2026) — NHIS active month and renewal",
+          { label: "PMC / NIH — Ghana free maternal-care policy", url: "https://pmc.ncbi.nlm.nih.gov/articles/PMC5953527", note: "Peer-reviewed study on free maternal care policy outcomes in Ghana" },
         ],
       },
       {
-        name: "Free Primary Healthcare — launched April 2026 (Program 2)",
+        name: "Free Dialysis — since 1 December 2024",
         official: [
-          { label: "nhis.gov.gh/News — NHIA news", url: "https://nhis.gov.gh/News", note: "prez-mahama-launches-free-primary-healthcare-policy announcement" },
-          { label: "presidency.gov.gh — Office of the President", url: "https://presidency.gov.gh", note: "Official FPHC launch announcement (April 2026)" },
-          { label: "Ministry of Health / Ghana Health Service", note: "FPHC delivery via CHPS compounds and health centres" },
+          { label: "nhis.gov.gh — NHIA Rolls Out Free Dialysis Program", url: "https://www.nhis.gov.gh/News/nhia-rolls-out-free-dialysis-program-5637", note: "Official NHIA announcement — free dialysis for all NHIS members with kidney disease, effective 1 Dec 2024" },
+          { label: "nhis.gov.gh — NHIA free dialysis program to cover renal disease patients", url: "https://www.nhis.gov.gh/News/nhia-free-dialysis-program-to-cover-hundreds-of-renal-disease-patients--5638", note: "Official NHIA news — 20 designated hospitals, 1,200+ projected beneficiaries" },
         ],
         press: [
-          "Ghana Business News (16 April 2026) — Phase 1: 150 underserved districts",
-          "The Ghanaian Chronicle — FPHC rollout details",
-          "News Ghana — nationwide expansion planned 2027–2028",
+          "myjoyonline.com — Free dialysis for all kidney patients under NHIS from Dec. 1",
+          "citinewsroom.com — NHIS announces hospitals offering free dialysis starting December 1",
+          "gna.org.gh (Ghana News Agency) — Kidney patients on NHIS to enjoy free dialysis from December 01",
         ],
       },
       {
-        name: "Free Maternal Health Care — under NHIS (Program 3)",
+        name: "MahamaCares — Ghana Medical Trust Fund",
         official: [
-          { label: "nhis.gov.gh — NHIA", url: "https://nhis.gov.gh", note: "Free maternal care: 6 ANC visits, delivery (incl. c-section), 2 postnatal visits. Added to NHIS exemptions 2008." },
+          { label: "gmtf.gov.gh — Ghana Medical Trust Fund (official site)", url: "https://gmtf.gov.gh/", note: "Official MahamaCares site — covers NCDs: cancer, cardiovascular, kidney failure, stroke, diabetes" },
+          { label: "moh.gov.gh — President Mahama launches Ghana Medical Trust Fund", url: "https://www.moh.gov.gh/president-mahama-launches-ghana-medical-trust-fund-to-support-chronic-disease-care/", note: "Ministry of Health official announcement" },
+          { label: "moh.gov.gh — MahamaCares Taskforce inauguration", url: "https://www.moh.gov.gh/hon-minister-for-health-inaugurated-ghana-medical-trust-fund-mahamacares-taskforce/", note: "Ministry of Health — MahamaCares taskforce setup" },
+        ],
+      },
+      {
+        name: "LEAP — Livelihood Empowerment Against Poverty",
+        official: [
+          { label: "mogcsp.gov.gh — Ministry of Gender, Children and Social Protection", url: "https://www.mogcsp.gov.gh/", note: "Ministry overseeing LEAP cash transfers" },
+          { label: "leap.mogcsp.gov.gh — LEAP Management Secretariat", url: "https://leap.mogcsp.gov.gh/", note: "Official LEAP site — eligibility, bi-monthly amounts GH¢256–424, PMT targeting" },
+          { label: "mogcsp.gov.gh — LEAP program page", url: "https://www.mogcsp.gov.gh/projects/livelyhood-empowerment-against-poverty-leap/", note: "Official LEAP program description" },
+          { label: "mogcsp.gov.gh — Government begins 99th cycle of LEAP payments", url: "https://www.mogcsp.gov.gh/government-begins-99th-cycle-of-leap-cash-grant-payments/", note: "99th payment cycle — GH¢139M released for ~350,580 households (Dec 2025)" },
         ],
         institutional: [
-          { label: "BMC / PLOS One / PMC peer-reviewed studies", note: "Ghana free maternal-care policy outcomes" },
-          { label: "UNICEF Ghana", note: "Maternal health coverage" },
-        ],
-      },
-      {
-        name: "Free Dialysis — since 1 December 2024 (Program 4)",
-        official: [
-          { label: "nhis.gov.gh/News — NHIA releases", url: "https://nhis.gov.gh/News", note: "Free dialysis added to NHIS benefits package 1 Dec 2024 — all NHIS members with kidney disease, 20 designated hospitals, ~GHC 57M/year" },
-        ],
-        press: [
-          "MyJoyOnline — free dialysis rollout coverage",
-          "Citi Newsroom (2025) — 20 designated dialysis hospitals",
-          "GhanaWeb — free dialysis expansion",
-        ],
-      },
-      {
-        name: "MahamaCares — Ghana Medical Trust Fund (Program 5)",
-        official: [
-          { label: "presidency.gov.gh — Office of the President", url: "https://presidency.gov.gh", note: "Ghana Medical Trust Fund 2025-26 announcement" },
-        ],
-        institutional: [
-          { label: "The Business & Financial Times (Budget 2025)", note: "MahamaCares funding: ≈GH¢2.3bn, from 20% of the NHIF" },
-          { label: "GBC Ghana — Mahama WHA address 2026", note: "MahamaCares scope: NCDs (cancer, hypertension, diabetes, stroke, kidney failure)" },
-        ],
-        press: [
-          "ModernGhana — MahamaCares coverage details",
-        ],
-      },
-      {
-        name: "LEAP — Livelihood Empowerment Against Poverty (Program 6)",
-        official: [
-          { label: "mogcsp.gov.gh — Ministry of Gender, Children and Social Protection", url: "https://mogcsp.gov.gh", note: "LEAP program management" },
-          { label: "leap.mogcsp.gov.gh — LEAP Management Secretariat", url: "https://leap.mogcsp.gov.gh", note: "Eligibility, bi-monthly amounts GH¢256-424, PMT targeting. Enrolment: Department of Social Welfare (district level)." },
-        ],
-        institutional: [
-          { label: "UNICEF Ghana Social Protection Budget Brief 2025", note: "LEAP expanded to 400,000 households from July 2025" },
-          { label: "World Bank", note: "Social protection / LEAP program profile" },
-          { label: "socialprotection.org", note: "LEAP program profile" },
-          { label: "ReliefWeb — LEAP 1000 endline", note: "LEAP 1000 sub-window for pregnant women/infants" },
-        ],
-        press: [
-          "thebftonline — Budget 2025 LEAP expansion",
-          "Graphic Online, GNA (Ghana News Agency) — LEAP coverage (~360,000 households, 2024)",
+          { label: "socialprotection.org — LEAP program profile", url: "https://socialprotection.org/", note: "LEAP in the international Social Protection database" },
         ],
       },
     ],
