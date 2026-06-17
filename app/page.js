@@ -267,9 +267,9 @@ const UI_LANGS = [
   { code: "fr", label: "Français" },
 ];
 const UI_LANGS_AFRICAN = [
-  { code: "fon", label: "Fɔngbe" },
-  { code: "wo",  label: "Wolof" },
-  { code: "tw",  label: "Twi" },
+  { code: "fon", label: "Fɔngbe", flagCode: "bj" },
+  { code: "wo",  label: "Wolof",  flagCode: "sn" },
+  { code: "tw",  label: "Twi",    flagCode: "gh" },
 ];
 const LANG_SHORT = { en: "EN", fr: "FR", fon: "Fɔn", wo: "Wol", tw: "Twi" };
 const NAV_START  = { en: "Start", fr: "Commencer", fon: "Bɛ̌ dìn", wo: "Tambalil", tw: "Fi ase" };
@@ -337,8 +337,8 @@ function LangSwitcher({ lang, setLang }) {
             <div style={{ flex: 1, height: 1, background: "var(--border-soft)" }} />
           </div>
 
-          {UI_LANGS_AFRICAN.map(({ code, label }) => (
-            <LangItem key={code} code={code} label={label} active={lang === code}
+          {UI_LANGS_AFRICAN.map(({ code, label, flagCode }) => (
+            <LangItem key={code} code={code} label={label} flagCode={flagCode} active={lang === code}
                       onPick={() => { setLang(code); setOpen(false); }} />
           ))}
         </div>
@@ -347,7 +347,7 @@ function LangSwitcher({ lang, setLang }) {
   );
 }
 
-function LangItem({ label, active, onPick }) {
+function LangItem({ label, flagCode, active, onPick }) {
   return (
     <button
       onClick={onPick}
@@ -362,10 +362,20 @@ function LangItem({ label, active, onPick }) {
       onMouseEnter={e => { if (!active) e.currentTarget.style.background = "var(--bg-subtle)"; }}
       onMouseLeave={e => { if (!active) e.currentTarget.style.background = "transparent"; }}
     >
-      <span style={{
-        width: 8, height: 8, borderRadius: "50%", flexShrink: 0,
-        background: active ? "var(--primary)" : "var(--border)",
-      }} />
+      {flagCode ? (
+        <img
+          src={`https://flagcdn.com/w20/${flagCode}.png`}
+          srcSet={`https://flagcdn.com/w40/${flagCode}.png 2x`}
+          width="20" height="14"
+          alt=""
+          style={{ borderRadius: 2, flexShrink: 0, objectFit: "cover" }}
+        />
+      ) : (
+        <span style={{
+          width: 8, height: 8, borderRadius: "50%", flexShrink: 0,
+          background: active ? "var(--primary)" : "var(--border)",
+        }} />
+      )}
       {label}
     </button>
   );
