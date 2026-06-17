@@ -6,11 +6,11 @@ import InstitutionsMap from "./InstitutionsMap";
 const SOFT_ERROR = "I could not answer just now. Please wait a moment and try again.";
 
 const LANG_CONFIG = {
-  en:  { native: "English",  flag: "",   sub: "",         local: false },
-  fr:  { native: "Français", flag: "",   sub: "",         local: false },
-  fon: { native: "Fɔngbe",   flag: "🇧🇯", sub: "Bénin",   local: true  },
-  wo:  { native: "Wolof",    flag: "🇸🇳", sub: "Sénégal", local: true  },
-  tw:  { native: "Twi",      flag: "🇬🇭", sub: "Ghana",   local: true  },
+  en:  { native: "English",  badge: null, badgeColor: null, sub: "",         local: false },
+  fr:  { native: "Français", badge: null, badgeColor: null, sub: "",         local: false },
+  fon: { native: "Fɔngbe",   badge: "BJ", badgeColor: "#C05A3C", sub: "Bénin",   local: true  },
+  wo:  { native: "Wolof",    badge: "SN", badgeColor: "#4A7C59", sub: "Sénégal", local: true  },
+  tw:  { native: "Twi",      badge: "GH", badgeColor: "#B8860B", sub: "Ghana",   local: true  },
 };
 
 const PLACEHOLDERS = {
@@ -148,17 +148,27 @@ function LangCard({ code, onSelect }) {
       onMouseEnter={() => setHover(true)}
       onMouseLeave={() => setHover(false)}
       style={{
-        flex: 1, padding: cfg.flag ? "18px 10px" : "16px 12px",
+        flex: 1, padding: cfg.badge ? "18px 10px" : "16px 12px",
         borderRadius: 14, textAlign: "center", cursor: "pointer",
         border: "2px solid " + (hover ? "var(--primary)" : "var(--border-soft)"),
         background: hover ? "var(--primary-soft)" : "var(--bg)",
         transition: "all 0.15s",
       }}
     >
-      {cfg.flag && <div style={{ fontSize: 26, marginBottom: 8 }}>{cfg.flag}</div>}
+      {cfg.badge && (
+        <div style={{
+          width: 36, height: 36, borderRadius: 8, margin: "0 auto 10px",
+          background: cfg.badgeColor,
+          display: "flex", alignItems: "center", justifyContent: "center",
+          fontFamily: "'Space Grotesk', sans-serif", fontWeight: 800,
+          fontSize: 12, color: "#fff", letterSpacing: "0.04em",
+        }}>
+          {cfg.badge}
+        </div>
+      )}
       <div style={{
         fontFamily: "'Space Grotesk', sans-serif", fontWeight: 700,
-        fontSize: cfg.flag ? 16 : 17, color: "var(--text)", lineHeight: 1.2,
+        fontSize: cfg.badge ? 16 : 17, color: "var(--text)", lineHeight: 1.2,
       }}>
         {cfg.native}
       </div>
