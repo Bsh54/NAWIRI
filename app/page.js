@@ -411,6 +411,19 @@ export default function Landing() {
           <span style={{ fontSize: 12, color: "var(--text-3)", display: "none" }} className="nav-countries">
             {t.nav_countries}
           </span>
+          <button
+            onClick={() => router.push("/sources")}
+            style={{
+              fontFamily: "'Space Grotesk', sans-serif", fontSize: 13, fontWeight: 600,
+              color: "var(--text-2)", background: "transparent", border: "none",
+              cursor: "pointer", padding: "4px 2px", letterSpacing: "-0.1px",
+              transition: "color 0.15s",
+            }}
+            onMouseEnter={e => e.currentTarget.style.color = "var(--primary)"}
+            onMouseLeave={e => e.currentTarget.style.color = "var(--text-2)"}
+          >
+            Sources
+          </button>
           <LangSwitcher lang={lang} setLang={changeLang} />
 
           <button
