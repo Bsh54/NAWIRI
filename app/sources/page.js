@@ -571,103 +571,18 @@ export default function SourcesPage() {
       {/* ── HEADER ─────────────────────────────────────────────────────────────── */}
       <div style={{
         maxWidth: 860, margin: "0 auto",
-        padding: "56px clamp(16px, 4vw, 40px) 32px",
+        padding: "48px clamp(16px, 4vw, 40px) 48px",
       }}>
-        <div style={{
-          display: "inline-flex", alignItems: "center", gap: 8,
-          background: "var(--primary-soft)", borderRadius: 99,
-          padding: "5px 14px", marginBottom: 20,
-        }}>
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" strokeWidth="2.5" strokeLinecap="round">
-            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-          </svg>
-          <span style={{
-            fontSize: 12, fontWeight: 700, color: "var(--primary)",
-            fontFamily: "'Space Grotesk', sans-serif", letterSpacing: "0.04em",
-          }}>
-            Verified data — June 2026
-          </span>
-        </div>
-
         <h1 style={{
           fontFamily: "'Space Grotesk', sans-serif", fontWeight: 800,
-          fontSize: "clamp(28px, 5vw, 44px)", letterSpacing: "-0.03em",
-          color: "var(--text)", marginBottom: 16, lineHeight: 1.1,
+          fontSize: "clamp(26px, 5vw, 40px)", letterSpacing: "-0.03em",
+          color: "var(--text)", marginBottom: 32, lineHeight: 1.1,
         }}>
-          Sources & Data Provenance
+          Sources
         </h1>
-        <p style={{
-          fontSize: 17, color: "var(--text-2)", lineHeight: 1.65,
-          maxWidth: 640, marginBottom: 32,
-        }}>
-          Every figure, rule, and program in NAWIRI comes from an official or institutional source.
-          Nothing is invented or guessed. All data was manually collected and verified in June 2026.
-          Click any program below to see its exact sources.
-        </p>
-
-        {/* Stats row */}
-        <div style={{
-          display: "flex", gap: 24, flexWrap: "wrap", marginBottom: 48,
-          paddingBottom: 32, borderBottom: "1px solid var(--border-soft)",
-        }}>
-          {[
-            { value: "25", label: "programs sourced" },
-            { value: "3", label: "countries" },
-            { value: "30+", label: "official sources" },
-            { value: "100%", label: "primary / official" },
-          ].map(s => (
-            <div key={s.label}>
-              <div style={{
-                fontFamily: "'Space Grotesk', sans-serif", fontWeight: 800,
-                fontSize: 28, color: "var(--primary)", lineHeight: 1,
-              }}>
-                {s.value}
-              </div>
-              <div style={{ fontSize: 12, color: "var(--text-3)", marginTop: 3 }}>
-                {s.label}
-              </div>
-            </div>
-          ))}
-        </div>
-
-        {/* Methodology note */}
-        <div style={{
-          background: "var(--bg-subtle)", borderRadius: 12,
-          padding: "20px 24px", marginBottom: 48,
-          border: "1px solid var(--border-soft)",
-        }}>
-          <div style={{
-            fontFamily: "'Space Grotesk', sans-serif", fontWeight: 700,
-            fontSize: 14, color: "var(--text)", marginBottom: 10,
-          }}>
-            Methodology
-          </div>
-          <ul style={{ margin: 0, padding: "0 0 0 20px", color: "var(--text-2)", fontSize: 14, lineHeight: 1.8 }}>
-            <li>Data collected from <strong>official government websites, national laws and decrees</strong> as primary sources.</li>
-            <li>Cross-checked against <strong>WHO, World Bank, UNICEF</strong> institutional reports for figures and coverage data.</li>
-            <li>Press/secondary sources used only to <strong>corroborate or date</strong> official figures — never as primary evidence.</li>
-            <li>Known corrections applied (e.g. ANACMU→SEN-CSU in Senegal; ANAM→ANPS in Benin; dialysis NOT free in Benin).</li>
-            <li>Targeted programs (cash transfers, free insurance for the poor) are <strong>survey-selected</strong>, not open sign-ups — correctly represented.</li>
-            <li>Each program's AI response cites the official contact, not invented data.</li>
-          </ul>
-        </div>
 
         {/* Country sections */}
         {COUNTRIES.map(c => <CountrySection key={c.flag} country={c} />)}
-
-        {/* Footer note */}
-        <div style={{
-          marginTop: 48, paddingTop: 24,
-          borderTop: "1px solid var(--border-soft)",
-          fontSize: 13, color: "var(--text-3)", lineHeight: 1.7,
-        }}>
-          <strong style={{ color: "var(--text-2)" }}>Important disclaimer:</strong> NAWIRI provides orientation only.
-          Program rules, amounts, and contacts may change. Always verify with the official body before taking action.
-          NAWIRI never certifies eligibility — only an official agent can validate a file.
-          <br /><br />
-          Data compiled by Team EVOLUTICS (Shadrak BESSANH & Franckel GNONLONFIN),
-          Université d'Abomey-Calavi, Benin — June 2026.
-        </div>
       </div>
     </div>
   );

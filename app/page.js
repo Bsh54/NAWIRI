@@ -407,21 +407,23 @@ export default function Landing() {
           NAWIRI
         </span>
 
-        <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
-          <span style={{ fontSize: 12, color: "var(--text-3)", display: "none" }} className="nav-countries">
-            {t.nav_countries}
-          </span>
+        <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
           <button
             onClick={() => router.push("/sources")}
             style={{
-              fontFamily: "'Space Grotesk', sans-serif", fontSize: 13, fontWeight: 600,
-              color: "var(--text-2)", background: "transparent", border: "none",
-              cursor: "pointer", padding: "4px 2px", letterSpacing: "-0.1px",
-              transition: "color 0.15s",
+              display: "inline-flex", alignItems: "center", gap: 6,
+              fontFamily: "'Space Grotesk', sans-serif", fontSize: 13, fontWeight: 700,
+              color: "var(--primary)", background: "var(--primary-soft)",
+              border: "1.5px solid var(--primary)", padding: "6px 14px",
+              borderRadius: "var(--radius)", cursor: "pointer", transition: "all 0.15s",
+              letterSpacing: "-0.1px",
             }}
-            onMouseEnter={e => e.currentTarget.style.color = "var(--primary)"}
-            onMouseLeave={e => e.currentTarget.style.color = "var(--text-2)"}
+            onMouseEnter={e => { e.currentTarget.style.background = "var(--primary)"; e.currentTarget.style.color = "#fff"; }}
+            onMouseLeave={e => { e.currentTarget.style.background = "var(--primary-soft)"; e.currentTarget.style.color = "var(--primary)"; }}
           >
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+            </svg>
             Sources
           </button>
           <LangSwitcher lang={lang} setLang={changeLang} />
