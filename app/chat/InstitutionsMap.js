@@ -3,7 +3,6 @@
 import { useEffect, useRef, useState } from "react";
 import { INSTITUTIONS, COUNTRIES } from "../../lib/institutions";
 
-// Loads Leaflet from CDN once, resolves with window.L.
 function loadLeaflet() {
   return new Promise((resolve) => {
     if (typeof window === "undefined") return;
@@ -60,8 +59,6 @@ export default function InstitutionsMap({ open = true, target = null }) {
   const markersRef = useRef([]);
   const [active, setActive] = useState("benin");
 
-  // When the panel becomes visible, Leaflet must recompute its size,
-  // otherwise it renders grey (it was initialised while hidden / 0-width).
   useEffect(() => {
     if (open && mapRef.current) {
       const t = setTimeout(() => mapRef.current.invalidateSize(), 320);
@@ -70,8 +67,6 @@ export default function InstitutionsMap({ open = true, target = null }) {
   }, [open]);
 
   useEffect(() => {
-    // Defer the ~150 KB Leaflet download until the map tab is actually opened,
-    // so visitors who only use the chat never pay for it.
     if (!open) return;
     let cancelled = false;
 
@@ -106,14 +101,13 @@ export default function InstitutionsMap({ open = true, target = null }) {
           .bindPopup(popupHtml(inst))
       );
 
-      // Leaflet can render grey if the container sized after init.
       setTimeout(() => map.invalidateSize(), 200);
     });
 
     return () => {
       cancelled = true;
     };
-  }, [open]); // init on first open (then the mapRef guard prevents re-init)
+  }, [open]);
 
   function focusCountry(key) {
     setActive(key);
@@ -123,7 +117,6 @@ export default function InstitutionsMap({ open = true, target = null }) {
     }
   }
 
-  // Click a card → fly the map to that institution and open its popup.
   function focusInstitution(idx) {
     const inst = INSTITUTIONS[idx];
     const marker = markersRef.current[idx];
@@ -133,9 +126,6 @@ export default function InstitutionsMap({ open = true, target = null }) {
     }
   }
 
-  // When the AI asks to open the map at a specific institution (via a
-  // [[MAP:<id>]] link in the chat), `target` changes → switch to its
-  // country and fly to it. `target.key` makes repeat clicks re-trigger.
   useEffect(() => {
     if (!target || !target.id) return;
     const idx = INSTITUTIONS.findIndex((i) => i.id === target.id);
@@ -143,8 +133,6 @@ export default function InstitutionsMap({ open = true, target = null }) {
     const inst = INSTITUTIONS[idx];
     setActive(inst.country);
 
-    // The map may still be loading (Leaflet is fetched on first open), so poll
-    // until it is ready, then fly to the institution and open its popup.
     let tries = 0;
     const timer = setInterval(() => {
       tries++;
@@ -155,7 +143,7 @@ export default function InstitutionsMap({ open = true, target = null }) {
         if (marker) setTimeout(() => marker.openPopup(), 850);
         clearInterval(timer);
       } else if (tries > 40) {
-        clearInterval(timer); // give up after ~8s
+        clearInterval(timer);
       }
     }, 200);
     return () => clearInterval(timer);
@@ -167,7 +155,6 @@ export default function InstitutionsMap({ open = true, target = null }) {
 
   return (
     <div style={{ display: "flex", flexDirection: "column", height: "100%" }}>
-      {/* Country switcher */}
       <div style={{
         display: "flex", gap: 6, padding: "8px 10px",
         borderBottom: "1px solid var(--border-soft)", flexShrink: 0,
@@ -191,12 +178,9 @@ export default function InstitutionsMap({ open = true, target = null }) {
         ))}
       </div>
 
-      {/* Map + cards side by side (stack on narrow screens) */}
       <div className="inst-content" style={{ flex: 1, minHeight: 0, display: "flex" }}>
-        {/* Map */}
         <div ref={containerRef} className="inst-map" style={{ flex: 1, minHeight: 240 }} />
 
-        {/* Institution cards (small panels) */}
         <div className="inst-cards" style={{
           width: 300, flexShrink: 0, overflowY: "auto",
           borderLeft: "1px solid var(--border-soft)",
@@ -263,7 +247,6 @@ export default function InstitutionsMap({ open = true, target = null }) {
         </div>
       </div>
 
-      {/* Hint */}
       <div style={{
         padding: "6px 12px", fontSize: 10, color: "var(--text-3)",
         borderTop: "1px solid var(--border-soft)", lineHeight: 1.4, flexShrink: 0,

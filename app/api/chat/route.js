@@ -2,16 +2,12 @@ import { buildSystemInstruction, detectCountry } from "../../../lib/context";
 
 export const runtime = "nodejs";
 
-// Flash-Lite: no "thinking" tokens (faster, far lighter on the free quota)
-// while still giving complete, well-structured answers in FR/EN.
 const GEMINI_MODEL = "gemini-flash-lite-latest";
-// Streaming endpoint (Server-Sent Events): the answer arrives token by token.
 const GEMINI_URL   = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:streamGenerateContent?alt=sse`;
 
 const SOFT_ERROR =
   "I could not answer just now. Please wait a moment and try again.";
 
-// Calls Gemini once (streaming). Returns the raw fetch Response.
 async function callGemini(apiKey, geminiBody) {
   return fetch(GEMINI_URL, {
     method:  "POST",
@@ -38,10 +34,6 @@ export async function POST(request) {
       return Response.json({ error: "No messages provided." }, { status: 400 });
     }
 
-    // Detect the country from the whole conversation (latest mention wins).
-    // Until a country is confirmed, all 3 are loaded; once confirmed, only that
-    // one is sent (faster/lighter). If the user switches country later, the next
-    // request re-detects it and switches automatically.
     const country = detectCountry(messages);
     const systemInstruction = buildSystemInstruction(country);
 
@@ -54,8 +46,6 @@ export async function POST(request) {
       system_instruction: { parts: [{ text: systemInstruction }] },
       contents,
       generationConfig: { temperature: 0.4, maxOutputTokens: 4096 },
-      // Be permissive: this is social-aid orientation, not harmful content.
-      // Avoids spurious SAFETY blocks on messages mentioning illness, money, children, etc.
       safetySettings: [
         { category: "HARM_CATEGORY_HARASSMENT",        threshold: "BLOCK_NONE" },
         { category: "HARM_CATEGORY_HATE_SPEECH",       threshold: "BLOCK_NONE" },
@@ -66,14 +56,11 @@ export async function POST(request) {
 
     const geminiRes = await callGemini(apiKey, geminiBody);
 
-    // On a hard error we have not streamed anything yet, so we can still
-    // return a clean JSON soft-error (no technical detail leaks).
     if (!geminiRes.ok || !geminiRes.body) {
       console.error("[chat] gemini status", geminiRes.status);
       return Response.json({ error: SOFT_ERROR }, { status: 502 });
     }
 
-    // Parse Gemini's SSE stream and forward only the plain text deltas.
     const reader  = geminiRes.body.getReader();
     const decoder = new TextDecoder();
     const encoder = new TextEncoder();
@@ -88,7 +75,7 @@ export async function POST(request) {
             if (done) break;
             buffer += decoder.decode(value, { stream: true });
             const lines = buffer.split("\n");
-            buffer = lines.pop(); // keep the last, possibly-incomplete line
+            buffer = lines.pop();
             for (const line of lines) {
               const t = line.trim();
               if (!t.startsWith("data:")) continue;
@@ -103,7 +90,7 @@ export async function POST(request) {
                     sentAny = true;
                   }
                 }
-              } catch { /* ignore a malformed chunk */ }
+              } catch { }
             }
           }
           if (!sentAny) {

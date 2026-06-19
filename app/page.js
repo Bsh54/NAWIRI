@@ -3,8 +3,6 @@
 import { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
 
-// ─── Copy (EN / FR) ────────────────────────────────────────────────────────────
-
 const T = {
   en: {
     nav_countries: "Benin · Senegal · Ghana",
@@ -105,8 +103,6 @@ const T = {
     footer_privacy: "Aucune donnée personnelle stockée sur nos serveurs.",
   },
 
-  // African-language copy, pre-translated from English via the Google Translate API
-  // (same engine the chat uses). Static so the landing renders instantly with no spinner.
   fon: {
     nav_countries: "Benin · Sénégal · Gana",
     h1a: "Alɔdó togun tɔn tíìn.",
@@ -220,8 +216,6 @@ const T = {
   },
 };
 
-// ─── SVG icon set ──────────────────────────────────────────────────────────────
-
 const ICONS = {
   brain: (
     <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
@@ -259,8 +253,6 @@ function FlagBadge({ code }) {
     </div>
   );
 }
-
-// ─── UI language switcher (globe dropdown, Oreus-style) ─────────────────────────
 
 const UI_LANGS = [
   { code: "en", label: "English" },
@@ -381,14 +373,11 @@ function LangItem({ label, flagCode, active, onPick }) {
   );
 }
 
-// ─── Landing page ───────────────────────────────────────────────────────────────
-
 export default function Landing() {
   const [lang, setLang] = useState("en");
   const router = useRouter();
   const t = T[lang];
 
-  // Restore the chosen UI language from a previous visit.
   useEffect(() => {
     const saved = localStorage.getItem("nawiri_lang");
     if (saved && T[saved]) setLang(saved);
@@ -402,7 +391,6 @@ export default function Landing() {
   return (
     <div style={{ minHeight: "100vh", display: "flex", flexDirection: "column", background: "var(--bg)" }}>
 
-      {/* ── NAV ────────────────────────────────────────────────────────────── */}
       <nav style={{
         position: "sticky", top: 0, zIndex: 50,
         display: "flex", alignItems: "center", justifyContent: "space-between",
@@ -455,14 +443,12 @@ export default function Landing() {
         </div>
       </nav>
 
-      {/* ── HERO ───────────────────────────────────────────────────────────── */}
       <section style={{ padding: "80px clamp(16px, 4vw, 40px) 64px" }}>
         <div style={{
           maxWidth: 1120, margin: "0 auto",
           display: "flex", gap: 64, alignItems: "center", flexWrap: "wrap",
         }}>
 
-          {/* Copy */}
           <div className="anim-fade-up" style={{ flex: "1 1 400px" }}>
             <h1 style={{
               fontSize: "clamp(36px, 5vw, 60px)",
@@ -506,7 +492,6 @@ export default function Landing() {
             </button>
           </div>
 
-          {/* Chat demo mockup */}
           <div className="anim-fade-up anim-delay-2" style={{
             flex: "0 1 400px", width: "100%",
             background: "var(--bg-card)",
@@ -515,7 +500,6 @@ export default function Landing() {
             boxShadow: "0 8px 48px rgba(0,0,0,0.09)",
             overflow: "hidden",
           }}>
-            {/* Mock top bar */}
             <div style={{
               padding: "14px 20px",
               borderBottom: "1px solid var(--border-soft)",
@@ -534,10 +518,8 @@ export default function Landing() {
               </div>
             </div>
 
-            {/* Messages */}
             <div style={{ padding: "20px 16px", display: "flex", flexDirection: "column", gap: 14 }}>
 
-              {/* User bubble */}
               <div style={{ display: "flex", justifyContent: "flex-end" }}>
                 <div style={{
                   maxWidth: "82%", padding: "10px 14px",
@@ -549,7 +531,6 @@ export default function Landing() {
                 </div>
               </div>
 
-              {/* NAWIRI reply */}
               <div style={{ display: "flex", gap: 8, alignItems: "flex-start" }}>
                 <div style={{
                   width: 28, height: 28, borderRadius: "50%", flexShrink: 0,
@@ -567,7 +548,6 @@ export default function Landing() {
                 </div>
               </div>
 
-              {/* Typing indicator */}
               <div style={{
                 display: "flex", gap: 5, alignItems: "center",
                 marginLeft: 36, opacity: 0.6,
@@ -587,7 +567,6 @@ export default function Landing() {
         </div>
       </section>
 
-      {/* ── STATS BAR ──────────────────────────────────────────────────────── */}
       <div style={{
         borderTop: "1px solid var(--border-soft)",
         borderBottom: "1px solid var(--border-soft)",
@@ -616,7 +595,6 @@ export default function Landing() {
         </div>
       </div>
 
-      {/* ── HOW IT WORKS ───────────────────────────────────────────────────── */}
       <section style={{ padding: "80px clamp(16px, 4vw, 40px)", background: "var(--bg)" }}>
         <div style={{ maxWidth: 1120, margin: "0 auto" }}>
           <h2 style={{ fontSize: "clamp(24px, 3vw, 32px)", textAlign: "center", marginBottom: 56 }}>
@@ -663,7 +641,6 @@ export default function Landing() {
         </div>
       </section>
 
-      {/* ── WHY AI ─────────────────────────────────────────────────────────── */}
       <section style={{
         padding: "80px clamp(16px, 4vw, 40px)",
         background: "var(--bg-card)",
@@ -707,7 +684,6 @@ export default function Landing() {
         </div>
       </section>
 
-      {/* ── PROGRAMS COVERED ───────────────────────────────────────────────── */}
       <section style={{
         padding: "80px clamp(16px, 4vw, 40px)",
         background: "var(--bg)",
@@ -729,7 +705,6 @@ export default function Landing() {
                 borderRadius: "var(--radius-lg)",
                 overflow: "hidden",
               }}>
-                {/* Country header */}
                 <div style={{
                   padding: "20px 24px 16px",
                   background: "var(--primary-soft)",
@@ -750,7 +725,6 @@ export default function Landing() {
                   }}>{c.count}</span>
                 </div>
 
-                {/* Programs list */}
                 <ul style={{ listStyle: "none", padding: "20px 24px", display: "flex", flexDirection: "column", gap: 9 }}>
                   {c.items.map((item, i) => (
                     <li key={i} style={{ display: "flex", gap: 10, alignItems: "flex-start" }}>
@@ -768,7 +742,6 @@ export default function Landing() {
         </div>
       </section>
 
-      {/* ── PRE-FOOTER CTA ─────────────────────────────────────────────────── */}
       <section style={{
         padding: "80px clamp(16px, 4vw, 40px)",
         background: "var(--primary)",

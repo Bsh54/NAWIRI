@@ -3,8 +3,6 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
-// ─── Data ─────────────────────────────────────────────────────────────────────
-
 const COUNTRIES = [
   {
     flag: "BJ",
@@ -251,8 +249,6 @@ const COUNTRIES = [
   },
 ];
 
-// ─── Components ────────────────────────────────────────────────────────────────
-
 function FlagBadge({ code, color }) {
   return (
     <div style={{
@@ -440,15 +436,12 @@ function CountrySection({ country }) {
   );
 }
 
-// ─── Page ──────────────────────────────────────────────────────────────────────
-
 export default function SourcesPage() {
   const router = useRouter();
 
   return (
     <div style={{ minHeight: "100vh", background: "var(--bg)" }}>
 
-      {/* ── NAV ────────────────────────────────────────────────────────────────── */}
       <nav style={{
         position: "sticky", top: 0, zIndex: 50,
         display: "flex", alignItems: "center", justifyContent: "space-between",
@@ -482,7 +475,6 @@ export default function SourcesPage() {
         </button>
       </nav>
 
-      {/* ── HEADER ─────────────────────────────────────────────────────────────── */}
       <div style={{
         maxWidth: 860, margin: "0 auto",
         padding: "48px clamp(16px, 4vw, 40px) 48px",
@@ -495,7 +487,6 @@ export default function SourcesPage() {
           Sources
         </h1>
 
-        {/* Country sections */}
         {COUNTRIES.map(c => <CountrySection key={c.flag} country={c} />)}
       </div>
     </div>

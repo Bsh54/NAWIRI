@@ -21,9 +21,6 @@ const PLACEHOLDERS = {
   tw:  "Ka wo ho asɛm wɔ Twi mu...",
 };
 
-// UI strings per language. African languages are pre-translated (via the Google
-// Translate API, same engine the chat uses) so picking a language is instant —
-// no API round-trip on selection.
 const STATIC_STRINGS = {
   en: {
     welcome_title:   "Describe your situation",
@@ -61,8 +58,6 @@ const STATIC_STRINGS = {
     new_chat:        "Nkɔmmɔbɔ foforo",
   },
 };
-
-// ─── Markdown / MAP-link renderer ──────────────────────────────────────────────
 
 function renderInline(content, keyBase, onMap) {
   const parts = [];
@@ -136,8 +131,6 @@ function renderMessage(text, onMap) {
     return <div key={li} style={{ marginTop: li === 0 ? 0 : 2 }}>{renderInline(content, li, onMap)}</div>;
   });
 }
-
-// ─── Language picker popup ──────────────────────────────────────────────────────
 
 function LangCard({ code, onSelect }) {
   const [hover, setHover] = useState(false);
@@ -230,9 +223,6 @@ function LanguagePicker({ onSelect }) {
   );
 }
 
-// ─── Translation helper ─────────────────────────────────────────────────────────
-
-// [[MAP:id|label]] → "label §n§" so the label gets translated but the id is preserved.
 async function translateText(text, src, tgt) {
   const mapIds = [];
   const prepared = text.replace(/\[\[MAP:([^\]|]+)\|([^\]]+)\]\]/g, (_, id, label) => {
@@ -262,8 +252,6 @@ async function translateText(text, src, tgt) {
   }
 }
 
-// ─── Main chat component ────────────────────────────────────────────────────────
-
 function ChatApp() {
   const [messages,    setMessages]    = useState([]);
   const [input,       setInput]       = useState("");
@@ -275,10 +263,8 @@ function ChatApp() {
   const [chosenLang,  setChosenLang]  = useState(null);
   const [showPicker,  setShowPicker]  = useState(false);
 
-  // UI strings in the chosen language (welcome title, sub, disclaimer, etc.)
   const [uiStr, setUiStr] = useState(STATIC_STRINGS.en);
 
-  // Clean conversation history sent to Gemini (always EN for local langs, or chosen lang otherwise).
   const aiHistoryRef = useRef([]);
 
   const endRef   = useRef(null);
@@ -295,9 +281,6 @@ function ChatApp() {
     endRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages, loading]);
 
-  // Called when the user picks a language from the popup.
-  // All languages (including the African ones) have pre-translated UI strings,
-  // so switching the interface is instant — no API call here.
   function selectLang(code) {
     setChosenLang(code);
     setShowPicker(false);
@@ -326,7 +309,6 @@ function ChatApp() {
     setLoading(true);
 
     try {
-      // For local langs: translate user input → English so Gemini always gets EN.
       let aiText = text;
       if (isLocalLang) {
         const xlated = await translateText(text, "auto", "en");
@@ -348,7 +330,6 @@ function ChatApp() {
         return;
       }
 
-      // Stream the English response live.
       const reader  = res.body.getReader();
       const decoder = new TextDecoder();
       let acc = "";
@@ -368,15 +349,12 @@ function ChatApp() {
         return;
       }
 
-      // Store English exchange in AI history.
       aiHistoryRef.current = [...newAiHistory, { role: "assistant", content: acc }];
 
-      // For local langs: silently translate the response to the user's language.
       if (isLocalLang) {
         setTranslating(true);
         const xlated = await translateText(acc, "en", chosenLang);
         setTranslating(false);
-        // Show translated version if successful, otherwise keep the English text.
         if (xlated) {
           setMessages([...newDisplay, { role: "assistant", content: xlated }]);
         }
@@ -412,7 +390,6 @@ function ChatApp() {
 
       {(!chosenLang || showPicker) && <LanguagePicker onSelect={selectLang} />}
 
-      {/* TOP BAR */}
       <header style={{
         display: "flex", alignItems: "center", justifyContent: "space-between",
         padding: "0 16px", height: 56, flexShrink: 0,
@@ -444,10 +421,8 @@ function ChatApp() {
         </div>
       </header>
 
-      {/* BODY */}
       <div style={{ flex: 1, display: "flex", overflow: "hidden" }}>
 
-        {/* Chat view */}
         <div style={{
           flex: 1, flexDirection: "column", overflow: "hidden",
           display: tab === "chat" ? "flex" : "none",
@@ -574,14 +549,12 @@ function ChatApp() {
             </div>
           </div>
 
-          {/* Input bar */}
           <div style={{
             padding: "12px 16px 14px", borderTop: "1px solid var(--border-soft)",
             background: "var(--bg-card)", flexShrink: 0,
           }}>
             <div style={{ width: "100%", maxWidth: 820, margin: "0 auto" }}>
 
-              {/* Change language link */}
               {chosenLang && (
                 <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: 6 }}>
                   <button
@@ -641,13 +614,11 @@ function ChatApp() {
           </div>
         </div>
 
-        {/* Map view */}
         <div style={{ flex: 1, minHeight: 0, display: tab === "map" ? "block" : "none" }}>
           <InstitutionsMap open={tab === "map"} target={mapTarget} />
         </div>
       </div>
 
-      {/* BOTTOM NAV (mobile) */}
       <nav className="bottom-nav" style={{
         flexShrink: 0, background: "var(--bg-card)",
         borderTop: "1px solid var(--border-soft)",
@@ -671,8 +642,6 @@ function ChatApp() {
     </div>
   );
 }
-
-// ─── Sub-components ─────────────────────────────────────────────────────────────
 
 function TabButton({ active, onClick, label, icon }) {
   return (
