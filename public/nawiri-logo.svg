@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="480" height="100" viewBox="0 0 480 100">
+  <rect width="480" height="100" rx="16" fill="#FFF5F2"/>
+  <text
+    x="240" y="62"
+    font-family="'Arial Black', 'Helvetica Neue', sans-serif"
+    font-size="56"
+    font-weight="900"
+    letter-spacing="-2"
+    text-anchor="middle"
+    fill="#C05A3C"
+  >NAWIRI</text>
+  <text
+    x="240" y="84"
+    font-family="'Arial', sans-serif"
+    font-size="13"
+    font-weight="500"
+    letter-spacing="3"
+    text-anchor="middle"
+    fill="#C05A3C"
+    opacity="0.6"
+  >AI · WEST AFRICA · PUBLIC SERVICES</text>
+</svg>
